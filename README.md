@@ -9,7 +9,7 @@
 ### TASK
 
 - **task_name** -> 任务名
-- **remark** -> 任务备注
+- **task_description** -> 任务备注
 - **deadline** -> 截止日期
 - **status** -> 任务是否已经完成
 
