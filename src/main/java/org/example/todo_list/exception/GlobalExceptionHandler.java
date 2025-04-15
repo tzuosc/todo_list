@@ -12,7 +12,7 @@ import org.springframework.web.bind.annotation.RestControllerAdvice;
 @RestControllerAdvice
 public class GlobalExceptionHandler {
 
-    // 处理数据层异常（如唯一约束冲突）
+    // 处理数据层异常
     @ExceptionHandler(DataIntegrityViolationException.class)
     public ResponseEntity<ApiResponse<Void>> handleDataException(DataIntegrityViolationException ex) {
         log.error("数据库异常: {}", ex.getMessage());
@@ -20,6 +20,13 @@ public class GlobalExceptionHandler {
                 .body(ApiResponse.error(409, "数据冲突，请检查任务名称唯一性"));
     }
 
+    /*   自定义的异常处理*/
+    //登录失败异常
+    @ExceptionHandler(AuthException.class)
+    public ResponseEntity<ApiResponse<Void>> handleAuthException(AuthException ex) {
+        return ResponseEntity.status(HttpStatus.BAD_REQUEST)
+                .body(ApiResponse.error(ex.getCode(), ex.getMessage()));
+    }
 
     // 兜底异常处理
     @ExceptionHandler(Exception.class)
