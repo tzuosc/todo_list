@@ -1,4 +1,4 @@
-package org.example.todo_list.Config;
+package org.example.todo_list.config;
 
 import io.swagger.v3.oas.models.ExternalDocumentation;
 import io.swagger.v3.oas.models.OpenAPI;

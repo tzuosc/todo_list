@@ -1,4 +1,4 @@
-package org.example.todo_list.DTO.Response;
+package org.example.todo_list.utils;
 
 import lombok.AllArgsConstructor;
 import lombok.Data;
