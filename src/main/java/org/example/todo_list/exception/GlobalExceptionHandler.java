@@ -21,19 +21,14 @@ public class GlobalExceptionHandler {
     }
 
     /*   自定义的异常处理*/
-    //登录或者注册失败异常
-    @ExceptionHandler(AuthException.class)
-    public ResponseEntity<ApiResponse<Void>> handleAuthException(AuthException ex) {
+
+    @ExceptionHandler(BaseException.class)
+    public ResponseEntity<ApiResponse<Void>> handleAuthException(BaseException ex) {
+        log.warn("业务异常: {}", ex.getMessage());
         return ResponseEntity.status(HttpStatus.BAD_REQUEST)
                 .body(ApiResponse.error(ex.getCode(), ex.getMessage()));
     }
 
-    // 任务相关的异常
-    @ExceptionHandler(TaskException.class)
-    public ResponseEntity<ApiResponse<Void>> handleException(TaskException ex) {
-        return ResponseEntity.status(HttpStatus.BAD_REQUEST)
-                .body(ApiResponse.error(ex.getCode(), ex.getMessage()));
-    }
 
     // 兜底异常处理
     @ExceptionHandler(Exception.class)

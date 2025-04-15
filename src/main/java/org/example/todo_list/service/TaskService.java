@@ -2,8 +2,8 @@ package org.example.todo_list.service;
 
 import lombok.RequiredArgsConstructor;
 import org.example.todo_list.dto.request.CreateTaskRequest;
-import org.example.todo_list.exception.TaskError;
 import org.example.todo_list.exception.TaskException;
+import org.example.todo_list.exception.errorCode.TaskError;
 import org.example.todo_list.model.Task;
 import org.example.todo_list.repository.TaskRepository;
 import org.springframework.stereotype.Service;

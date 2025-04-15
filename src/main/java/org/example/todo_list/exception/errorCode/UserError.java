@@ -1,4 +1,4 @@
-package org.example.todo_list.exception;
+package org.example.todo_list.exception.errorCode;
 
 import lombok.AllArgsConstructor;
 import lombok.Getter;
