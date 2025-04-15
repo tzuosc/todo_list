@@ -1,4 +1,4 @@
-package org.example.todo_list.DTO.request;
+package org.example.todo_list.dto.request;
 
 import jakarta.validation.constraints.NotNull;
 

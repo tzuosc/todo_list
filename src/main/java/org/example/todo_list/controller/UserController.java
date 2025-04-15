@@ -2,13 +2,16 @@ package org.example.todo_list.controller;
 
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;
+import jakarta.servlet.http.HttpServletResponse;
 import lombok.RequiredArgsConstructor;
-import org.example.todo_list.DTO.request.LoginRequest;
-import org.example.todo_list.DTO.request.RegisterRequest;
+import org.example.todo_list.dto.request.LoginRequest;
+import org.example.todo_list.dto.request.RegisterRequest;
 import org.example.todo_list.model.User;
 import org.example.todo_list.repository.UserRepository;
+import org.example.todo_list.security.JwtUtils;
 import org.example.todo_list.service.UserService;
 import org.example.todo_list.utils.ApiResponse;
+import org.example.todo_list.utils.CookieUtil;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -21,14 +24,16 @@ import org.springframework.web.bind.annotation.RestController;
 public class UserController {
     private final UserService userService;
     private final UserRepository userRepository;
+    private final JwtUtils jwtUtils;
 
     @Operation(summary = "登录", description = "传入用户名和密码")
     @PostMapping(value = "/login")
-    public ApiResponse<String> login(@RequestBody LoginRequest request) {
+    public ApiResponse<String> login(@RequestBody LoginRequest request, HttpServletResponse response) {
         boolean judge = userRepository.existsByUsernameAndPassword(
                 request.username(), request.password());
         if (judge) {
-            return ApiResponse.success(null);
+            CookieUtil.setCookie(response, jwtUtils.generateToken(request.username()));
+            return ApiResponse.success("登录成功");
         } else {
             return ApiResponse.error(400, "用户或者密码错误");
         }
