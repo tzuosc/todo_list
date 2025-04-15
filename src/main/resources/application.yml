@@ -31,3 +31,6 @@ logging:
   level:
     org.hibernate.SQL: debug
     org.hibernate.type: trace
+jwt:
+  secret: 8J6bZzqkRtA7X9LvMwYhN2PpQeFjHnKsDcV4BfGxTqWu3yJ5rCt0Oa1iEoUl+/M=
+  expiration: 3600

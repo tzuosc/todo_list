@@ -1,13 +1,10 @@
-package org.example.todo_list.Model;
+package org.example.todo_list.model;
 
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
-import lombok.Getter;
-import lombok.RequiredArgsConstructor;
-import lombok.Setter;
-import lombok.ToString;
+import lombok.*;
 import org.hibernate.proxy.HibernateProxy;
 
 import java.util.Objects;
@@ -15,7 +12,9 @@ import java.util.Objects;
 @Getter
 @Setter
 @ToString
-@RequiredArgsConstructor
+@Builder
+@NoArgsConstructor
+@AllArgsConstructor
 @Entity
 public class User {
     @Id
@@ -25,6 +24,12 @@ public class User {
     private String password;
     private String avatarUrl;
 
+
+    public User(String username, String password, String avatarUrl) {
+        this.username = username;
+        this.password = password;
+        this.avatarUrl = avatarUrl;
+    }
 
     @Override
     public final boolean equals(Object o) {
