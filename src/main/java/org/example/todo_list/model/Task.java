@@ -22,8 +22,8 @@ public class Task {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    private String taskName;
-    private String taskDescription;
+    private String name;
+    private String description;
     @JsonProperty(value = "task_date")
     @JsonFormat(pattern = "yyyy-MM-dd HH:mm", timezone = "GMT+8")
     private Date taskDate;
@@ -33,9 +33,9 @@ public class Task {
     @JoinColumn(name = "todo_list_id")
     private TodoList todoList;
 
-    public Task(String taskName, String taskDescription, Date taskDate, boolean status) {
-        this.taskName = taskName;
-        this.taskDescription = taskDescription;
+    public Task(String name, String description, Date taskDate, boolean status) {
+        this.name = name;
+        this.description = description;
         this.taskDate = taskDate;
         this.status = status;
     }

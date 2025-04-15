@@ -8,7 +8,7 @@ import java.util.Date;
 
 public record CreateTaskRequest(
         @NotBlank String category,
-        @NotBlank String taskName,
+        @NotBlank String name,
         String taskDescription,
         @AssertFalse(message = "传入的时候必须是 False") Boolean status,
         @Future(message = "截至日期必须是未来的某个时间") Date deadline
