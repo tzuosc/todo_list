@@ -3,13 +3,13 @@ package org.example.todo_list.controller;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.servlet.http.HttpServletResponse;
+import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.example.todo_list.dto.request.LoginRequest;
 import org.example.todo_list.dto.request.RegisterRequest;
 import org.example.todo_list.model.User;
 import org.example.todo_list.repository.UserRepository;
 import org.example.todo_list.security.JwtUtils;
-import org.example.todo_list.service.UserService;
 import org.example.todo_list.utils.ApiResponse;
 import org.example.todo_list.utils.CookieUtil;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -22,13 +22,12 @@ import org.springframework.web.bind.annotation.RestController;
 @RequestMapping(value = "/auth")
 @RequiredArgsConstructor
 public class UserController {
-    private final UserService userService;
     private final UserRepository userRepository;
     private final JwtUtils jwtUtils;
 
     @Operation(summary = "登录", description = "传入用户名和密码")
     @PostMapping(value = "/login")
-    public ApiResponse<String> login(@RequestBody LoginRequest request, HttpServletResponse response) {
+    public ApiResponse<String> login(@Valid @RequestBody LoginRequest request, HttpServletResponse response) {
         boolean judge = userRepository.existsByUsernameAndPassword(
                 request.username(), request.password());
         if (judge) {
@@ -41,7 +40,7 @@ public class UserController {
 
     @Operation(summary = "注册", description = "传入用户名,密码和头像地址")
     @PostMapping(value = "/register")
-    public ApiResponse<String> register(@RequestBody RegisterRequest request) {
+    public ApiResponse<String> register(@Valid @RequestBody RegisterRequest request) {
         User user = User.builder()
                 .avatarUrl(request.avatarUrl())
                 .username(request.username())

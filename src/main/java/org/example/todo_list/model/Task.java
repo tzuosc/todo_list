@@ -9,6 +9,7 @@ import org.hibernate.proxy.HibernateProxy;
 import java.util.Date;
 import java.util.Objects;
 
+@Builder
 @Entity
 @Getter
 @Setter
@@ -22,19 +23,22 @@ public class Task {
     private Long id;
 
     private String taskName;
-
     private String taskDescription;
-
     @JsonProperty(value = "task_date")
-    @JsonFormat(pattern = "yyyy-MM-dd", timezone = "GMT+8")
+    @JsonFormat(pattern = "yyyy-MM-dd HH:mm", timezone = "GMT+8")
     private Date taskDate;
-
     private boolean status;
-
     @ManyToOne
     @ToString.Exclude
     @JoinColumn(name = "todo_list_id")
     private TodoList todoList;
+
+    public Task(String taskName, String taskDescription, Date taskDate, boolean status) {
+        this.taskName = taskName;
+        this.taskDescription = taskDescription;
+        this.taskDate = taskDate;
+        this.status = status;
+    }
 
     @Override
     public final boolean equals(Object o) {
