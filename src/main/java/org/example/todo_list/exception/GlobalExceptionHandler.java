@@ -1,15 +1,18 @@
 package org.example.todo_list.exception;
 
+import com.fasterxml.jackson.databind.exc.InvalidFormatException;
 import lombok.extern.slf4j.Slf4j;
 import org.example.todo_list.utils.ApiResponse;
 import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.http.converter.HttpMessageNotReadableException;
 import org.springframework.validation.FieldError;
 import org.springframework.web.bind.MethodArgumentNotValidException;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.RestControllerAdvice;
 
+import java.time.format.DateTimeParseException;
 import java.util.Map;
 import java.util.Optional;
 import java.util.stream.Collectors;
@@ -47,6 +50,25 @@ public class GlobalExceptionHandler {
                         fieldError -> Optional.ofNullable(fieldError.getDefaultMessage()).orElse("参数错误")
                 ));
         return ApiResponse.error(400, "参数校验失败", errors);
+    }
+
+    // 处理 JSON 解析异常（如日期格式错误）
+    @ExceptionHandler(HttpMessageNotReadableException.class)
+    public ApiResponse<Void> handleHttpMessageNotReadableException(HttpMessageNotReadableException ex) {
+        log.error("JSON 解析错误: {}", ex.getMessage());
+
+        // 提取具体错误信息
+        Throwable rootCause = ex.getRootCause();
+        String errorMessage = "请求体格式错误";
+        if (rootCause instanceof InvalidFormatException ife) {
+            errorMessage = String.format("字段 '%s' 格式错误，应为 %s",
+                    ife.getPath().getFirst().getFieldName(),
+                    ife.getTargetType().getSimpleName());
+        } else if (rootCause instanceof DateTimeParseException) {
+            errorMessage = "日期格式错误，正确格式应为 yyyy-MM-dd HH:mm";
+        }
+
+        return ApiResponse.error(400, errorMessage);
     }
 
     // 兜底异常处理

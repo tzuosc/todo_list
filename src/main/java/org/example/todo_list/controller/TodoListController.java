@@ -21,20 +21,23 @@ public class TodoListController {
 
     @Operation(summary = "新建一个任务列表")
     @PutMapping("/create")
-    public void create(String category) {
+    public ApiResponse<String> create(String category) {
         todoListService.create(category);
+        return ApiResponse.success("创建成功");
     }
 
     @Operation(summary = "根据id删除任务列表")
     @DeleteMapping("/delete")
-    public void delete(Long id) {
+    public ApiResponse<String> delete(Long id) {
         todoListService.delete(id);
+        return ApiResponse.success("删除成功");
     }
 
     @Operation(summary = "根据id修改列表的类别")
     @PatchMapping("/change_category")
-    public void changeCategory(Long id, String newCategory) {
+    public ApiResponse<String> changeCategory(Long id, String newCategory) {
         todoListService.changeListCategory(id, newCategory);
+        return ApiResponse.success("修改成功");
     }
 
     @Operation(summary = "获取所有的任务列表",
