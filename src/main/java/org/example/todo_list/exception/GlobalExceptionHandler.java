@@ -9,8 +9,10 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.http.converter.HttpMessageNotReadableException;
 import org.springframework.validation.FieldError;
 import org.springframework.web.bind.MethodArgumentNotValidException;
+import org.springframework.web.bind.MissingServletRequestParameterException;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.RestControllerAdvice;
+import org.springframework.web.method.annotation.MethodArgumentTypeMismatchException;
 
 import java.time.format.DateTimeParseException;
 import java.util.Map;
@@ -50,6 +52,20 @@ public class GlobalExceptionHandler {
                         fieldError -> Optional.ofNullable(fieldError.getDefaultMessage()).orElse("参数错误")
                 ));
         return ApiResponse.error(400, "参数校验失败", errors);
+    }
+
+    // 处理参数缺失异常
+    @ExceptionHandler(MissingServletRequestParameterException.class)
+    public ApiResponse<Void> handleMissingParameter(MissingServletRequestParameterException ex) {
+        String message = "缺少必需参数: " + ex.getParameterName();
+        return ApiResponse.error(400, message);
+    }
+
+    // 处理类型不匹配异常
+    @ExceptionHandler(MethodArgumentTypeMismatchException.class)
+    public ApiResponse<Void> handleTypeMismatch(MethodArgumentTypeMismatchException ex) {
+        String message = "参数类型错误: " + ex.getName() + " 应为 " + ex.getRequiredType().getSimpleName();
+        return ApiResponse.error(400, message);
     }
 
     // 处理 JSON 解析异常（如日期格式错误）

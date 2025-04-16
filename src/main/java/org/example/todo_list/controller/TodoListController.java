@@ -28,7 +28,8 @@ public class TodoListController {
 
     @Operation(summary = "根据id删除任务列表")
     @DeleteMapping("/delete")
-    public ApiResponse<String> delete(Long id) {
+    public ApiResponse<String> delete(@RequestParam
+                                      Long id) {
         todoListService.delete(id);
         return ApiResponse.success("删除成功");
     }
