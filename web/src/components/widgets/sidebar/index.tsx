@@ -27,14 +27,7 @@ const navItems =[
         path : "/plan"
     },
 ]
-const data = {
-    user: {
-        name: "username",
-        email: "m@example.com",
-        avatar: "https://avatars.githubusercontent.com/u/149759599?v=4",
-    },
 
-}
 const infoItem = [
     {
         title : "settings",
