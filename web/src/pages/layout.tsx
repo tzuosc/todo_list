@@ -16,7 +16,9 @@ export default function layout(){
                     <SidebarInset>
                         <main
                             className={cn([
-                                ""
+                                "flex flex-col " +
+                                "min-h-full w-full " +
+                                "p-4"
                             ])}
                         >
                         </main>

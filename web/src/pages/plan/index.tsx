@@ -1,4 +1,4 @@
-export  default function settings() {
+export  default function plan() {
     return(
         <>
         </>

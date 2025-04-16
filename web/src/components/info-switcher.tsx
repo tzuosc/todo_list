@@ -2,7 +2,7 @@
 
 import * as React from "react"
 import { useNavigate } from "react-router-dom"
-import { ChevronsUpDown } from "lucide-react"
+
 
 import {
     DropdownMenu,
@@ -59,7 +59,7 @@ export function InfoSwitch({
                             <div className="grid flex-1 text-left text-sm leading-tight">
                                 username's chat
                             </div>
-                            <ChevronsUpDown className="ml-auto" />
+
                         </SidebarMenuButton>
                     </DropdownMenuTrigger>
                     <DropdownMenuContent

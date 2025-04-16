@@ -35,14 +35,38 @@ export default createBrowserRouter([
                                 await import("@/pages/account/register")
                             ).default
                         })
+                    },
+                    {
+                        path:"settings",
+                        lazy:async ()=>({
+                            Component:(
+                                await import("@/pages/account/settings")
+                            ).default
+                        })
                     }
                 ]
             },
             {
-                path:"/:nickname",
+                path:"/:username",
                 lazy:async ()=>({
                     Component:(
                         await import("@/pages/users/profile.tsx")
+                    ).default
+                })
+            },
+            {
+                path:"/importance",
+                lazy:async ()=>({
+                    Component:(
+                        await import("@/pages/importance")
+                    ).default
+                })
+            },
+            {
+                path:"/plan",
+                lazy:async ()=>({
+                    Component:(
+                        await import("@/pages/plan")
                     ).default
                 })
             }
