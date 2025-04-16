@@ -7,6 +7,7 @@ import java.util.List;
 
 @Schema(name = "获取所有list的响应")
 public record GetAllListResponse(
+        @NotNull Long id,
         @NotNull String category,
         List<Long> tasks
 ) {

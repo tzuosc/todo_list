@@ -4,6 +4,7 @@ import lombok.RequiredArgsConstructor;
 import org.example.todo_list.dto.response.GetAllListResponse;
 import org.example.todo_list.exception.ListException;
 import org.example.todo_list.exception.errors.ListError;
+import org.example.todo_list.model.Task;
 import org.example.todo_list.model.TodoList;
 import org.example.todo_list.repository.TaskRepository;
 import org.example.todo_list.repository.TodoListRepository;
@@ -11,6 +12,7 @@ import org.springframework.stereotype.Service;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Optional;
 
 @RequiredArgsConstructor
 @Service
@@ -31,6 +33,7 @@ public class TodoListService {
                 .tasks(new ArrayList<>())
                 .build();
         todoListRepository.save(todoList);
+        todoList.addTask(new Task());
     }
 
     public void delete(Long id) {
@@ -41,6 +44,7 @@ public class TodoListService {
             );
         }
         todoListRepository.deleteById(id);
+        Optional<TodoList> list = todoListRepository.findById(id);
     }
 
     public void changeListCategory(Long id, String newCategory) {
@@ -54,12 +58,11 @@ public class TodoListService {
     }
 
     public List<GetAllListResponse> getAllLists() {
-
-        List<String> allList = todoListRepository.findAllCategories();
+        List<TodoList> allList = todoListRepository.findAll();
         List<GetAllListResponse> responses = new ArrayList<>();
-        allList.forEach(category -> {
-            List<Long> tasks = taskRepository.findTaskIdsByCategory(category);
-            responses.add(new GetAllListResponse(category, tasks));
+        allList.forEach(todoList -> {
+            List<Long> tasks = taskRepository.findTaskIdsByCategory(todoList.getCategory());
+            responses.add(new GetAllListResponse(todoList.getId(), todoList.getCategory(), tasks));
         });
         return responses;
     }
