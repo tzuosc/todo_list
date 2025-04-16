@@ -1,4 +1,8 @@
+<<<<<<<< HEAD:src/main/java/org/example/todo_list/config/SecurityConfig.java
 package org.example.todo_list.config;
+========
+package org.example.todo_list.security;
+>>>>>>>> master:src/main/java/org/example/todo_list/security/SecurityConfig.java
 
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;

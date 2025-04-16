@@ -12,4 +12,6 @@ public interface UserRepository extends
     boolean existsByUsernameAndPassword(String username, String password);
 
     boolean existsByUsername(String username);
+
+    User findByUsername(String username);
 }
