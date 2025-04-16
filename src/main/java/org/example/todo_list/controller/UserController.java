@@ -8,7 +8,8 @@ import lombok.RequiredArgsConstructor;
 import org.example.todo_list.dto.request.LoginRequest;
 import org.example.todo_list.dto.request.RegisterRequest;
 import org.example.todo_list.exception.AuthException;
-import org.example.todo_list.exception.errorCode.UserError;
+import org.example.todo_list.exception.errors.UserError;
+
 import org.example.todo_list.model.User;
 import org.example.todo_list.repository.UserRepository;
 import org.example.todo_list.security.JwtUtils;

@@ -26,17 +26,17 @@ public class Task {
     private String description;
     @JsonProperty(value = "task_date")
     @JsonFormat(pattern = "yyyy-MM-dd HH:mm", timezone = "GMT+8")
-    private Date taskDate;
+    private Date deadline;
     private boolean status;
     @ManyToOne
     @ToString.Exclude
     @JoinColumn(name = "todo_list_id")
     private TodoList todoList;
 
-    public Task(String name, String description, Date taskDate, boolean status) {
+    public Task(String name, String description, Date deadline, boolean status) {
         this.name = name;
         this.description = description;
-        this.taskDate = taskDate;
+        this.deadline = deadline;
         this.status = status;
     }
 

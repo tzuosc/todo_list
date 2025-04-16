@@ -62,6 +62,9 @@
     - GET
     - 返回: 一个列表 [[category1, todo_id_list1], [category2, todo_id_list2]]
     - 备注: 加载主界面的时候调用这个接口, 这个接口不会直接返回 todo 模型, 点击对应的todolist 需要调用todo接口获取
+- /change_category -> 修改任务类型
+    - UPDATE
+    - 传入: id, category
 
 ### 关于 TASK /task
 
@@ -77,16 +80,14 @@
     - PATCH
     - 传入: id
 - /not_finish -> 把任务重新标记为未完成
-    - GET
+    - PATCH
     - 传入: id
 - /delete -> 删除一个任务
     - DELETE
     - 传入: id
-- /change_category -> 修改任务类型
-    - UPDATE
-    - 传入: id, category
+
 - /change_deadline -> 修改截止日期
-    - UPDATE
+    - PATCH
     - 传入: id, deadline
 
 
