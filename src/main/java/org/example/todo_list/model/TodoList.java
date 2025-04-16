@@ -1,5 +1,6 @@
 package org.example.todo_list.model;
 
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import jakarta.persistence.*;
 import lombok.*;
 import org.hibernate.proxy.HibernateProxy;
@@ -21,9 +22,22 @@ public class TodoList {
 
     private String category;
 
-    @OneToMany(cascade = CascadeType.ALL, fetch = FetchType.EAGER, mappedBy = "todoList")
+    @OneToMany(cascade = CascadeType.ALL,
+            fetch = FetchType.LAZY,
+            mappedBy = "todoList")
     @ToString.Exclude
+    @JsonIgnoreProperties(value = "todoList")
     private List<Task> tasks;
+
+    public void addTask(Task task) {
+        tasks.add(task);
+        task.setTodoList(this);
+    }
+
+    public void removeTask(Task task) {
+        tasks.remove(task);
+        task.setTodoList(null);
+    }
 
     @Override
     public final boolean equals(Object o) {

@@ -1,8 +1,8 @@
 package org.example.todo_list.controller;
 
 import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.validation.Valid;
-
 import jakarta.validation.constraints.Min;
 import jakarta.validation.constraints.NotNull;
 import lombok.RequiredArgsConstructor;
@@ -15,7 +15,7 @@ import org.springframework.web.bind.annotation.*;
 
 import java.util.Date;
 
-
+@Tag(name = "任务相关Api", description = "用于管理任务")
 @RestController
 @RequestMapping("/task")
 @RequiredArgsConstructor
@@ -32,31 +32,36 @@ public class TaskController {
         return ApiResponse.success("创建任务成功");
     }
 
-
+    @Operation(summary = "获取一个任务",
+            description = "传入任务id, 返回 task的详细信息")
     @GetMapping("/{id}")
     public ApiResponse<GetTaskResponse> getTask(@Min(value = 1, message = "id至少为1")
                                                 @PathVariable Long id) {
         return ApiResponse.success(taskService.getTask(id));
     }
 
+    @Operation(summary = "把一个任务标记为已完成")
     @PatchMapping("/finish")
     public ApiResponse<String> finishTask(@NotNull @RequestParam Long id) {
         taskService.changeStatus(id, true);
         return ApiResponse.success("任务完成");
     }
 
+    @Operation(summary = "把已经完成的任务标记为未完成")
     @PatchMapping("/not_finish")
     public ApiResponse<String> notFinishTask(@NotNull @RequestParam Long id) {
         taskService.changeStatus(id, false);
         return ApiResponse.success("成功修改任务状态");
     }
 
+    @Operation(summary = "删除一个任务")
     @DeleteMapping("/delete")
     public ApiResponse<String> deleteTask(@NotNull @RequestParam Long id) {
         taskService.deleteTask(id);
         return ApiResponse.success("删除成功");
     }
 
+    @Operation(summary = "修改截止日期")
     @PatchMapping("/change_deadline")
     public ApiResponse<String> changeDeadline(@NotNull @RequestParam Long id, @NotNull Date deadline) {
         taskService.changeDeadline(id, deadline);
