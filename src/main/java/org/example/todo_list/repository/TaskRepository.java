@@ -10,6 +10,7 @@ import org.springframework.lang.NonNull;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.util.Date;
+import java.util.List;
 
 public interface TaskRepository extends JpaRepository<Task, Long> {
     @Transactional
@@ -25,4 +26,9 @@ public interface TaskRepository extends JpaRepository<Task, Long> {
     @Modifying
     @Query("update Task t set t.deadline = ?1 where t.id = ?2")
     int updateTaskDateById(@NonNull Date taskDate, @NonNull Long id);
+
+//    List<Long> findByTodoList_Category(String category);
+
+    @Query("select t.id from Task t where t.todoList.category = ?1")
+    List<Long> findTaskIdsByCategory(@NonNull String category);
 }

@@ -1,12 +1,11 @@
 package org.example.todo_list.model;
 
 import com.fasterxml.jackson.annotation.JsonFormat;
-import com.fasterxml.jackson.annotation.JsonProperty;
 import jakarta.persistence.*;
 import lombok.*;
 import org.hibernate.proxy.HibernateProxy;
 
-import java.util.Date;
+import java.time.LocalDateTime;
 import java.util.Objects;
 
 @Builder
@@ -24,21 +23,14 @@ public class Task {
 
     private String name;
     private String description;
-    @JsonProperty(value = "task_date")
     @JsonFormat(pattern = "yyyy-MM-dd HH:mm", timezone = "GMT+8")
-    private Date deadline;
+    private LocalDateTime deadline;
     private boolean status;
-    @ManyToOne
+    @ManyToOne(fetch = FetchType.LAZY)
     @ToString.Exclude
     @JoinColumn(name = "todo_list_id")
     private TodoList todoList;
 
-    public Task(String name, String description, Date deadline, boolean status) {
-        this.name = name;
-        this.description = description;
-        this.deadline = deadline;
-        this.status = status;
-    }
 
     @Override
     public final boolean equals(Object o) {

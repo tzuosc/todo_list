@@ -5,6 +5,7 @@ import org.example.todo_list.dto.response.GetAllListResponse;
 import org.example.todo_list.exception.ListException;
 import org.example.todo_list.exception.errors.ListError;
 import org.example.todo_list.model.TodoList;
+import org.example.todo_list.repository.TaskRepository;
 import org.example.todo_list.repository.TodoListRepository;
 import org.springframework.stereotype.Service;
 
@@ -15,6 +16,7 @@ import java.util.List;
 @Service
 public class TodoListService {
     private final TodoListRepository todoListRepository;
+    private final TaskRepository taskRepository;
 
     public void create(String category) {
         if (todoListRepository.existsByCategory(category)) {
@@ -56,7 +58,7 @@ public class TodoListService {
         List<String> allList = todoListRepository.findAllCategories();
         List<GetAllListResponse> responses = new ArrayList<>();
         allList.forEach(category -> {
-            List<Long> tasks = todoListRepository.getIdsByCategory(category);
+            List<Long> tasks = taskRepository.findTaskIdsByCategory(category);
             responses.add(new GetAllListResponse(category, tasks));
         });
         return responses;
