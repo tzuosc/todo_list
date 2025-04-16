@@ -1,14 +1,14 @@
 package org.example.todo_list.model;
 
 import com.fasterxml.jackson.annotation.JsonFormat;
-import com.fasterxml.jackson.annotation.JsonProperty;
 import jakarta.persistence.*;
 import lombok.*;
 import org.hibernate.proxy.HibernateProxy;
 
-import java.util.Date;
+import java.time.LocalDateTime;
 import java.util.Objects;
 
+@Builder
 @Entity
 @Getter
 @Setter
@@ -21,20 +21,16 @@ public class Task {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    private String taskName;
-
-    private String taskDescription;
-
-    @JsonProperty(value = "task_date")
-    @JsonFormat(pattern = "yyyy-MM-dd", timezone = "GMT+8")
-    private Date taskDate;
-
+    private String name;
+    private String description;
+    @JsonFormat(pattern = "yyyy-MM-dd HH:mm", timezone = "GMT+8")
+    private LocalDateTime deadline;
     private boolean status;
-
-    @ManyToOne
+    @ManyToOne(fetch = FetchType.LAZY)
     @ToString.Exclude
     @JoinColumn(name = "todo_list_id")
     private TodoList todoList;
+
 
     @Override
     public final boolean equals(Object o) {

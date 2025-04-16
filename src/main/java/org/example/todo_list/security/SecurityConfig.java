@@ -1,4 +1,4 @@
-package org.example.todo_list.config;
+package org.example.todo_list.security;
 
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
