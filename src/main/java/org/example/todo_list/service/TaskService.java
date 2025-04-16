@@ -11,7 +11,7 @@ import org.example.todo_list.repository.TaskRepository;
 import org.example.todo_list.repository.TodoListRepository;
 import org.springframework.stereotype.Service;
 
-import java.util.Date;
+import java.time.LocalDateTime;
 
 @Service
 @RequiredArgsConstructor
@@ -82,7 +82,7 @@ public class TaskService {
     }
 
 
-    public void changeDeadline(Long id, Date deadline) {
+    public void changeDeadline(Long id, LocalDateTime deadline) {
 
         int res = taskRepository.updateTaskDateById(deadline, id);
         if (res == 0)

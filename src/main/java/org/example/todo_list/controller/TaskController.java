@@ -13,7 +13,7 @@ import org.example.todo_list.utils.ApiResponse;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 
-import java.util.Date;
+import java.time.LocalDateTime;
 
 @Tag(name = "任务相关Api", description = "用于管理任务")
 @RestController
@@ -63,7 +63,7 @@ public class TaskController {
 
     @Operation(summary = "修改截止日期")
     @PatchMapping("/change_deadline")
-    public ApiResponse<String> changeDeadline(@NotNull @RequestParam Long id, @NotNull Date deadline) {
+    public ApiResponse<String> changeDeadline(@NotNull @RequestParam Long id, @NotNull LocalDateTime deadline) {
         taskService.changeDeadline(id, deadline);
         return ApiResponse.success("成功修改截至日期");
     }
