@@ -8,6 +8,7 @@ import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 
+
 @RestController
 @RequestMapping("/list")
 @RequiredArgsConstructor
@@ -35,4 +36,5 @@ public class TodoListController {
         List<GetAllListResponse> allLists = todoListService.getAllLists();
         return ApiResponse.success(allLists);
     }
+
 }
