@@ -7,6 +7,7 @@ import org.example.todo_list.exception.TaskException;
 import org.example.todo_list.exception.errors.TaskError;
 import org.example.todo_list.model.Task;
 import org.example.todo_list.repository.TaskRepository;
+import org.example.todo_list.repository.TodoListRepository;
 import org.springframework.stereotype.Service;
 
 import java.util.Date;
@@ -15,6 +16,7 @@ import java.util.Date;
 @RequiredArgsConstructor
 public class TaskService {
     private final TaskRepository taskRepository;
+    private final TodoListRepository todoListRepository;
 
 
     public void createTask(CreateTaskRequest createTaskRequest) {
@@ -30,8 +32,11 @@ public class TaskService {
                 .deadline(createTaskRequest.deadline())
                 .description(createTaskRequest.taskDescription())
                 .status(createTaskRequest.status())
+                .todoList(todoListRepository.findByCategory(createTaskRequest.category()))
                 .build();
         taskRepository.save(task);
+
+
     }
 
     public GetTaskResponse getTask(Long id) {

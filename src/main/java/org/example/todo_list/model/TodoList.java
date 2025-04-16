@@ -13,6 +13,7 @@ import java.util.Objects;
 @Entity
 @AllArgsConstructor
 @NoArgsConstructor
+@Builder
 public class TodoList {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
