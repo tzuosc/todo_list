@@ -6,7 +6,6 @@ import lombok.RequiredArgsConstructor;
 import org.example.todo_list.dto.response.GetAllListResponse;
 import org.example.todo_list.service.TodoListService;
 import org.example.todo_list.utils.ApiResponse;
-import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -15,7 +14,6 @@ import java.util.List;
 @RestController
 @RequestMapping("/list")
 @RequiredArgsConstructor
-@Validated
 public class TodoListController {
     private final TodoListService todoListService;
 
@@ -27,16 +25,15 @@ public class TodoListController {
     }
 
     @Operation(summary = "根据id删除任务列表")
-    @DeleteMapping({"/", ""})
-    public ApiResponse<String> delete(@RequestParam
-                                      Long id) {
+    @DeleteMapping({"/{id}", ""})
+    public ApiResponse<String> delete(@PathVariable Long id) {
         todoListService.delete(id);
         return ApiResponse.success("删除成功");
     }
 
     @Operation(summary = "根据id修改列表的类别")
-    @PatchMapping("/change_category")
-    public ApiResponse<String> changeCategory(Long id, String newCategory) {
+    @PatchMapping("/change_category/{id}")
+    public ApiResponse<String> changeCategory(@PathVariable Long id, String newCategory) {
         todoListService.changeListCategory(id, newCategory);
         return ApiResponse.success("修改成功");
     }
