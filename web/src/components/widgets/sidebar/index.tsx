@@ -32,12 +32,16 @@ const infoItem = [
     {
         title : "settings",
         logo : Settings,
+
         url : "/account/settings"
+
     },
     {
         title: "login/register",
         logo: LogIn,
+
         url: "/account/login"
+
     }
 ]
 
@@ -48,6 +52,7 @@ export default function AppSidebar(){
 
 
             <SidebarHeader>
+
                 <InfoSwitch items={infoItem}/>
             </SidebarHeader>
 
