@@ -9,7 +9,6 @@ import org.springframework.data.jpa.repository.Query;
 import org.springframework.lang.NonNull;
 import org.springframework.transaction.annotation.Transactional;
 
-import java.time.LocalDateTime;
 import java.util.List;
 
 public interface TaskRepository extends JpaRepository<Task, Long> {
@@ -25,7 +24,7 @@ public interface TaskRepository extends JpaRepository<Task, Long> {
     @Transactional
     @Modifying
     @Query("update Task t set t.deadline = ?1 where t.id = ?2")
-    int updateTaskDateById(@NonNull LocalDateTime taskDate, @NonNull Long id);
+    int updateTaskDateById(@NonNull Long taskDate, @NonNull Long id);
 
 
     @Query("select t.id from Task t where t.todoList.category = ?1")

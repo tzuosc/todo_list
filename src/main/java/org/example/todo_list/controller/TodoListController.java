@@ -20,14 +20,14 @@ public class TodoListController {
     private final TodoListService todoListService;
 
     @Operation(summary = "新建一个任务列表")
-    @PutMapping("/create")
+    @PutMapping({"/", ""})
     public ApiResponse<String> create(String category) {
         todoListService.create(category);
         return ApiResponse.success("创建成功");
     }
 
     @Operation(summary = "根据id删除任务列表")
-    @DeleteMapping("/delete")
+    @DeleteMapping({"/", ""})
     public ApiResponse<String> delete(@RequestParam
                                       Long id) {
         todoListService.delete(id);
@@ -44,7 +44,7 @@ public class TodoListController {
     @Operation(summary = "获取所有的任务列表",
             description = "注意, 这个api返回的值是一个json格式的数据, 每个对象包含一个 category(类别) " +
                     "tasks(保存的是task的id),如果你你想获取对应的id, 那么你需要调用task的api -> /task/get 逐个获取task")
-    @GetMapping("/fetch")
+    @GetMapping({"/", ""})
     public ApiResponse<List<GetAllListResponse>> fetch() {
         List<GetAllListResponse> allLists = todoListService.getAllLists();
         return ApiResponse.success(allLists);

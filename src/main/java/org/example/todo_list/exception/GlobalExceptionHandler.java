@@ -16,6 +16,7 @@ import org.springframework.web.method.annotation.MethodArgumentTypeMismatchExcep
 
 import java.time.format.DateTimeParseException;
 import java.util.Map;
+import java.util.Objects;
 import java.util.Optional;
 import java.util.stream.Collectors;
 
@@ -49,7 +50,8 @@ public class GlobalExceptionHandler {
                 .stream()
                 .collect(Collectors.toMap(
                         FieldError::getField,
-                        fieldError -> Optional.ofNullable(fieldError.getDefaultMessage()).orElse("参数错误")
+                        fieldError -> Optional.ofNullable(fieldError.getDefaultMessage())
+                                .orElse("参数错误")
                 ));
         return ApiResponse.error(400, "参数校验失败", errors);
     }
@@ -64,7 +66,8 @@ public class GlobalExceptionHandler {
     // 处理类型不匹配异常
     @ExceptionHandler(MethodArgumentTypeMismatchException.class)
     public ApiResponse<Void> handleTypeMismatch(MethodArgumentTypeMismatchException ex) {
-        String message = "参数类型错误: " + ex.getName() + " 应为 " + ex.getRequiredType().getSimpleName();
+        String message = "参数类型错误: " + ex.getName() +
+                " 应为 " + Objects.requireNonNull(ex.getRequiredType()).getSimpleName();
         return ApiResponse.error(400, message);
     }
 
