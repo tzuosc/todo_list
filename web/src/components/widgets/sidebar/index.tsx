@@ -32,12 +32,16 @@ const infoItem = [
     {
         title : "settings",
         logo : Settings,
-        url : "/settings"
+
+        url : "/account/settings"
+
     },
     {
         title: "login/register",
         logo: LogIn,
-        url: "/login"
+
+        url: "/account/login"
+
     }
 ]
 
@@ -48,24 +52,7 @@ export default function AppSidebar(){
 
 
             <SidebarHeader>
-               {/* <div className={cn(["flex items-center p-2"])}>
-                    <div className={
-                        cn([
-                            "flex " +
-                            "h-8 w-8" +
-                            "items-center justify-center" +
-                            "rounded-lg" +
-                            "bg-primary"
-                        ])
-                    }>
 
-                    </div>
-                    <span className={
-                        cn([
-
-                        ])
-                    }>Chat</span>
-                </div>*/}
                 <InfoSwitch items={infoItem}/>
             </SidebarHeader>
 
