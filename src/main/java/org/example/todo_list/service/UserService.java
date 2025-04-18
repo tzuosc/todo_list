@@ -1,6 +1,7 @@
 package org.example.todo_list.service;
 
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.example.todo_list.dto.request.LoginRequest;
 import org.example.todo_list.dto.request.RegisterRequest;
 import org.example.todo_list.exception.UserException;
@@ -10,6 +11,7 @@ import org.example.todo_list.repository.UserRepository;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
 
+@Slf4j
 @Service
 @RequiredArgsConstructor
 public class UserService {
@@ -43,6 +45,18 @@ public class UserService {
     }
 
     public void register(RegisterRequest request) {
+
+        // 如果注册用户名使用非法字符
+        String username = request.username();
+        if (!username.matches("[a-zA-Z0-9_]{3,15}")) {
+            // 可在此处打印异常信息
+            log.warn("非法用户名是: {}", request.username());
+            
+            throw new UserException(
+                    UserError.INVALID_USERNAME.getCode(),
+                    UserError.INVALID_USERNAME.getMessage()
+            );
+        }
 
         // 如果存在相同的用户名
         if (userRepository.existsByUsername(request.username())) {
