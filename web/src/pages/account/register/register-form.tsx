@@ -2,9 +2,7 @@ import {
     UserRound,
     Lock,
     Check,
-    TypeIcon,
-    HashIcon,
-    HouseIcon,
+
 } from "lucide-react";
 import { cn } from "@/utils";
 import { Input } from "@/components/ui/input";
@@ -21,7 +19,7 @@ import {
 } from "@/components/ui/form";
 import { Button } from "@/components/ui/button";
 import { useState } from "react";
-import { register } from "@/api/users";
+import { register } from "@/api/user";
 import { toast } from "sonner";
 import { useNavigate } from "react-router";
 
@@ -32,21 +30,12 @@ function RegisterForm() {
 
     const formSchema = z
         .object({
-            login: z
+            username: z
                 .string({
                     message: "请输入用户名",
                 })
                 .regex(/^[a-z]/, "用户名必须以小写字母开头")
                 .regex(/^[a-z0-9]*$/, "用户名只能包含小写字母和数字"),
-            name: z.string({
-                message: "请输入昵称",
-            }),
-            age: z.number({
-                message: "请输入年龄",
-            }),
-            address: z.string({
-                message: "请输入地址",
-            }),
             password: z
                 .string({
                     message: "请输入密码",
@@ -109,7 +98,7 @@ function RegisterForm() {
                     <div className={cn(["flex", "gap-3", "items-center"])}>
                         <FormField
                             control={form.control}
-                            name={"login"}
+                            name={"username"}
                             render={({ field }) => (
                                 <FormItem className={cn(["flex-1"])}>
                                     <FormLabel>用户名</FormLabel>
@@ -120,7 +109,7 @@ function RegisterForm() {
                                 </FormItem>
                             )}
                         />
-                        <FormField
+                        {/*<FormField
                             control={form.control}
                             name={"name"}
                             render={({ field }) => (
@@ -132,44 +121,10 @@ function RegisterForm() {
                                     <FormMessage />
                                 </FormItem>
                             )}
-                        />
+                        />*/}
                     </div>
-                    <FormField
-                        control={form.control}
-                        name={"age"}
-                        render={({ field }) => (
-                            <FormItem>
-                                <FormLabel>年龄</FormLabel>
-                                <FormControl>
-                                    <Input
-                                        {...field}
-                                        type={"number"}
-                                        icon={HashIcon}
-                                        value={field.value || 0}
-                                        onChange={(e) =>
-                                            field.onChange(
-                                                Number(e.target.value)
-                                            )
-                                        }
-                                    />
-                                </FormControl>
-                                <FormMessage />
-                            </FormItem>
-                        )}
-                    />
-                    <FormField
-                        control={form.control}
-                        name={"address"}
-                        render={({ field }) => (
-                            <FormItem>
-                                <FormLabel>地址</FormLabel>
-                                <FormControl>
-                                    <Input icon={HouseIcon} {...field} />
-                                </FormControl>
-                                <FormMessage />
-                            </FormItem>
-                        )}
-                    />
+
+
                     <FormField
                         control={form.control}
                         name={"password"}
