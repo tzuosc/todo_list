@@ -6,7 +6,7 @@ import adapterFetch from "alova/fetch";
 import { useAuthStore } from "@/storages/auth";
 
 export const alova = createAlova({
-    baseURL: "/api",
+    baseURL: "http://localhost:8080",
     requestAdapter: adapterFetch(),
     timeout: 5000,
     shareRequest: true,
