@@ -5,7 +5,7 @@ import jakarta.servlet.http.Cookie;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import lombok.RequiredArgsConstructor;
-import org.example.todo_list.exception.AuthException;
+import org.example.todo_list.exception.UserException;
 import org.example.todo_list.exception.errors.UserError;
 import org.springframework.stereotype.Component;
 import org.springframework.util.AntPathMatcher;
@@ -38,7 +38,7 @@ public class JwtInterceptor implements HandlerInterceptor {
             return true;
         }
         if (cookies == null) {
-            throw new AuthException(
+            throw new UserException(
                     UserError.NO_COOKIE.getCode(),
                     UserError.NO_COOKIE.getMessage()
             );
