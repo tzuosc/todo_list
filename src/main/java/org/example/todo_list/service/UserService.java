@@ -3,7 +3,7 @@ package org.example.todo_list.service;
 import lombok.RequiredArgsConstructor;
 import org.example.todo_list.dto.request.LoginRequest;
 import org.example.todo_list.dto.request.RegisterRequest;
-import org.example.todo_list.exception.AuthException;
+import org.example.todo_list.exception.UserException;
 import org.example.todo_list.exception.errors.UserError;
 import org.example.todo_list.model.User;
 import org.example.todo_list.repository.UserRepository;
@@ -24,7 +24,7 @@ public class UserService {
 
         // 如果用户名不存在
         if (user == null) {
-            throw new AuthException(
+            throw new UserException(
                     UserError.INVALID_PASSWD_USER.getCode(),
                     UserError.INVALID_PASSWD_USER.getMessage());
         }
@@ -34,7 +34,7 @@ public class UserService {
 
         // 如果密码错误
         if (!judge) {
-            throw new AuthException(
+            throw new UserException(
                     UserError.INVALID_PASSWD_USER.getCode(),
                     UserError.INVALID_PASSWD_USER.getMessage()
             );
@@ -46,7 +46,7 @@ public class UserService {
 
         // 如果存在相同的用户名
         if (userRepository.existsByUsername(request.username())) {
-            throw new AuthException(
+            throw new UserException(
                     UserError.DUPLICATE_USERNAME.getCode(),
                     UserError.DUPLICATE_USERNAME.getMessage()
             );

@@ -3,7 +3,7 @@ package org.example.todo_list.service;
 
 import org.example.todo_list.dto.request.LoginRequest;
 import org.example.todo_list.dto.request.RegisterRequest;
-import org.example.todo_list.exception.AuthException;
+import org.example.todo_list.exception.UserException;
 import org.example.todo_list.model.User;
 import org.example.todo_list.repository.UserRepository;
 import org.junit.jupiter.api.Test;
@@ -34,7 +34,7 @@ class UserServiceTest {
         when(userRepository.findByUsername("testUser")).thenReturn(null);
 
         LoginRequest request = new LoginRequest("testUser", "password");
-        AuthException exception = assertThrows(AuthException.class, () -> userService.login(request));
+        UserException exception = assertThrows(UserException.class, () -> userService.login(request));
 
         assertEquals(1001, exception.getCode());
         assertEquals("用户不存在", exception.getMessage());
@@ -47,7 +47,7 @@ class UserServiceTest {
         when(userRepository.existsByUsernameAndPassword("testUser", "wrongPass")).thenReturn(false);
 
         LoginRequest request = new LoginRequest("testUser", "wrongPass");
-        AuthException exception = assertThrows(AuthException.class, () -> userService.login(request));
+        UserException exception = assertThrows(UserException.class, () -> userService.login(request));
 
         assertEquals(1002, exception.getCode());
         assertEquals("用户名或者密码错误", exception.getMessage());
@@ -68,7 +68,7 @@ class UserServiceTest {
         when(userRepository.existsByUsername("existingUser")).thenReturn(true);
 
         RegisterRequest request = new RegisterRequest("existingUser", "pass", "avatar.jpg");
-        AuthException exception = assertThrows(AuthException.class, () -> userService.register(request));
+        UserException exception = assertThrows(UserException.class, () -> userService.register(request));
 
         assertEquals(1003, exception.getCode());
         assertEquals("用户名已经存在", exception.getMessage());

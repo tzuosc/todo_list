@@ -37,12 +37,13 @@ public class TaskService {
         }
 
         // 如果不是将来的时间
-        if (createTaskRequest.deadline() < System.currentTimeMillis()) {
+        if (createTaskRequest.deadline() < System.currentTimeMillis() / 1000) {
             throw new TaskException(
                     TaskError.NOT_FUTURE_TIME.getCode(),
                     TaskError.NOT_FUTURE_TIME.getMessage()
             );
         }
+
 
         TodoList list = todoListRepository.findByCategory(createTaskRequest.category());
 
