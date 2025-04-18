@@ -5,7 +5,9 @@ import jakarta.validation.constraints.AssertFalse;
 import jakarta.validation.constraints.Max;
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotNull;
+import lombok.Builder;
 
+@Builder
 @Schema(name = "新建任务请求")
 public record CreateTaskRequest(
         @Schema(name = "category", example = "work")

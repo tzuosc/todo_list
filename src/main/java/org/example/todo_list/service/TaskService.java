@@ -36,6 +36,13 @@ public class TaskService {
             todoListService.create(createTaskRequest.category());
         }
 
+        if (createTaskRequest.status() == null) {
+            throw new TaskException(
+                    TaskError.INVALID_STATUS.getCode(),
+                    TaskError.INVALID_STATUS.getMessage()
+            );
+        }
+
         // 如果不是将来的时间
         if (createTaskRequest.deadline() < System.currentTimeMillis() / 1000) {
             throw new TaskException(
@@ -88,32 +95,39 @@ public class TaskService {
     public void updateTask(Long id, UpdateTaskRequest oldTask) {
 
         Optional<Task> byId = taskRepository.findById(id);
-        byId.ifPresent(newTask -> {
-            // 修改截至日期
-            if (oldTask.deadline() != null) {
-                if (oldTask.deadline() < System.currentTimeMillis()) {
+        byId.ifPresentOrElse(newTask -> {
+                    // 修改截至日期
+                    if (oldTask.deadline() != null) {
+                        if (oldTask.deadline() < System.currentTimeMillis()) {
+                            throw new TaskException(
+                                    TaskError.NOT_FUTURE_TIME.getCode(),
+                                    TaskError.NOT_FUTURE_TIME.getMessage()
+                            );
+                        }
+                        newTask.setDeadline(oldTask.deadline());
+                    }
+                    // 修改完成状态
+                    if (oldTask.status() != null) newTask.setStatus(oldTask.status());
+                    // 修改任务类别
+                    if (oldTask.category() != null) {
+                        if (!todoListRepository.existsByCategory(oldTask.category())) {
+                            todoListService.create(oldTask.category());
+                        }
+                        TodoList list = todoListRepository.findByCategory(oldTask.category());
+                        list.addTask(newTask);
+                    }
+                    //修改任务名
+                    if (oldTask.name() != null) newTask.setName(oldTask.name());
+                    // 修改备注
+                    if (oldTask.description() != null) newTask.setDescription(oldTask.description());
+                    taskRepository.save(newTask);
+                },
+                () -> {
                     throw new TaskException(
-                            TaskError.NOT_FUTURE_TIME.getCode(),
-                            TaskError.NOT_FUTURE_TIME.getMessage()
+                            TaskError.TASK_NOT_FOUND.getCode(),
+                            TaskError.TASK_NOT_FOUND.getMessage()
                     );
                 }
-                newTask.setDeadline(oldTask.deadline());
-            }
-            // 修改完成状态
-            if (oldTask.status() != null) newTask.setStatus(oldTask.status());
-            // 修改任务类别
-            if (oldTask.category() != null) {
-                if (!todoListRepository.existsByCategory(oldTask.category())) {
-                    todoListService.create(oldTask.category());
-                }
-                TodoList list = todoListRepository.findByCategory(oldTask.category());
-                list.addTask(newTask);
-            }
-            //修改任务名
-            if (oldTask.name() != null) newTask.setName(oldTask.name());
-            // 修改备注
-            if (oldTask.description() != null) newTask.setDescription(oldTask.description());
-            taskRepository.save(newTask);
-        });
+        );
     }
 }

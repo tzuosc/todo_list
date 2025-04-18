@@ -110,6 +110,7 @@
             <artifactId>spring-security-core</artifactId>
             <version>6.4.4</version>
         </dependency>
+     
     </dependencies>
 
     <build>

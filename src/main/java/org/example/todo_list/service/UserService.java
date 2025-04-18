@@ -17,7 +17,7 @@ import org.springframework.stereotype.Service;
 public class UserService {
 
     private final UserRepository userRepository;
-    private final BCryptPasswordEncoder passwordEncoder = new BCryptPasswordEncoder();
+    private final BCryptPasswordEncoder passwordEncoder;
 
 
     public boolean login(LoginRequest request) {
@@ -51,7 +51,7 @@ public class UserService {
         if (!username.matches("[a-zA-Z0-9_]{3,15}")) {
             // 可在此处打印异常信息
             log.warn("非法用户名是: {}", request.username());
-            
+
             throw new UserException(
                     UserError.INVALID_USERNAME.getCode(),
                     UserError.INVALID_USERNAME.getMessage()
