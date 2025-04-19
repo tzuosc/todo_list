@@ -1,7 +1,6 @@
 package org.example.todo_list.dto.request;
 
 import io.swagger.v3.oas.annotations.media.Schema;
-import jakarta.validation.constraints.Max;
 import lombok.Builder;
 
 @Schema
@@ -21,7 +20,6 @@ public record UpdateTaskRequest(
         String description,
 
         @Schema(name = "deadline", example = "2177423998")
-        @Max(value = 2177423999L, message = "非法日期")
         Long deadline
 ) {
 }

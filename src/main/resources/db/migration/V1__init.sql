@@ -32,6 +32,9 @@ values ('重要'),
        ('我的一天'),
        ('计划内');
 
+insert into task(deadline, description, name, status, todo_list_id)
+values (2177423999, '测试用例', '测试用例', false, 1);
+
 ALTER TABLE task
     ADD CONSTRAINT FKfveviky2vs8r9k10b4wf56em FOREIGN KEY (todo_list_id) REFERENCES todo_list (id) ON DELETE NO ACTION;
 
