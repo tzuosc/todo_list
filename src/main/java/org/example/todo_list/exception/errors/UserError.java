@@ -12,7 +12,8 @@ public enum UserError {
     INVALID_PASSWD_USER(1002, "用户名或者密码错误"),
     // 注册的时候不能有重复的用户名
     DUPLICATE_USERNAME(1003, "用户名已经存在"),
-    NO_COOKIE(1004, "没有登录");
+    NO_COOKIE(1004, "没有登录"),
+    NO_USER(1005, "没找到用户");
 
     private final Integer code;
     private final String message;

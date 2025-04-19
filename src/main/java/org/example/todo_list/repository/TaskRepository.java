@@ -29,4 +29,8 @@ public interface TaskRepository extends JpaRepository<Task, Long> {
 
     @Query("select t.id from Task t where t.todoList.category = ?1")
     List<Long> findTaskIdsByCategory(@NonNull String category);
+
+
+    @Query("select t.id from Task t where t.todoList.id = ?1")
+    List<Long> findIdsByTodoList_Id(Long id);
 }

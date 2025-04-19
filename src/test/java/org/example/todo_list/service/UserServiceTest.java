@@ -1,7 +1,6 @@
 package org.example.todo_list.service;
 
-import org.example.todo_list.dto.request.LoginRequest;
-import org.example.todo_list.dto.request.RegisterRequest;
+import org.example.todo_list.dto.request.LoginRegisterRequest;
 import org.example.todo_list.exception.UserException;
 import org.example.todo_list.model.User;
 import org.example.todo_list.repository.UserRepository;
@@ -46,7 +45,7 @@ class UserServiceTest {
         when(passwordEncoder.encode("password")).thenReturn("encoded_password");
 
         // 执行注册
-        RegisterRequest regRequest = new RegisterRequest("user", "password", "avatar");
+        @jakarta.validation.Valid LoginRegisterRequest regRequest = new LoginRegisterRequest("user", "password");
         userService.register(regRequest);
 
         // 验证注册保存的用户
@@ -65,15 +64,15 @@ class UserServiceTest {
         when(passwordEncoder.matches("password", "encoded_password")).thenReturn(true);
 
         // 执行登录
-        LoginRequest loginRequest = new LoginRequest("user", "password");
-        assertTrue(userService.login(loginRequest));
+        LoginRegisterRequest loginRegisterRequest = new LoginRegisterRequest("user", "password");
+        assertTrue(userService.login(loginRegisterRequest));
     }
 
     @Test
     void login_UserNotFound_ThrowsException() {
         when(userRepository.findByUsername("the_test_user")).thenReturn(null);
 
-        LoginRequest request = new LoginRequest("the_test_user", "password");
+        LoginRegisterRequest request = new LoginRegisterRequest("the_test_user", "password");
         UserException exception = assertThrows(UserException.class, () -> userService.login(request));
 
         assertEquals(1002, exception.getCode());
@@ -84,7 +83,7 @@ class UserServiceTest {
     @ParameterizedTest
     @ValueSource(strings = {"####", "aa", "aaaa#"})
     void register_InvalidUser_ThrowsException(String username) {
-        RegisterRequest request = new RegisterRequest(username, "password", null);
+        @jakarta.validation.Valid LoginRegisterRequest request = new LoginRegisterRequest(username, "password");
 
         UserException exception = assertThrows(UserException.class,
                 () -> userService.register(request));
@@ -99,7 +98,7 @@ class UserServiceTest {
     void register_DuplicateUsername_ThrowsException() {
         when(userRepository.existsByUsername("existingUser")).thenReturn(true);
 
-        RegisterRequest request = new RegisterRequest("existingUser", "pass", "avatar.jpg");
+        @jakarta.validation.Valid LoginRegisterRequest request = new LoginRegisterRequest("existingUser", "pass");
         UserException exception = assertThrows(UserException.class,
                 () -> userService.register(request));
 
@@ -113,7 +112,7 @@ class UserServiceTest {
         when(userRepository.existsByUsername("newUser")).thenReturn(false);
         when(passwordEncoder.encode("pass123")).thenReturn("encoded_pass");
 
-        RegisterRequest request = new RegisterRequest("newUser", "pass123", "avatar.png");
+        @jakarta.validation.Valid LoginRegisterRequest request = new LoginRegisterRequest("newUser", "pass123");
         userService.register(request);
 
         ArgumentCaptor<User> captor = ArgumentCaptor.forClass(User.class);
@@ -132,7 +131,7 @@ class UserServiceTest {
         when(userRepository.findByUsername("user")).thenReturn(mockUser);
         when(passwordEncoder.matches("password", "encoded_pass")).thenReturn(true);
 
-        LoginRequest request = new LoginRequest("user", "password");
+        LoginRegisterRequest request = new LoginRegisterRequest("user", "password");
         assertTrue(userService.login(request));
         verify(passwordEncoder).matches("password", "encoded_pass");
     }
@@ -146,7 +145,7 @@ class UserServiceTest {
         when(userRepository.findByUsername("user")).thenReturn(mockUser);
         when(passwordEncoder.matches("wrong_pass", "encoded_pass")).thenReturn(false);
 
-        LoginRequest request = new LoginRequest("user", "wrong_pass");
+        LoginRegisterRequest request = new LoginRegisterRequest("user", "wrong_pass");
         UserException exception = assertThrows(UserException.class,
                 () -> userService.login(request));
 
