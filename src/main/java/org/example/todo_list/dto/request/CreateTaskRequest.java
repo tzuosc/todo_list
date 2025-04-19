@@ -2,7 +2,6 @@ package org.example.todo_list.dto.request;
 
 import io.swagger.v3.oas.annotations.media.Schema;
 import jakarta.validation.constraints.AssertFalse;
-import jakarta.validation.constraints.Max;
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotNull;
 import lombok.Builder;
@@ -23,7 +22,7 @@ public record CreateTaskRequest(
         String taskDescription,
 
         @Schema(name = "deadline", example = "1830268799")
-        @Max(value = 2177423999L, message = "非法日期")
+//        @Max(value = 2177423999L, message = "非法日期")
         Long deadline
 ) {
 }

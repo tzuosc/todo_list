@@ -22,7 +22,7 @@ public class WebMVCConfig implements WebMvcConfigurer {
                 .allowCredentials(false);
     }
 
-    @Override
+   /* @Override
     public void addInterceptors(InterceptorRegistry registry) {
         registry.addInterceptor(jwtInterceptor)
                 .addPathPatterns("/**")               // 拦截所有路径
@@ -35,5 +35,5 @@ public class WebMVCConfig implements WebMvcConfigurer {
                         "/swagger-ui/**",
                         "/swagger-resources/**",
                         "/webjars/**");
-    }
+    }*/
 }
