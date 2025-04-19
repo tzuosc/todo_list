@@ -60,6 +60,7 @@ public class GlobalExceptionHandler {
     @ExceptionHandler(MissingServletRequestParameterException.class)
     public ApiResponse<Void> handleMissingParameter(MissingServletRequestParameterException ex) {
         String message = "缺少必需参数: " + ex.getParameterName();
+        log.error(message);
         return ApiResponse.error(400, message);
     }
 
@@ -68,6 +69,7 @@ public class GlobalExceptionHandler {
     public ApiResponse<Void> handleTypeMismatch(MethodArgumentTypeMismatchException ex) {
         String message = "参数类型错误: " + ex.getName() +
                 " 应为 " + Objects.requireNonNull(ex.getRequiredType()).getSimpleName();
+        log.error(message);
         return ApiResponse.error(400, message);
     }
 
@@ -78,7 +80,7 @@ public class GlobalExceptionHandler {
 
         // 提取具体错误信息
         Throwable rootCause = ex.getRootCause();
-        String errorMessage = "请求体格式错误";
+        String errorMessage = "请求体格式错误, 请检查是否有必填的字段缺失";
         if (rootCause instanceof InvalidFormatException ife) {
             errorMessage = String.format("字段 '%s' 格式错误，应为 %s",
                     ife.getPath().getFirst().getFieldName(),
