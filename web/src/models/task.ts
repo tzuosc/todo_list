@@ -4,5 +4,5 @@ export interface Task{
     description?:string,
     deadline?:number,
     status?:boolean,
-
+    category: string;
 }

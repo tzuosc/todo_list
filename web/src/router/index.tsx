@@ -74,22 +74,6 @@ export default createBrowserRouter([
                         await import("@/pages/users/profile.tsx")
                     ).default
                 })
-            },
-            {
-                path:"/importance",
-                lazy:async ()=>({
-                    Component:(
-                        await import("@/pages/importance")
-                    ).default
-                })
-            },
-            {
-                path:"/plan",
-                lazy:async ()=>({
-                    Component:(
-                        await import("@/pages/plan")
-                    ).default
-                })
             }
         ]
     }

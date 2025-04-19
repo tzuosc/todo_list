@@ -7,11 +7,10 @@ export interface CreateTaskRequest {
     description?: string;
     status?: boolean;
     deadline?: number;
-
-
+    category: string;
 }
 export async function createTask(data: CreateTaskRequest) {
-    return alova.Post<WebResponse<string>>("/task", data);
+    return alova.Post<WebResponse<string>>("/task", data); /* alova 连接后端8080/task接口*/
     /*
     * code msg data
     * */
