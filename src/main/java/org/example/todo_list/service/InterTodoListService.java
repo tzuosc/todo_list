@@ -3,14 +3,14 @@ package org.example.todo_list.service;
 import org.example.todo_list.dto.response.GetListResponse;
 
 public interface InterTodoListService {
-    public void create(String category);
+    void create(String category);
 
-    public void delete(Long id);
+    void delete(Long id);
 
-    public void changeListCategory(Long id, String newCategory);
+    void changeListCategory(Long id, String newCategory);
 
 
-    public GetListResponse getListById(Long id);
+    GetListResponse getListById(Long id);
 
 //    public List<GetListByIdResponse> getAllLists();
 }

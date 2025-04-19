@@ -44,7 +44,6 @@ public class TodoListService implements InterTodoListService {
             );
         }
         todoListRepository.deleteById(id);
-        Optional<TodoList> list = todoListRepository.findById(id);
     }
 
     public void changeListCategory(Long id, String newCategory) {

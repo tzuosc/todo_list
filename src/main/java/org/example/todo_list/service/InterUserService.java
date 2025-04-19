@@ -4,10 +4,10 @@ import org.example.todo_list.dto.request.LoginRegisterRequest;
 import org.example.todo_list.dto.request.UpdateUserRequest;
 
 public interface InterUserService {
-    public boolean login(LoginRegisterRequest loginRegisterRequest);
+    boolean login(LoginRegisterRequest loginRegisterRequest);
 
-    public void register(LoginRegisterRequest loginRegisterRequest);
+    void register(LoginRegisterRequest loginRegisterRequest);
 
-    public void updateUser(Long id, UpdateUserRequest updateUserRequest);
+    void updateUser(Long id, UpdateUserRequest updateUserRequest);
 
 }
