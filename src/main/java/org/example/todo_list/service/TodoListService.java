@@ -1,7 +1,7 @@
 package org.example.todo_list.service;
 
 import lombok.RequiredArgsConstructor;
-import org.example.todo_list.dto.response.GetAllListResponse;
+import org.example.todo_list.dto.response.GetListByIdResponse;
 import org.example.todo_list.exception.ListException;
 import org.example.todo_list.exception.errors.ListError;
 import org.example.todo_list.model.Task;
@@ -57,13 +57,30 @@ public class TodoListService {
         }
     }
 
-    public List<GetAllListResponse> getAllLists() {
+    public List<GetListByIdResponse> getAllLists() {
         List<TodoList> allList = todoListRepository.findAll();
-        List<GetAllListResponse> responses = new ArrayList<>();
+        List<GetListByIdResponse> responses = new ArrayList<>();
         allList.forEach(todoList -> {
             List<Long> tasks = taskRepository.findTaskIdsByCategory(todoList.getCategory());
-            responses.add(new GetAllListResponse(todoList.getId(), todoList.getCategory(), tasks));
+            responses.add(new GetListByIdResponse(todoList.getId(), todoList.getCategory(), tasks));
         });
         return responses;
     }
+
+    public GetListByIdResponse getListById(Long id) {
+        Optional<TodoList> listById = todoListRepository.findById(id);
+        if (listById.isPresent()) {
+            List<Long> allByTodoListId = taskRepository.findIdsByTodoList_Id(id);
+            return GetListByIdResponse.builder()
+                    .id(id).
+                    category(listById.get().getCategory())
+                    .tasks(allByTodoListId).build();
+        } else {
+            throw new ListException(
+                    ListError.LIST_NOT_FOUND.getCode(),
+                    ListError.LIST_NOT_FOUND.getMessage()
+            );
+        }
+    }
 }
+
