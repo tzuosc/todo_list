@@ -18,7 +18,7 @@ import java.util.Optional;
 @Slf4j
 @Service
 @RequiredArgsConstructor
-public class TaskService {
+public class TaskService implements InterTaskService {
     private final TaskRepository taskRepository;
     private final TodoListRepository todoListRepository;
     private final TodoListService todoListService;
@@ -98,7 +98,7 @@ public class TaskService {
         byId.ifPresentOrElse(newTask -> {
                     // 修改截至日期
                     if (oldTask.deadline() != null) {
-                        if (oldTask.deadline() < System.currentTimeMillis()) {
+                        if (oldTask.deadline() < System.currentTimeMillis() / 1000) {
                             throw new TaskException(
                                     TaskError.NOT_FUTURE_TIME.getCode(),
                                     TaskError.NOT_FUTURE_TIME.getMessage()

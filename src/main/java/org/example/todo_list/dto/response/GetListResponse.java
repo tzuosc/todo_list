@@ -4,13 +4,13 @@ import io.swagger.v3.oas.annotations.media.Schema;
 import jakarta.validation.constraints.NotNull;
 import lombok.Builder;
 
-@Schema(name = "获取任务的响应")
+import java.util.List;
+
+@Schema(name = "获取所有list的响应")
 @Builder
-public record GetTaskResponse(
+public record GetListResponse(
         @NotNull Long id,
-        Long deadline,
-        @NotNull String name,
-        @NotNull String description,
-        @NotNull boolean status
+        @NotNull String category,
+        List<Long> tasks
 ) {
 }
