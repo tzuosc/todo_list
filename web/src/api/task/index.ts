@@ -35,11 +35,12 @@ export async function deleteTask(id: number) {
 
 /* 改 */
 export interface UpdateTaskRequest {
+    id?:number;
     name?: string;
     description?: string;
     status?: boolean;
     deadline?: number;
-    todoListId?:number
+    category: string;
 }
 export async function updateTask(id: number, data: UpdateTaskRequest) {
     return alova.Patch<WebResponse<null>>(`/task/${id}`, data);
