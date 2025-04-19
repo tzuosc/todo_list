@@ -21,7 +21,6 @@ public class Task {
 
     private String name;
     private String description;
-    //    @JsonFormat(pattern = "yyyy-MM-dd HH:mm", timezone = "GMT+8")
     private Long deadline;
     private boolean status;
     @ManyToOne(fetch = FetchType.LAZY)
