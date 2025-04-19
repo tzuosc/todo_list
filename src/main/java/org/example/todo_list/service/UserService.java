@@ -2,8 +2,8 @@ package org.example.todo_list.service;
 
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import org.example.todo_list.dto.request.LoginRequest;
-import org.example.todo_list.dto.request.RegisterRequest;
+import org.example.todo_list.dto.request.LoginRegisterRequest;
+import org.example.todo_list.dto.request.UpdateUserRequest;
 import org.example.todo_list.exception.UserException;
 import org.example.todo_list.exception.errors.UserError;
 import org.example.todo_list.model.User;
@@ -20,7 +20,7 @@ public class UserService {
     private final BCryptPasswordEncoder passwordEncoder;
 
 
-    public boolean login(LoginRequest request) {
+    public boolean login(LoginRegisterRequest request) {
 
         User user = userRepository.findByUsername(request.username());
 
@@ -44,7 +44,7 @@ public class UserService {
         return true;
     }
 
-    public void register(RegisterRequest request) {
+    public void register(LoginRegisterRequest request) {
 
         // 如果注册用户名使用非法字符
         String username = request.username();
@@ -70,11 +70,39 @@ public class UserService {
         String encodedPassword = passwordEncoder.encode(request.password());
 
         User user = User.builder()
-                .avatarUrl(request.avatarUrl())
                 .username(request.username())
                 .password(encodedPassword)
                 .build();
 
         userRepository.save(user);
+    }
+
+
+    public void updateUser(Long id, UpdateUserRequest newUser) {
+        userRepository.findById(id).ifPresentOrElse(
+                user -> {
+                    if (newUser.username() != null) {
+                        if (!newUser.username().matches("[a-zA-Z0-9_]{3,15}")) {
+                            throw new UserException(
+                                    UserError.INVALID_USERNAME.getCode(),
+                                    UserError.INVALID_USERNAME.getMessage()
+                            );
+                        }
+                        user.setUsername(newUser.username());
+                    }
+                    if (newUser.password() != null) {
+                        String encodedPassword = passwordEncoder.encode(newUser.password());
+                        user.setPassword(encodedPassword);
+                    }
+                    if (newUser.avatarUrl() != null) user.setAvatarUrl(newUser.avatarUrl());
+                    userRepository.save(user);
+                },
+                () -> {
+                    throw new UserException(
+                            UserError.NO_USER.getCode(),
+                            UserError.NO_USER.getMessage()
+                    );
+                }
+        );
     }
 }

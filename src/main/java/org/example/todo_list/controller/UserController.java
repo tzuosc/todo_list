@@ -5,8 +5,8 @@ import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.servlet.http.HttpServletResponse;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
-import org.example.todo_list.dto.request.LoginRequest;
-import org.example.todo_list.dto.request.RegisterRequest;
+import org.example.todo_list.dto.request.LoginRegisterRequest;
+import org.example.todo_list.dto.request.UpdateUserRequest;
 import org.example.todo_list.security.JwtUtils;
 import org.example.todo_list.service.UserService;
 import org.example.todo_list.utils.ApiResponse;
@@ -24,7 +24,7 @@ public class UserController {
     @Operation(summary = "登录",
             description = "传入用户名和密码")
     @PostMapping("/login")
-    public ApiResponse<String> login(@Valid @RequestBody LoginRequest request,
+    public ApiResponse<String> login(@Valid @RequestBody LoginRegisterRequest request,
                                      HttpServletResponse response) {
         if (userService.login(request)) {
             CookieUtil.setCookie(response, jwtUtils.generateToken(request.username()));
@@ -35,9 +35,15 @@ public class UserController {
     @Operation(summary = "注册",
             description = "传入用户名,密码和头像地址")
     @PostMapping("/register")
-    public ApiResponse<String> register(@Valid @RequestBody RegisterRequest request) {
+    public ApiResponse<String> register(@RequestBody @Valid LoginRegisterRequest request) {
         userService.register(request);
         return ApiResponse.success("注册成功");
+    }
+
+    @PatchMapping("/{id}")
+    public ApiResponse<String> update(@PathVariable Long id, @RequestBody @Valid UpdateUserRequest request) {
+        userService.updateUser(id, request);
+        return ApiResponse.success("更新成功");
     }
 
     @GetMapping("/logout")
