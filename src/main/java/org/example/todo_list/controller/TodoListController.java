@@ -8,8 +8,6 @@ import org.example.todo_list.service.TodoListService;
 import org.example.todo_list.utils.ApiResponse;
 import org.springframework.web.bind.annotation.*;
 
-import java.util.List;
-
 @Tag(name = "List相关Api", description = "用于创建, 删除, 修改, 获取任务列表")
 @RestController
 @RequestMapping("/list")
