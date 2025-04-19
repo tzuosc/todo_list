@@ -4,14 +4,13 @@ import { getAllTodoLists, fetchByListId } from "@/api/todolist";
 
 import { toast } from "sonner";
 import { AddTask } from "@/components/widgets/addTask";
-import { Column } from "@/pages/list/column.tsx";
+import { Column, TaskRow } from "@/pages/list/column.tsx";
 import { getTask } from "@/api/task";
 import { cn } from "@/utils";
 export default function ListDetailPage() {
     const { category } = useParams<{ category: string }>(); /* 获取*/
     const [loading, setLoading] = useState(true);
-    const [taskNames, setTaskNames] = useState<string[]>([]);
-
+    const [tasks, setTasks] = useState<TaskRow[]>([]);
     useEffect(() => {
         if (!category) return;
 
@@ -28,7 +27,6 @@ export default function ListDetailPage() {
             fetchByListId(matched.id).then(async (res2) => {
                 const todoList = res2.data;
                 if (!todoList?.tasks) {
-                    setTaskNames([]);
                     setLoading(false);
                     return;
                 }
@@ -40,8 +38,21 @@ export default function ListDetailPage() {
                         names.push(taskRes.data.name);
                     }
                 }
+                const taskList: TaskRow[] = [];
 
-                setTaskNames(names);
+                for (const id of todoList.tasks) {
+                    const taskRes = await getTask(id);
+                    if (taskRes.code === 200 && taskRes.data?.name) {
+                        taskList.push({
+                            id,
+                            name: taskRes.data.name,
+                            done: taskRes.data.status ?? false,
+                        });
+                    }
+                }
+                setTasks(taskList);
+
+
                 setLoading(false);
             });
         });
@@ -52,7 +63,7 @@ export default function ListDetailPage() {
         <div className={cn(["flex","flex-col","items-center", "justify-center"])}>
             <div className={cn(["flex-col"," items-center", "justify-center"])}>
                 <h1 className="text-2xl font-bold mb-4">{category} 分类任务</h1>
-                <Column tasks={taskNames} loading={loading} />
+                <Column tasks={tasks} loading={loading} />
             </div>
                     <AddTask  />
         </div>

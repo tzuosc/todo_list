@@ -1,21 +1,50 @@
+// components/widgets/column.tsx
+import { ColumnDef } from "@tanstack/react-table";
+import { DataTable } from "@/components/ui/data-table";
+import { Badge } from "@/components/ui/badge";
+import { Checkbox } from "@/components/ui/checkbox";
+
+export interface TaskRow {
+    id: number;
+    name: string;
+    done: boolean;
+}
+
 interface ColumnProps {
-    tasks: string[];
+    tasks: TaskRow[];
     loading?: boolean;
 }
 
+const columns: ColumnDef<TaskRow>[] = [
+    {
+        accessorKey: "status",
+        header: "状态",
+        cell: ({ row }) => (
+            <Checkbox checked={row.getValue("status")} disabled />
+        ),
+    },
+    {
+        accessorKey: "name",
+        header: "任务名称",
+        cell: ({ row }) => (
+            <span className="font-medium">{row.getValue("name")}</span>
+        ),
+    },
+    {
+        id: "actions",
+        header: "操作",
+        cell: ({ row }) => (
+            <Badge variant="outline">编辑</Badge> // 你可以换成下拉、按钮等
+        ),
+    },
+];
+
 export function Column({ tasks, loading }: ColumnProps) {
-    if (loading) return <div>加载中...</div>;
+    if (loading) return <div className="p-4">加载中...</div>;
 
     return (
-        <div className="border rounded shadow bg-white">
-            <h2 className="text-xl font-semibold mb-2">任务列表</h2>
-            <ul className="space-y-2">
-                {tasks.map((taskName, idx) => (
-                    <li key={idx} className="border rounded bg-gray-100">
-                        {taskName}
-                    </li>
-                ))}
-            </ul>
+        <div className="container mx-auto py-4">
+            <DataTable columns={columns} data={tasks} />
         </div>
     );
 }
