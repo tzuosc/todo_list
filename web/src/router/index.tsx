@@ -18,6 +18,27 @@ export default createBrowserRouter([
                 })
             },
             {
+                path:"list",
+                children:[
+                    {
+                        index:true,
+                        lazy:async()=>({
+                            Component: (
+                                await import("@/pages/list")
+                            ).default
+                        })
+                    },
+                    {
+                        path: ":category",
+                        lazy:async()=>({
+                            Component: (
+                                await import("@/pages/list/list_id")
+                            ).default
+                        })
+                    }
+                ]
+            },
+            {
                 path:"account",
                 children:[
                     {

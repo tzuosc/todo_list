@@ -1,25 +1,32 @@
 import { alova } from "@/utils/alova.ts";
 import { WebResponse } from "@/types";
-import { TodoList } from "@/models/todolist.ts";
-import { Task } from "@/models/task.ts";
 
 /* 增 */
 export interface CreateTaskRequest {
-    name: string; //名称
+    name: string; // 任务名称（必须上传）
     description?: string;
     status?: boolean;
     deadline?: number;
-    todoList?:TodoList //category
+
+
 }
 export async function createTask(data: CreateTaskRequest) {
     return alova.Post<WebResponse<string>>("/task", data);
+    /*
+    * code msg data
+    * */
 }
 
 
 /* 查  删 */
 export interface GetTaskResponse {
     id: number;
+    name: string;
+    description: string;
+    deadline: number;
+    status: boolean;
 }
+
 export async function getTask(id: number) {
     return alova.Get<WebResponse<GetTaskResponse>>(`/task/${id}`);
 }
@@ -33,15 +40,10 @@ export interface UpdateTaskRequest {
     description?: string;
     status?: boolean;
     deadline?: number;
-    category?:string;
+    todoListId?:number
 }
 export async function updateTask(id: number, data: UpdateTaskRequest) {
     return alova.Patch<WebResponse<null>>(`/task/${id}`, data);
 }
 
-export interface Task[]{
 
-}
-export async function fetchByListId(listId:number){
-    return alova.Get<WebResponse<Task[]>>(`list/${listId}/tasks`)
-}
