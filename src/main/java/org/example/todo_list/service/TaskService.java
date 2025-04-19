@@ -43,12 +43,21 @@ public class TaskService implements InterTaskService {
             );
         }
 
-        // 如果不是将来的时间
-        if (createTaskRequest.deadline() < System.currentTimeMillis() / 1000) {
-            throw new TaskException(
-                    TaskError.NOT_FUTURE_TIME.getCode(),
-                    TaskError.NOT_FUTURE_TIME.getMessage()
-            );
+        if (createTaskRequest.deadline() != null) {
+            // 如果不是将来的时间
+            if (createTaskRequest.deadline() < System.currentTimeMillis() / 1000) {
+                throw new TaskException(
+                        TaskError.NOT_FUTURE_TIME.getCode(),
+                        TaskError.NOT_FUTURE_TIME.getMessage()
+                );
+            }
+            if (createTaskRequest.deadline() > 2177423999L) {
+                throw new TaskException(
+                        TaskError.INVALID_TIME.getCode(),
+                        TaskError.INVALID_TIME.getMessage()
+                );
+            }
+
         }
 
 
@@ -102,6 +111,12 @@ public class TaskService implements InterTaskService {
                             throw new TaskException(
                                     TaskError.NOT_FUTURE_TIME.getCode(),
                                     TaskError.NOT_FUTURE_TIME.getMessage()
+                            );
+                        }
+                        if (oldTask.deadline() > 2177423999L) {
+                            throw new TaskException(
+                                    TaskError.INVALID_TIME.getCode(),
+                                    TaskError.INVALID_TIME.getMessage()
                             );
                         }
                         newTask.setDeadline(oldTask.deadline());
