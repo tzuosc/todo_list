@@ -1,7 +1,6 @@
 package org.example.todo_list.repository;
 
 import jakarta.validation.constraints.NotBlank;
-import jakarta.validation.constraints.NotNull;
 import org.example.todo_list.model.Task;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
@@ -13,7 +12,7 @@ public interface TaskRepository extends JpaRepository<Task, Long> {
 
     boolean existsByName(@NotBlank String name);
 
-    boolean existsById(@NotNull Long id);
+    boolean existsById(@NonNull Long id);
 
 
     @Query("select t.id from Task t where t.todoList.category = ?1")
