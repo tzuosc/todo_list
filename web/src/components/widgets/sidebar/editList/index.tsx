@@ -74,23 +74,23 @@ const infoItem = [
 export default function AppSidebar(){
     const [lists, setLists] = useState<DynamicItem[]>([])
     const location = useLocation()
-    useEffect(() => {
-        async function fetchLists() {
-            try {
-                const res = await getAllTodoLists();
-                if (res.code === 200 && res.data) {
-                    const fetchedLists = res.data.map((item) => ({
-                        title: item.category,
-                        path: `/list/${item.category}`,
-                        id: item.id
-                    }));
-                    setLists(fetchedLists);
-                }
-            } catch (err) {
-                console.error("获取列表失败", err);
+    const fetchLists = async () => {
+        try {
+            const res = await getAllTodoLists();
+            if (res.code === 200 && res.data) {
+                const fetchedLists = res.data.map((item) => ({
+                    title: item.category,
+                    path: `/list/${item.category}`,
+                    id: item.id
+                }));
+                setLists(fetchedLists);
             }
+        } catch (err) {
+            console.error("获取列表失败", err);
         }
+    };
 
+    useEffect(() => {
         fetchLists();
     }, []);
     const allNavItems :NavItem[]= [...staticNavItems, ...lists];
@@ -190,7 +190,7 @@ export default function AppSidebar(){
                     {/*<div className={cn(["rounded-lg bg-muted p-2"])}>
                         <p>Sidebar footer</p>
                     </div>*/}
-                    <AddList/>
+                    <AddList onAddSuccess={()=>fetchLists()}/>
                 </div>
             </SidebarFooter>
 

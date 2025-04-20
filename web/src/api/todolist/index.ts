@@ -11,9 +11,7 @@ export interface GetAllListResponse {
 
 
 export async function createTodoList(category: string) {
-    return alova.Put<WebResponse<string>>("/list",{
-        data: { category },
-    });
+    return alova.Put<WebResponse<string>>(`/list/${category}`);
 }
 
 export async function getAllTodoLists() {

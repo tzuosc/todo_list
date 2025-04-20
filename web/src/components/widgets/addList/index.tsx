@@ -10,16 +10,16 @@ import { Button } from "@/components/ui/button.tsx";
 import { Form, FormControl, FormField, FormItem, FormLabel } from "@/components/ui/form.tsx";
 import { Input } from "@/components/ui/input.tsx";
 
-function AddList(){
+function AddList({onAddSuccess}:{onAddSuccess:()=>void}){
     const navigate = useNavigate();
     const [loading, setLoading] = useState(false);
     const formSchema = z.object({
-        category:z.string({message:"请填写任务类型"})
+        category:z.string({message:"请填写List类型"})
     })
     const form = useForm<z.infer<typeof formSchema>>({
         resolver:zodResolver(formSchema)
     })
-
+    const [open,setOpen] =useState(false)
     function onSubmit(values:z.infer<typeof formSchema>){
         setLoading(true);
         createTodoList(values.category)
@@ -29,21 +29,24 @@ function AddList(){
                         toast.success("列表添加成功", {
                             id: "add-success",
                             description: "finish"
-                        });
-                        navigate(`/list/${values.category}`);
+                        })
+                        navigate(`/list/${values.category}`)
+                        setOpen(false)
+                        onAddSuccess()
                     } else {
                         toast.error("列表添加失败", {
                             id: "add-error",
                             description: res.msg
-                        });
+                        })
                     }
                 })
             .finally(()=>{
                 setLoading(false)
             })
     }
+
     return(
-        <Dialog>
+        <Dialog open={open} onOpenChange={setOpen}>
             <DialogTrigger asChild>
                 <Button variant="outline">Add List</Button>
             </DialogTrigger>
