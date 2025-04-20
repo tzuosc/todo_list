@@ -22,7 +22,6 @@ public record CreateTaskRequest(
         String taskDescription,
 
         @Schema(name = "deadline", example = "1830268799")
-//        @Max(value = 2177423999L, message = "非法日期")
         Long deadline
 ) {
 }

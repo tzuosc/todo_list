@@ -18,8 +18,8 @@ public class TodoListController {
     private final TodoListService todoListService;
 
     @Operation(summary = "新建一个任务列表")
-    @PutMapping({"/", ""})
-    public ApiResponse<String> create(String category) {
+    @PutMapping("/{category}")
+    public ApiResponse<String> create(@PathVariable String category) {
         todoListService.create(category);
         return ApiResponse.success("创建成功");
     }
