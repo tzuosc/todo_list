@@ -27,10 +27,8 @@ public class WebMVCConfig implements WebMvcConfigurer {
         registry.addInterceptor(jwtInterceptor)
                 .addPathPatterns("/**")               // 拦截所有路径
                 .excludePathPatterns(
-                        "/login",
+                        "/auth/**",
                         "/static/**",
-                        "/register",
-                        "/logout",
                         "/v3/api-docs/**",
                         "/swagger-ui/**",
                         "/swagger-resources/**",

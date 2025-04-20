@@ -51,7 +51,7 @@ public class TaskService implements InterTaskService {
                         TaskError.NOT_FUTURE_TIME.getMessage()
                 );
             }
-            if (createTaskRequest.deadline() > 2177423999L) {
+            if (createTaskRequest.deadline() > 2147483647L) {
                 throw new TaskException(
                         TaskError.INVALID_TIME.getCode(),
                         TaskError.INVALID_TIME.getMessage()
@@ -113,7 +113,7 @@ public class TaskService implements InterTaskService {
                                     TaskError.NOT_FUTURE_TIME.getMessage()
                             );
                         }
-                        if (oldTask.deadline() > 2177423999L) {
+                        if (oldTask.deadline() > 2147483647L) {
                             throw new TaskException(
                                     TaskError.INVALID_TIME.getCode(),
                                     TaskError.INVALID_TIME.getMessage()
