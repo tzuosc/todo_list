@@ -4,7 +4,6 @@ import lombok.RequiredArgsConstructor;
 import org.example.todo_list.security.JwtInterceptor;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.web.servlet.config.annotation.CorsRegistry;
-import org.springframework.web.servlet.config.annotation.InterceptorRegistry;
 import org.springframework.web.servlet.config.annotation.WebMvcConfigurer;
 
 @Configuration
@@ -22,16 +21,16 @@ public class WebMVCConfig implements WebMvcConfigurer {
                 .allowCredentials(false);
     }
 
-    @Override
-    public void addInterceptors(InterceptorRegistry registry) {
-        registry.addInterceptor(jwtInterceptor)
-                .addPathPatterns("/**")               // 拦截所有路径
-                .excludePathPatterns(
-                        "/auth/**",
-                        "/static/**",
-                        "/v3/api-docs/**",
-                        "/swagger-ui/**",
-                        "/swagger-resources/**",
-                        "/webjars/**");
-    }
+//    @Override
+//    public void addInterceptors(InterceptorRegistry registry) {
+//        registry.addInterceptor(jwtInterceptor)
+//                .addPathPatterns("/**")               // 拦截所有路径
+//                .excludePathPatterns(
+//                        "/auth/**",
+//                        "/static/**",
+//                        "/v3/api-docs/**",
+//                        "/swagger-ui/**",
+//                        "/swagger-resources/**",
+//                        "/webjars/**");
+//    }
 }

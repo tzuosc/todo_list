@@ -2,6 +2,7 @@ package org.example.todo_list.controller;
 
 import org.example.todo_list.security.JwtUtils;
 import org.example.todo_list.service.TaskService;
+import org.example.todo_list.service.UserService;
 import org.mockito.Mockito;
 import org.springframework.boot.test.context.TestConfiguration;
 import org.springframework.context.annotation.Bean;
@@ -19,5 +20,11 @@ public class TestConfig {
     @Primary
     public TaskService taskService() {
         return Mockito.mock(TaskService.class);
+    }
+
+    @Bean
+    @Primary
+    public UserService userService() {
+        return Mockito.mock(UserService.class);
     }
 }

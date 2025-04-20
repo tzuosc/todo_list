@@ -76,9 +76,6 @@ class TaskServiceTest {
                         .category("test")
                         .taskDescription("Valid Description")
                         .build())
-//                Arguments.of(validCreateRequest().status(null).build()),
-//                Arguments.of(validCreateRequest().status(true).build()),
-//                Arguments.of(validCreateRequest().deadline(2177424000L).build())
         );
     }
 
@@ -160,20 +157,6 @@ class TaskServiceTest {
 
         assertEquals(2003, exception.getCode());
         assertEquals("不是将来的时间", exception.getMessage());
-    }
-
-    // 测试新建任务重复类别抛出异常
-    @Test
-    void createTask_WithDuplicateName_ThrowsDuplicateTaskException() {
-        when(taskRepository.existsByName("ExistingTask")).thenReturn(true);
-
-        CreateTaskRequest request = validCreateRequest().name("ExistingTask").build();
-        TaskException exception = assertThrows(TaskException.class,
-                () -> taskService.createTask(request));
-
-        assertEquals(2001, exception.getCode());
-        assertEquals("重复的任务", exception.getMessage());
-        verify(taskRepository, never()).save(any());
     }
 
     //测试跟新任务使用过去的时间

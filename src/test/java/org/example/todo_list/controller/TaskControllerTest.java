@@ -8,16 +8,20 @@ import org.example.todo_list.dto.response.GetTaskResponse;
 import org.example.todo_list.service.TaskService;
 import org.example.todo_list.utils.ApiResponse;
 import org.junit.jupiter.api.Test;
+import org.mockito.InjectMocks;
 import org.mockito.Mockito;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
 import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
 import org.springframework.context.annotation.Import;
 import org.springframework.http.MediaType;
+import org.springframework.security.test.context.support.WithMockUser;
+import org.springframework.security.test.web.servlet.request.SecurityMockMvcRequestPostProcessors;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.MvcResult;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertNotNull;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
@@ -28,13 +32,19 @@ public class TaskControllerTest {
 
     @Autowired
     private MockMvc mockMvc;
-
     @Autowired
     private ObjectMapper objectMapper;
-
-    @Autowired
+    @InjectMocks
     private TaskService taskService;
 
+    @Test
+    public void contextLoads() {
+        assertNotNull(mockMvc);
+        assertNotNull(objectMapper);
+        assertNotNull(taskService);
+    }
+
+    @WithMockUser
     @Test
     void createTask_Success() throws Exception {
         CreateTaskRequest request = new CreateTaskRequest(
@@ -46,6 +56,7 @@ public class TaskControllerTest {
         );
 
         mockMvc.perform(post("/task")
+                        .with(SecurityMockMvcRequestPostProcessors.csrf())
                         .contentType(MediaType.APPLICATION_JSON)
                         .content(objectMapper.writeValueAsString(request)))
                 .andExpect(status().isOk());

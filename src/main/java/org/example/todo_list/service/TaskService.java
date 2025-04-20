@@ -18,19 +18,13 @@ import java.util.Optional;
 @Slf4j
 @Service
 @RequiredArgsConstructor
-public class TaskService implements InterTaskService {
+public class TaskService {
     private final TaskRepository taskRepository;
     private final TodoListRepository todoListRepository;
     private final TodoListService todoListService;
 
 
     public void createTask(CreateTaskRequest createTaskRequest) {
-        // 如果有重复的任务名
-        if (taskRepository.existsByName(createTaskRequest.name())) {
-            throw new TaskException(
-                    TaskError.DUPLICATE_TASK.getCode(),
-                    TaskError.DUPLICATE_TASK.getMessage());
-        }
         // 如果不存在对应的任务类别
         if (!todoListRepository.existsByCategory(createTaskRequest.category())) {
             todoListService.create(createTaskRequest.category());
