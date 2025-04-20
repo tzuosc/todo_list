@@ -66,8 +66,8 @@ class TaskServiceTest {
                 Arguments.of(validCreateRequest()
                         .category("test")
                         .name("test")
-                        .status(false)
                         .deadline(System.currentTimeMillis() / 1000 + 30)
+                        .status(false)
                         .taskDescription("Valid Description")
                         .build()),
                 Arguments.of(validCreateRequest()
@@ -76,20 +76,13 @@ class TaskServiceTest {
                         .category("test")
                         .taskDescription("Valid Description")
                         .build())
+//                Arguments.of(validCreateRequest().status(null).build()),
+//                Arguments.of(validCreateRequest().status(true).build()),
+//                Arguments.of(validCreateRequest().deadline(2177424000L).build())
         );
     }
 
 
-    @Test
-    void contextLoad() {
-        assertNotNull(todoListRepository);
-        assertNotNull(taskRepository);
-        assertNotNull(taskService);
-        assertNotNull(mockTodoList);
-        assertNotNull(todoListService);
-    }
-
-    // 测试正常添加数据
     @ParameterizedTest
     @MethodSource("invalidCreateRequests")
     void updateTask_Normal(CreateTaskRequest createTaskRequest) {
@@ -99,6 +92,15 @@ class TaskServiceTest {
         taskService.createTask(createTaskRequest);
         verify(taskRepository).save(any(Task.class));
         verify(mockTodoList).addTask(any(Task.class));
+    }
+
+    @Test
+    void contextLoad() {
+        assertNotNull(todoListRepository);
+        assertNotNull(taskRepository);
+        assertNotNull(taskService);
+        assertNotNull(mockTodoList);
+        assertNotNull(todoListService);
     }
 
     //      测试新建任务使用新的类别, 如果没有对应的类别, 自动新建一个类别
