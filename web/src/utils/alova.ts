@@ -6,8 +6,10 @@ import adapterFetch from "alova/fetch";
 import { useAuthStore } from "@/storages/auth";
 
 export const alova = createAlova({
-    baseURL: "http://localhost:8080",
-    requestAdapter: adapterFetch(),
+    baseURL: "/api",
+    requestAdapter: adapterFetch(/*{
+        credentials: "include"
+    }*/),
     timeout: 5000,
     shareRequest: true,
     statesHook: ReactHook,
@@ -16,9 +18,10 @@ export const alova = createAlova({
         PUT: 0,
         DELETE: 0,
     },
+
     responded: {
         onSuccess: async (response, _method) => {
-            if (response.status === 401) {
+            if (response.status === 1004) {
                 globalRouter?.navigate?.("/account/login");
                 toast.warning("请先登录", {
                     id: "please-login",

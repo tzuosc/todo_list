@@ -1,4 +1,4 @@
-import { LogIn, Settings, SquareChartGantt, Star, Sun } from "lucide-react";
+import { LogIn, LogOut, Settings, SquareChartGantt, Star, Sun } from "lucide-react";
 import { Link, useLocation } from "react-router-dom";
 import {
     Sidebar,
@@ -20,6 +20,7 @@ import {
 
 } from "@/components/ui/context-menu.tsx";
 import { toast } from "sonner";
+import { logout } from "@/api/user";
 
 // 静态项有图标
 type StaticItem = {
@@ -67,7 +68,28 @@ const infoItem = [
         logo: LogIn,
 
         url: "/account/login"
-
+    },
+    {
+        title: "logout",
+        logo:LogOut,
+        onClick:async () => {
+            try {
+                // 调用登出API
+                const response = await logout();
+                if (response.code === 200) {
+                    // 如果登出成功，清除本地存储的认证信息
+                    localStorage.removeItem("token");
+                    sessionStorage.removeItem("token");
+                    // 跳转到登录页面
+                    window.location.href = "/account/login";
+                    toast.success("已成功登出！");
+                } else {
+                    toast.error("登出失败：" + response.msg);
+                }
+            } catch (error) {
+                toast.error("登出失败，请稍后再试");
+            }
+        }
     }
 ]
 
