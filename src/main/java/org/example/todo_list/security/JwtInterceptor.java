@@ -32,9 +32,9 @@ public class JwtInterceptor implements HandlerInterceptor {
     @Override
     public boolean preHandle(HttpServletRequest request, HttpServletResponse response, Object handler) {
         Cookie[] cookies = request.getCookies();
-        String servletPath = request.getServletPath();
+//        String servletPath = request.getServletPath();
         String requestURI = request.getRequestURI();
-        if (EXCLUDE_PATH.stream().anyMatch(pattern -> pathMatcher.match(pattern, request.getRequestURI()))) {
+        if (EXCLUDE_PATH.stream().anyMatch(pattern -> pathMatcher.match(pattern, requestURI))) {
             return true;
         }
         if (cookies == null) {
@@ -52,6 +52,12 @@ public class JwtInterceptor implements HandlerInterceptor {
                 res.add(claim);
             }
         }
-        return !res.isEmpty();
+//        return !res.isEmpty();
+        if (!res.isEmpty()) {
+            return true;
+        } else throw new UserException(
+                UserError.NO_COOKIE.getCode(),
+                UserError.NO_COOKIE.getMessage()
+        );
     }
 }

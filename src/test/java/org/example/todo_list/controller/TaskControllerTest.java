@@ -8,7 +8,6 @@ import org.example.todo_list.dto.response.GetTaskResponse;
 import org.example.todo_list.service.TaskService;
 import org.example.todo_list.utils.ApiResponse;
 import org.junit.jupiter.api.Test;
-import org.mockito.InjectMocks;
 import org.mockito.Mockito;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
@@ -34,7 +33,7 @@ public class TaskControllerTest {
     private MockMvc mockMvc;
     @Autowired
     private ObjectMapper objectMapper;
-    @InjectMocks
+    @Autowired
     private TaskService taskService;
 
     @Test
