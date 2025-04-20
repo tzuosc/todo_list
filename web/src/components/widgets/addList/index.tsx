@@ -45,10 +45,10 @@ function AddList(){
     return(
         <Dialog>
             <DialogTrigger asChild>
-                <Button variant="outline">Add Task</Button>
+                <Button variant="outline">Add List</Button>
             </DialogTrigger>
             <DialogContent>
-                <DialogTitle>Add Task</DialogTitle>
+                <DialogTitle>Add List</DialogTitle>
                 <Form {...form}>
                     <form onSubmit={form.handleSubmit(onSubmit)}>
                         <div>
@@ -59,7 +59,7 @@ function AddList(){
                                     <FormItem>
                                         <FormLabel>任务名称</FormLabel>
                                         <FormControl>
-                                            <Input placeholder="..." {...field} />
+                                            <Input placeholder="" {...field} />
                                         </FormControl>
                                     </FormItem>
                                 )}

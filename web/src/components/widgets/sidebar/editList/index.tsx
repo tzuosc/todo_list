@@ -9,7 +9,7 @@ import {
     SidebarMenuItem,
 } from "@/components/ui/sidebar.tsx";
 import { cn } from "@/utils";
-import { InfoSwitch } from "@/components/info-switcher.tsx";
+import { InfoSwitch } from "@/components/widgets/sidebar/info-switcher.tsx";
 import { AddList } from "@/components/widgets/addList";
 import { useEffect, useState } from "react";
 import { changeTodoListCategory, deleteByListId, getAllTodoLists } from "@/api/todolist";
@@ -106,7 +106,9 @@ export default function AppSidebar(){
 
             <SidebarContent>
                 <SidebarMenu>
-                    {allNavItems.map((item)=>{
+                    {allNavItems
+                        .filter(Boolean)    // 过滤掉 null 或 undefined
+                        .map((item)=>{
                         const isActive =location.pathname === item.path
                         const isStatic = "icon" in item;
                         const Icon = isStatic ? item.icon : null;
@@ -137,10 +139,9 @@ export default function AppSidebar(){
                                                     if (!confirmed) return;
 
                                                     try {
-                                                        const res = await deleteByListId(Number(item.id)); // 需要你传入 id（下一步提）
+                                                        const res = await deleteByListId(Number(item.id)); // 需要你传入 id
                                                         if (res.code === 200) {
-                                                            toast.success("列表已删除");
-                                                            // 刷新列表
+                                                            toast.success("列表已删除");  // 刷新列表
                                                             setLists((prev) => prev.filter((l) => l.title !== category));
                                                         } else {
                                                             toast.error("删除失败", { description: res.msg });
