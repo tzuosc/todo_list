@@ -2,17 +2,26 @@ package org.example.todo_list.controller;
 
 import org.example.todo_list.security.JwtUtils;
 import org.example.todo_list.service.TaskService;
+import org.example.todo_list.service.TodoListService;
 import org.example.todo_list.service.UserService;
 import org.mockito.Mockito;
+import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.test.context.TestConfiguration;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Primary;
-import org.springframework.security.config.annotation.web.builders.HttpSecurity;
-import org.springframework.security.config.annotation.web.configurers.AbstractHttpConfigurer;
-import org.springframework.security.web.SecurityFilterChain;
 
+@SpringBootTest
 @TestConfiguration
 public class TestConfig {
+//
+//    @Bean
+//    @Primary  // 优先使用此配置
+//    public FilterRegistrationBean<JwtInterceptor> myFilterRegistration() {
+//        FilterRegistrationBean<JwtInterceptor> registration = new FilterRegistrationBean<>();
+//        registration.setEnabled(false);  // 禁用注册
+//        return registration;
+//    }
+
     @Bean
     @Primary
     public JwtUtils jwtUtils() {
@@ -32,13 +41,8 @@ public class TestConfig {
     }
 
     @Bean
-    public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
-        http
-                .csrf(AbstractHttpConfigurer::disable) // 禁用 CSRF
-                .authorizeHttpRequests(auth -> auth
-                        .requestMatchers("/auth/**").permitAll() // 允许所有 /auth 路径匿名访问
-                        .anyRequest().authenticated()
-                );
-        return http.build();
+    @Primary
+    public TodoListService todoListService() {
+        return Mockito.mock(TodoListService.class);
     }
 }

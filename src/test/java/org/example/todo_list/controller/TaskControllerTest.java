@@ -2,6 +2,7 @@ package org.example.todo_list.controller;
 
 import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.databind.ObjectMapper;
+import org.example.todo_list.config.TestSecurityConfig;
 import org.example.todo_list.dto.request.CreateTaskRequest;
 import org.example.todo_list.dto.request.UpdateTaskRequest;
 import org.example.todo_list.dto.response.GetTaskResponse;
@@ -26,7 +27,7 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 
 @WebMvcTest(TaskController.class)
 @AutoConfigureMockMvc(addFilters = false)
-@Import(TestConfig.class)
+@Import({TestConfig.class, TestSecurityConfig.class})
 public class TaskControllerTest {
 
     @Autowired

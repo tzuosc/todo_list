@@ -52,7 +52,6 @@ public class JwtInterceptor implements HandlerInterceptor {
                 res.add(claim);
             }
         }
-//        return !res.isEmpty();
         if (!res.isEmpty()) {
             return true;
         } else throw new UserException(

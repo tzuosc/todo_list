@@ -17,7 +17,7 @@ public class TestSecurityConfig {
         http
                 .csrf(AbstractHttpConfigurer::disable) // 测试环境禁用 CSRF
                 .authorizeHttpRequests(auth -> auth
-                        .requestMatchers("/auth/**").permitAll()
+                        .requestMatchers("/auth/*", "/list/*", "/task/*").permitAll()
                         .anyRequest().authenticated()
                 );
         return http.build();
