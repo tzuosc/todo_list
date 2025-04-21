@@ -1,10 +1,9 @@
 package org.example.todo_list.service;
 
 import lombok.RequiredArgsConstructor;
-import org.example.todo_list.dto.response.GetAllListResponse;
+import org.example.todo_list.dto.response.GetListResponse;
 import org.example.todo_list.exception.ListException;
 import org.example.todo_list.exception.errors.ListError;
-import org.example.todo_list.model.Task;
 import org.example.todo_list.model.TodoList;
 import org.example.todo_list.repository.TaskRepository;
 import org.example.todo_list.repository.TodoListRepository;
@@ -16,7 +15,7 @@ import java.util.Optional;
 
 @RequiredArgsConstructor
 @Service
-public class TodoListService {
+public class TodoListService implements InterTodoListService {
     private final TodoListRepository todoListRepository;
     private final TaskRepository taskRepository;
 
@@ -33,7 +32,6 @@ public class TodoListService {
                 .tasks(new ArrayList<>())
                 .build();
         todoListRepository.save(todoList);
-        todoList.addTask(new Task());
     }
 
     public void delete(Long id) {
@@ -44,10 +42,16 @@ public class TodoListService {
             );
         }
         todoListRepository.deleteById(id);
-        Optional<TodoList> list = todoListRepository.findById(id);
     }
 
     public void changeListCategory(Long id, String newCategory) {
+        if (todoListRepository.existsByCategory(newCategory)) {
+            throw new ListException(
+                    ListError.DUPLICATE_CATEGORY.getCode(),
+                    ListError.DUPLICATE_CATEGORY.getMessage()
+            );
+        }
+
         int res = todoListRepository.updateCategoryById(newCategory, id);
         if (res != 1) {
             throw new ListException(
@@ -57,13 +61,31 @@ public class TodoListService {
         }
     }
 
-    public List<GetAllListResponse> getAllLists() {
+
+    public List<GetListResponse> getAllLists() {
         List<TodoList> allList = todoListRepository.findAll();
-        List<GetAllListResponse> responses = new ArrayList<>();
+        List<GetListResponse> responses = new ArrayList<>();
         allList.forEach(todoList -> {
             List<Long> tasks = taskRepository.findTaskIdsByCategory(todoList.getCategory());
-            responses.add(new GetAllListResponse(todoList.getId(), todoList.getCategory(), tasks));
+            responses.add(new GetListResponse(todoList.getId(), todoList.getCategory(), tasks));
         });
         return responses;
     }
+
+    public GetListResponse getListById(Long id) {
+        Optional<TodoList> listById = todoListRepository.findById(id);
+        if (listById.isPresent()) {
+            List<Long> allByTodoListId = taskRepository.findIdsByTodoList_Id(id);
+            return GetListResponse.builder()
+                    .id(id).
+                    category(listById.get().getCategory())
+                    .tasks(allByTodoListId).build();
+        } else {
+            throw new ListException(
+                    ListError.LIST_NOT_FOUND.getCode(),
+                    ListError.LIST_NOT_FOUND.getMessage()
+            );
+        }
+    }
 }
+

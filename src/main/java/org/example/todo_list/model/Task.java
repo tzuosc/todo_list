@@ -1,11 +1,9 @@
 package org.example.todo_list.model;
 
-import com.fasterxml.jackson.annotation.JsonFormat;
 import jakarta.persistence.*;
 import lombok.*;
 import org.hibernate.proxy.HibernateProxy;
 
-import java.time.LocalDateTime;
 import java.util.Objects;
 
 @Builder
@@ -23,8 +21,7 @@ public class Task {
 
     private String name;
     private String description;
-    @JsonFormat(pattern = "yyyy-MM-dd HH:mm", timezone = "GMT+8")
-    private LocalDateTime deadline;
+    private Long deadline;
     private boolean status;
     @ManyToOne(fetch = FetchType.LAZY)
     @ToString.Exclude

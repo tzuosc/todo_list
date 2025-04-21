@@ -6,8 +6,9 @@ import lombok.RequiredArgsConstructor;
 @RequiredArgsConstructor
 @Getter
 public enum ListError {
-    DUPLICATE_LIST(1006, "重复类型的任务"),
-    LIST_NOT_FOUND(1007, "没找到任务列表");
+    DUPLICATE_LIST(3001, "重复类型的任务"),
+    LIST_NOT_FOUND(3002, "没找到任务列表"),
+    DUPLICATE_CATEGORY(3003, "已存在类别");
 
     private final Integer code;
     private final String message;

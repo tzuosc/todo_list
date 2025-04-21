@@ -16,21 +16,29 @@ spring:
   # 数据库的配置
   datasource:
     driver-class-name: com.mysql.cj.jdbc.Driver  # 如果使用的 mysq 版本比较老,那么就使用 com.mysql.jdbc.Driver .
-    password: "root"
+    password: "123456"
     username: "root"
     url: jdbc:mysql://localhost:3306/TodoList?useSSL=false&characterEncoding=UTF-8&serverTimezone=UTC&createDatabaseIfNotExist=true
   jpa:
     hibernate:
-      ddl-auto: update
+      ddl-auto: validate
     show-sql: true
     properties:
       hibernate:
         format_sql: true
         dialect: org.hibernate.dialect.MySQLDialect
+  flyway:
+    enabled: true
+    baseline-on-migrate: true
+    validate-on-migrate: true
+    locations: classpath:db/migration
+
 logging:
   level:
     org.hibernate.SQL: debug
     org.hibernate.type: trace
+
+
 jwt:
   secret: 8J6bZzqkRtA7X9LvMwYhN2PpQeFjHnKsDcV4BfGxTqWu3yJ5rCt0Oa1iEoUl+/M=
   expiration: 3600

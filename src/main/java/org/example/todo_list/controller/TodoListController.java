@@ -2,8 +2,10 @@ package org.example.todo_list.controller;
 
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;
+import jakarta.validation.Valid;
+import jakarta.validation.constraints.NotBlank;
 import lombok.RequiredArgsConstructor;
-import org.example.todo_list.dto.response.GetAllListResponse;
+import org.example.todo_list.dto.response.GetListResponse;
 import org.example.todo_list.service.TodoListService;
 import org.example.todo_list.utils.ApiResponse;
 import org.springframework.validation.annotation.Validated;
@@ -20,23 +22,23 @@ public class TodoListController {
     private final TodoListService todoListService;
 
     @Operation(summary = "新建一个任务列表")
-    @PutMapping("/create")
-    public ApiResponse<String> create(String category) {
+    @PutMapping("/{category}")
+    public ApiResponse<String> create(@PathVariable String category) {
         todoListService.create(category);
         return ApiResponse.success("创建成功");
     }
 
     @Operation(summary = "根据id删除任务列表")
-    @DeleteMapping("/delete")
-    public ApiResponse<String> delete(@RequestParam
-                                      Long id) {
+    @DeleteMapping("/{id}")
+    public ApiResponse<String> delete(@PathVariable Long id) {
         todoListService.delete(id);
         return ApiResponse.success("删除成功");
     }
 
     @Operation(summary = "根据id修改列表的类别")
-    @PatchMapping("/change_category")
-    public ApiResponse<String> changeCategory(Long id, String newCategory) {
+    @PatchMapping("/change_category/{id}")
+    public ApiResponse<String> changeCategory(@PathVariable Long id,
+                                              @Valid @RequestParam @NotBlank(message = "类别不能为空") String newCategory) {
         todoListService.changeListCategory(id, newCategory);
         return ApiResponse.success("修改成功");
     }
@@ -44,10 +46,16 @@ public class TodoListController {
     @Operation(summary = "获取所有的任务列表",
             description = "注意, 这个api返回的值是一个json格式的数据, 每个对象包含一个 category(类别) " +
                     "tasks(保存的是task的id),如果你你想获取对应的id, 那么你需要调用task的api -> /task/get 逐个获取task")
-    @GetMapping("/fetch")
-    public ApiResponse<List<GetAllListResponse>> fetch() {
-        List<GetAllListResponse> allLists = todoListService.getAllLists();
+    @GetMapping({"/", ""})
+    public ApiResponse<List<GetListResponse>> fetch() {
+        List<GetListResponse> allLists = todoListService.getAllLists();
         return ApiResponse.success(allLists);
     }
 
+    @Operation(summary = "根据id获取任务列表")
+    @GetMapping("/{id}")
+    public ApiResponse<GetListResponse> get(@PathVariable Long id) {
+        GetListResponse listById = todoListService.getListById(id);
+        return ApiResponse.success(listById);
+    }
 }

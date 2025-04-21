@@ -18,6 +18,27 @@ export default createBrowserRouter([
                 })
             },
             {
+                path:"list",
+                children:[
+                    {
+                        index:true,
+                        lazy:async()=>({
+                            Component: (
+                                await import("@/pages/list")
+                            ).default
+                        })
+                    },
+                    {
+                        path: ":category",
+                        lazy:async()=>({
+                            Component: (
+                                await import("@/pages/list/list_id")
+                            ).default
+                        })
+                    }
+                ]
+            },
+            {
                 path:"account",
                 children:[
                     {
@@ -35,11 +56,19 @@ export default createBrowserRouter([
                                 await import("@/pages/account/register")
                             ).default
                         })
+                    },
+                    {
+                        path:"settings",
+                        lazy:async ()=>({
+                            Component:(
+                                await import("@/pages/account/settings")
+                            ).default
+                        })
                     }
                 ]
             },
             {
-                path:"/:nickname",
+                path:"/:username",
                 lazy:async ()=>({
                     Component:(
                         await import("@/pages/users/profile.tsx")

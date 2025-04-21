@@ -1,6 +1,5 @@
 package org.example.todo_list.config;
 
-import io.swagger.v3.oas.models.ExternalDocumentation;
 import io.swagger.v3.oas.models.OpenAPI;
 import io.swagger.v3.oas.models.info.Contact;
 import io.swagger.v3.oas.models.info.Info;
@@ -14,13 +13,8 @@ public class SwaggerConfig {
         return new OpenAPI()
                 .info(new Info()
                         .title("TODOLIST API")
-                        .version("1.0")
-                        .description("接口文档示例")
+                        .description("这是 TODOLIST 的接口文档展示 ")
                         .contact(new Contact().name("开发团队"))
-                )
-                .externalDocs(new ExternalDocumentation()
-                        .description("详细说明")
-                        .url("https://example.com/docs")
                 );
     }
 }
