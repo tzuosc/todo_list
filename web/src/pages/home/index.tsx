@@ -1,7 +1,8 @@
-export default function Index(){
-    return(
-        <div>
-            111
-        </div>
-    )
+export default function Home() {
+    /* 获取当前list的url里面的id */
+    return (
+
+        <>
+        </>
+    );
 }

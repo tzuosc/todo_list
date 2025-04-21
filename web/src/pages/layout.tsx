@@ -1,6 +1,4 @@
-
 import { Outlet, useNavigate } from "react-router-dom";
-
 import globalRouter from "@/utils/global-router.ts";
 import { cn } from "@/utils";
 import { SidebarInset, SidebarProvider } from "@/components/ui/sidebar.tsx";
@@ -28,7 +26,6 @@ export default function layout(){
                     </SidebarInset>
                 </SidebarProvider>
             </div>
-
         </div>
     )
 }
