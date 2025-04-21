@@ -51,9 +51,15 @@
             <version>9.1.0</version>
             <scope>runtime</scope>
         </dependency>
+        <!--        <dependency>-->
+        <!--            <groupId>org.projectlombok</groupId>-->
+        <!--            <artifactId>lombok</artifactId>-->
+        <!--            <optional>true</optional>-->
+        <!--        </dependency>-->
         <dependency>
             <groupId>org.projectlombok</groupId>
             <artifactId>lombok</artifactId>
+            <version>1.18.32</version> <!-- 指定版本 -->
             <optional>true</optional>
         </dependency>
         <dependency>
@@ -108,7 +114,7 @@
         <dependency>
             <groupId>org.springframework.security</groupId>
             <artifactId>spring-security-core</artifactId>
-            <version>6.4.4</version>
+            <!--            <version>6.4.4</version>-->
         </dependency>
         <dependency>
             <groupId>org.flywaydb</groupId>
@@ -129,18 +135,42 @@
                 <executions>
                     <execution>
                         <goals>
-                            <goal>prepare-agent</goal> <!-- 启动覆盖率代理 -->
+                            <goal>prepare-agent</goal>
                         </goals>
+                        <configuration>
+                            <!-- 显式指定 destfile 路径，避免路径问题 -->
+                            <destFile>${project.build.directory}/jacoco.exec</destFile>
+                            <propertyName>surefire.argLine</propertyName>
+                        </configuration>
                     </execution>
                     <execution>
                         <id>report</id>
-                        <phase>test</phase> <!-- 绑定到 test 阶段 -->
+                        <phase>test</phase>
                         <goals>
-                            <goal>report</goal> <!-- 生成报告 -->
+                            <goal>report</goal>
                         </goals>
                     </execution>
                 </executions>
             </plugin>
+            <!--            <plugin>-->
+            <!--                <groupId>org.jacoco</groupId>-->
+            <!--                <artifactId>jacoco-maven-plugin</artifactId>-->
+            <!--                <version>0.8.10</version>-->
+            <!--                <executions>-->
+            <!--                    <execution>-->
+            <!--                        <goals>-->
+            <!--                            <goal>prepare-agent</goal> &lt;!&ndash; 启动覆盖率代理 &ndash;&gt;-->
+            <!--                        </goals>-->
+            <!--                    </execution>-->
+            <!--                    <execution>-->
+            <!--                        <id>report</id>-->
+            <!--                        <phase>test</phase> &lt;!&ndash; 绑定到 test 阶段 &ndash;&gt;-->
+            <!--                        <goals>-->
+            <!--                            <goal>report</goal> &lt;!&ndash; 生成报告 &ndash;&gt;-->
+            <!--                        </goals>-->
+            <!--                    </execution>-->
+            <!--                </executions>-->
+            <!--            </plugin>-->
             <plugin>
                 <groupId>org.apache.maven.plugins</groupId>
                 <artifactId>maven-compiler-plugin</artifactId>
@@ -153,10 +183,20 @@
                     </annotationProcessorPaths>
                 </configuration>
             </plugin>
+            <!--            <plugin>-->
+            <!--                <artifactId>maven-surefire-plugin</artifactId>-->
+            <!--                <configuration>-->
+            <!--                    <skipTests>false</skipTests> &lt;!&ndash; 必须为 false &ndash;&gt;-->
+            <!--                </configuration>-->
+            <!--            </plugin>-->
             <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
                 <artifactId>maven-surefire-plugin</artifactId>
+                <version>3.2.5</version> <!-- 升级到最新稳定版 -->
                 <configuration>
-                    <skipTests>false</skipTests> <!-- 必须为 false -->
+                    <argLine>-Xmx1024m</argLine> <!-- 增加内存 -->
+                    <forkCount>1</forkCount>     <!-- 确保使用独立进程 -->
+                    <reuseForks>false</reuseForks>
                 </configuration>
             </plugin>
             <plugin>

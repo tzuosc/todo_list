@@ -146,3 +146,41 @@ TODOLIST(一对多)
 
 - 重复类型的任务(3001) 新建任务列表的时候传入了重复的类别
 - 没找到任务列表(3002) 更新或者获取的时候传入非法 id
+
+# 开始
+
+## maven 换源
+
+新建一个 xml 文件, 如果没有的话, 路径是
+
+```angular2html
+C:\Users\你的用户名\.m2\settings.xml
+```
+
+填入
+
+```angular2html
+
+<settings>
+    <mirrors>
+        <mirror>
+            <id>aliyunmaven</id>
+            <name>阿里云公共仓库</name>
+            <url>https://maven.aliyun.com/repository/public</url>
+            <mirrorOf>central</mirrorOf>
+        </mirror>
+    </mirrors>
+</settings>
+```
+
+运行
+
+```angular2html
+mvn clean install -U
+```
+
+## 设置 jdk
+
+选择 `jdk21`
+
+
