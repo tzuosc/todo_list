@@ -15,7 +15,7 @@ import java.util.Optional;
 
 @RequiredArgsConstructor
 @Service
-public class TodoListService {
+public class TodoListService implements InterTodoListService {
     private final TodoListRepository todoListRepository;
     private final TaskRepository taskRepository;
 

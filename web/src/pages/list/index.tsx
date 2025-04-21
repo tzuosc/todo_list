@@ -1,4 +1,4 @@
-export  default function importance() {
+export default function(){
     return(
         <>
         </>

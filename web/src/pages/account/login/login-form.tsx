@@ -28,6 +28,7 @@ function LoginForm(){
     const form = useForm<z.infer<typeof formSchema> >({
         resolver:zodResolver(formSchema)
     })
+
     function  onSubmit(values:z.infer<typeof formSchema>){
         setLoading(true)
         login({
@@ -45,7 +46,7 @@ function LoginForm(){
             if (res.code===400){
                 toast.error(
                     "fall to login",{
-                        id:"login-erro",
+                        id:"login-error",
                         description:res.msg
                     }
                 )
