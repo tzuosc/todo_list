@@ -9,7 +9,6 @@ import org.springframework.transaction.annotation.Transactional;
 
 @Repository
 public interface TodoListRepository extends JpaRepository<TodoList, Long> {
-
     @Transactional
     @Modifying
     @Query("update TodoList t set t.category = ?1 where t.id = ?2")
