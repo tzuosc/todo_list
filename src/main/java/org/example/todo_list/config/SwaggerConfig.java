@@ -16,9 +16,5 @@ public class SwaggerConfig {
                         .description("这是 TODOLIST 的接口文档展示 ")
                         .contact(new Contact().name("开发团队"))
                 );
-//                .externalDocs(new ExternalDocumentation()
-//                        .description("详细说明")
-//                        .url("https://example.com/docs")
-//                );
     }
 }

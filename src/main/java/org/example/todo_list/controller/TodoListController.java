@@ -2,10 +2,13 @@ package org.example.todo_list.controller;
 
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;
+import jakarta.validation.Valid;
+import jakarta.validation.constraints.NotBlank;
 import lombok.RequiredArgsConstructor;
 import org.example.todo_list.dto.response.GetListResponse;
 import org.example.todo_list.service.TodoListService;
 import org.example.todo_list.utils.ApiResponse;
+import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -14,12 +17,13 @@ import java.util.List;
 @RestController
 @RequestMapping("/list")
 @RequiredArgsConstructor
+@Validated
 public class TodoListController {
     private final TodoListService todoListService;
 
     @Operation(summary = "新建一个任务列表")
-    @PutMapping({"/", ""})
-    public ApiResponse<String> create(String category) {
+    @PutMapping("/{category}")
+    public ApiResponse<String> create(@PathVariable String category) {
         todoListService.create(category);
         return ApiResponse.success("创建成功");
     }
@@ -33,7 +37,8 @@ public class TodoListController {
 
     @Operation(summary = "根据id修改列表的类别")
     @PatchMapping("/change_category/{id}")
-    public ApiResponse<String> changeCategory(@PathVariable Long id, String newCategory) {
+    public ApiResponse<String> changeCategory(@PathVariable Long id,
+                                              @Valid @RequestParam @NotBlank(message = "类别不能为空") String newCategory) {
         todoListService.changeListCategory(id, newCategory);
         return ApiResponse.success("修改成功");
     }

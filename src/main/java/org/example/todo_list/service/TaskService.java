@@ -25,12 +25,6 @@ public class TaskService implements InterTaskService {
 
 
     public void createTask(CreateTaskRequest createTaskRequest) {
-        // 如果有重复的任务名
-        if (taskRepository.existsByName(createTaskRequest.name())) {
-            throw new TaskException(
-                    TaskError.DUPLICATE_TASK.getCode(),
-                    TaskError.DUPLICATE_TASK.getMessage());
-        }
         // 如果不存在对应的任务类别
         if (!todoListRepository.existsByCategory(createTaskRequest.category())) {
             todoListService.create(createTaskRequest.category());
@@ -51,7 +45,7 @@ public class TaskService implements InterTaskService {
                         TaskError.NOT_FUTURE_TIME.getMessage()
                 );
             }
-            if (createTaskRequest.deadline() > 2177423999L) {
+            if (createTaskRequest.deadline() > 2147483647L) {
                 throw new TaskException(
                         TaskError.INVALID_TIME.getCode(),
                         TaskError.INVALID_TIME.getMessage()
@@ -113,7 +107,7 @@ public class TaskService implements InterTaskService {
                                     TaskError.NOT_FUTURE_TIME.getMessage()
                             );
                         }
-                        if (oldTask.deadline() > 2177423999L) {
+                        if (oldTask.deadline() > 2147483647L) {
                             throw new TaskException(
                                     TaskError.INVALID_TIME.getCode(),
                                     TaskError.INVALID_TIME.getMessage()

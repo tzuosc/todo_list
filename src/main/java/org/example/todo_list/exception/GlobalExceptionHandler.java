@@ -1,6 +1,8 @@
 package org.example.todo_list.exception;
 
 import com.fasterxml.jackson.databind.exc.InvalidFormatException;
+import jakarta.validation.ConstraintViolation;
+import jakarta.validation.ConstraintViolationException;
 import lombok.extern.slf4j.Slf4j;
 import org.example.todo_list.utils.ApiResponse;
 import org.springframework.dao.DataIntegrityViolationException;
@@ -11,6 +13,7 @@ import org.springframework.validation.FieldError;
 import org.springframework.web.bind.MethodArgumentNotValidException;
 import org.springframework.web.bind.MissingServletRequestParameterException;
 import org.springframework.web.bind.annotation.ExceptionHandler;
+import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.bind.annotation.RestControllerAdvice;
 import org.springframework.web.method.annotation.MethodArgumentTypeMismatchException;
 
@@ -43,6 +46,7 @@ public class GlobalExceptionHandler {
     }
 
     // 参数校验异常
+    @ResponseStatus(HttpStatus.BAD_REQUEST)
     @ExceptionHandler(MethodArgumentNotValidException.class)
     public ApiResponse<Map<String, String>> handleValidationException(MethodArgumentNotValidException ex) {
         Map<String, String> errors = ex.getBindingResult()
@@ -57,6 +61,7 @@ public class GlobalExceptionHandler {
     }
 
     // 处理参数缺失异常
+    @ResponseStatus(HttpStatus.BAD_REQUEST)
     @ExceptionHandler(MissingServletRequestParameterException.class)
     public ApiResponse<Void> handleMissingParameter(MissingServletRequestParameterException ex) {
         String message = "缺少必需参数: " + ex.getParameterName();
@@ -65,6 +70,7 @@ public class GlobalExceptionHandler {
     }
 
     // 处理类型不匹配异常
+    @ResponseStatus(HttpStatus.BAD_REQUEST)
     @ExceptionHandler(MethodArgumentTypeMismatchException.class)
     public ApiResponse<Void> handleTypeMismatch(MethodArgumentTypeMismatchException ex) {
         String message = "参数类型错误: " + ex.getName() +
@@ -73,7 +79,19 @@ public class GlobalExceptionHandler {
         return ApiResponse.error(400, message);
     }
 
+    // 处理参数校验失败异常（@RequestParam、@PathVariable）
+    @ResponseStatus(HttpStatus.BAD_REQUEST)
+    @ExceptionHandler(ConstraintViolationException.class)
+    public ApiResponse<String> handleConstraintViolation(ConstraintViolationException ex) {
+        String errorMsg = ex.getConstraintViolations().stream()
+                .map(ConstraintViolation::getMessage)
+                .collect(Collectors.joining(", "));
+
+        return ApiResponse.error(HttpStatus.BAD_REQUEST.value(), errorMsg);
+    }
+
     // 处理 JSON 解析异常（如日期格式错误）
+    @ResponseStatus(HttpStatus.BAD_REQUEST)
     @ExceptionHandler(HttpMessageNotReadableException.class)
     public ApiResponse<Void> handleHttpMessageNotReadableException(HttpMessageNotReadableException ex) {
         log.error("JSON 解析错误: {}", ex.getMessage());
