@@ -17,10 +17,11 @@ export default function ListDetailPage() {
         if (!category) return;
         setLoading(true);
         try {
-            // 获取所有的 todo list
+            // 获取所有的 todolist
             const res = await getAllTodoLists();
             const allLists = res.data || [];
             const matched = allLists.find((list) => list.category === category);
+
             if (!matched) {
                 toast.error("找不到该分类");
                 setLoading(false);
@@ -44,6 +45,7 @@ export default function ListDetailPage() {
                         name: taskRes.data.name,
                         status: taskRes.data.status ?? false,
                         category: category,
+                        deadline:taskRes.data.deadline
                     });
                 }
             }));
@@ -59,7 +61,6 @@ export default function ListDetailPage() {
         fetchTasks();
     }, [category]);
 
-    // 任务更新后的回调函数
 
 
     return (

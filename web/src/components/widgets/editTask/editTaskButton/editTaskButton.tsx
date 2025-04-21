@@ -9,10 +9,11 @@ import { Loader2 } from "lucide-react";
 interface EditTaskButtonProps {
     taskId: number;
     category: string;
+    deadline:number
     onUpdated?:() => void;
 }
 
-function EditTaskButton({ taskId, category ,onUpdated }: EditTaskButtonProps) {
+function EditTaskButton({ taskId, category ,deadline,onUpdated }: EditTaskButtonProps) {
     const [open, setOpen] = useState(false);
     const [loading, setLoading] = useState(true);
     const [task, setTask] = useState<any>(null);
@@ -51,10 +52,10 @@ function EditTaskButton({ taskId, category ,onUpdated }: EditTaskButtonProps) {
                     <EditTaskForm
                         taskId={taskId}
                         category={category}
+                        deadline={deadline}
                         defaultValues={{
                             name: task.name,
                             description: task.description,
-                            deadline: task.deadline,
                         }}
                         onSuccess={() => {
                             setOpen(false)

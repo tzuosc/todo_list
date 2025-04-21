@@ -1,5 +1,3 @@
-// components/widgets/edit-task-form.tsx
-
 import { useState } from "react";
 import { z } from "zod";
 import { useForm } from "react-hook-form";
@@ -33,23 +31,24 @@ const formSchema = z.object({
 export interface EditTaskFormProps {
     taskId: number;
     category: string;
+    deadline?: number; // timestamp
     defaultValues: {
         name: string;
         description?: string;
-        deadline?: number; // timestamp
     };
     onSuccess?: () => void;
 }
 
-export function EditTaskForm({ taskId, category, defaultValues, onSuccess }: EditTaskFormProps) {
+export function EditTaskForm({ taskId, category, deadline, defaultValues, onSuccess }: EditTaskFormProps) {
     const [loading, setLoading] = useState(false);
 
+    // 将 defaultValues 中的 deadline 设置为 Date 对象
     const form = useForm<z.infer<typeof formSchema>>({
         resolver: zodResolver(formSchema),
         defaultValues: {
             name: defaultValues.name,
             description: defaultValues.description ?? "",
-            deadline: defaultValues.deadline ? new Date(defaultValues.deadline) : undefined,
+            deadline: deadline ? new Date(deadline) : undefined,  // 恢复此行
         },
     });
 
@@ -60,13 +59,14 @@ export function EditTaskForm({ taskId, category, defaultValues, onSuccess }: Edi
                 id: taskId,
                 name: values.name,
                 description: values.description,
-                deadline: values.deadline ? values.deadline.getTime() : undefined,
+                // 将表单中的 deadline 转换成时间戳
+                deadline, // 使用 getTime() 将 Date 转换为 timestamp
                 category,
             });
 
             if (res.code === 200) {
                 toast.success("任务更新成功");
-                onSuccess?.();
+                onSuccess?.();  // 调用 onSuccess 来更新父组件
             } else {
                 toast.error("更新失败", { description: res.msg });
             }

@@ -10,11 +10,12 @@ export interface TaskRow{
     id: number;        // 任务 ID
     name: string;      // 任务名称
     status: boolean;   // 任务状态，可能是完成或未完成
+    deadline:number,
     category: string;  // 任务所属分类
 }
 interface ColumnProps {
     tasks: TaskRow[];  // 添加 tasks 属性
-    loading: boolean;// 添加 loading 属性
+    loading: boolean;  // 添加 loading 属性
     onUpdated?:()=>void;
 }
 
@@ -37,12 +38,27 @@ export function Column({ tasks, loading,onUpdated }: ColumnProps) {
             ),
         },
         {
+            accessorKey: "deadline",
+            header: "截止时间",
+            cell: ({ row }) => {
+                const timestamp = row.getValue<number>("deadline");
+                const date = new Date(timestamp);
+                const formatted = date.toLocaleDateString("zh-CN", {
+                    year: "numeric", //
+                    month: "2-digit", //
+                    day: "2-digit", //
+                });
+                return <span>{formatted}</span>;
+            },
+        },
+        {
             id: "actions",
             header: "操作",
             cell: ({ row }) => (
                 <EditTaskButton
                     taskId={row.original.id}
                     category={row.original.category}
+                    deadline={row.original.deadline}
                     onUpdated = {onUpdated}
                 />
             ),
