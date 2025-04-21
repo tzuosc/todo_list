@@ -2,7 +2,9 @@ package org.example.todo_list.controller;
 
 import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.databind.ObjectMapper;
+import org.example.todo_list.config.TestConfig;
 import org.example.todo_list.config.TestSecurityConfig;
+import org.example.todo_list.config.WebMVCConfig;
 import org.example.todo_list.dto.request.CreateTaskRequest;
 import org.example.todo_list.dto.request.UpdateTaskRequest;
 import org.example.todo_list.dto.response.GetTaskResponse;
@@ -13,6 +15,8 @@ import org.mockito.Mockito;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
 import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
+import org.springframework.context.annotation.ComponentScan;
+import org.springframework.context.annotation.FilterType;
 import org.springframework.context.annotation.Import;
 import org.springframework.http.MediaType;
 import org.springframework.security.test.context.support.WithMockUser;
@@ -25,7 +29,13 @@ import static org.junit.jupiter.api.Assertions.assertNotNull;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
-@WebMvcTest(TaskController.class)
+@WebMvcTest(
+        controllers = TaskController.class,
+        excludeFilters = @ComponentScan.Filter(
+                type = FilterType.ASSIGNABLE_TYPE,
+                classes = WebMVCConfig.class // 排除拦截器配置类
+        )
+)
 @AutoConfigureMockMvc(addFilters = false)
 @Import({TestConfig.class, TestSecurityConfig.class})
 public class TaskControllerTest {

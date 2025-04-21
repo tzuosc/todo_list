@@ -1,7 +1,9 @@
 package org.example.todo_list.controller;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
+import org.example.todo_list.config.TestConfig;
 import org.example.todo_list.config.TestSecurityConfig;
+import org.example.todo_list.config.WebMVCConfig;
 import org.example.todo_list.dto.request.LoginRegisterRequest;
 import org.example.todo_list.dto.request.UpdateUserRequest;
 import org.example.todo_list.security.JwtUtils;
@@ -11,6 +13,8 @@ import org.mockito.Mockito;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
 import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
+import org.springframework.context.annotation.ComponentScan;
+import org.springframework.context.annotation.FilterType;
 import org.springframework.context.annotation.Import;
 import org.springframework.http.MediaType;
 import org.springframework.security.test.web.servlet.request.SecurityMockMvcRequestPostProcessors;
@@ -19,7 +23,13 @@ import org.springframework.test.web.servlet.MockMvc;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
 
-@WebMvcTest(UserController.class)
+@WebMvcTest(
+        controllers = UserController.class,
+        excludeFilters = @ComponentScan.Filter(
+                type = FilterType.ASSIGNABLE_TYPE,
+                classes = WebMVCConfig.class // 排除拦截器配置类
+        )
+)
 @Import({TestSecurityConfig.class, TestConfig.class})
 @AutoConfigureMockMvc(addFilters = false)
 public class UserControllerTest {

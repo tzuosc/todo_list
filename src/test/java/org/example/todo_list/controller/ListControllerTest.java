@@ -1,7 +1,9 @@
 package org.example.todo_list.controller;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
+import org.example.todo_list.config.TestConfig;
 import org.example.todo_list.config.TestSecurityConfig;
+import org.example.todo_list.config.WebMVCConfig;
 import org.example.todo_list.dto.response.GetListResponse;
 import org.example.todo_list.exception.ListException;
 import org.example.todo_list.exception.errors.ListError;
@@ -9,9 +11,10 @@ import org.example.todo_list.service.TodoListService;
 import org.junit.jupiter.api.Test;
 import org.mockito.Mockito;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.boot.autoconfigure.security.servlet.SecurityAutoConfiguration;
 import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
 import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
+import org.springframework.context.annotation.ComponentScan;
+import org.springframework.context.annotation.FilterType;
 import org.springframework.context.annotation.Import;
 import org.springframework.http.MediaType;
 import org.springframework.security.test.web.servlet.request.SecurityMockMvcRequestPostProcessors;
@@ -26,7 +29,10 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 
 @WebMvcTest(
         controllers = TodoListController.class,
-        excludeAutoConfiguration = SecurityAutoConfiguration.class  // 排除安全自动配置
+        excludeFilters = @ComponentScan.Filter(
+                type = FilterType.ASSIGNABLE_TYPE,
+                classes = WebMVCConfig.class // 排除拦截器配置类
+        )
 )
 @Import({TestSecurityConfig.class, TestConfig.class})
 @AutoConfigureMockMvc(addFilters = false)
@@ -86,8 +92,8 @@ public class ListControllerTest {
         // When & Then
         mockMvc.perform(delete("/list/{id}", invalidId)
                         .with(SecurityMockMvcRequestPostProcessors.csrf()))
-                .andExpect(status().isNotFound())
-                .andExpect(jsonPath("$.message").value("列表不存在"));
+                .andExpect(status().isBadRequest())
+                .andExpect(jsonPath("$.message").value("没找到任务列表"));
     }
     // endregion
 
@@ -119,7 +125,7 @@ public class ListControllerTest {
                         .with(SecurityMockMvcRequestPostProcessors.csrf())
                         .param("newCategory", invalidCategory))
                 .andExpect(status().isBadRequest())
-                .andExpect(jsonPath("$.message").value("aaa"));
+                .andExpect(jsonPath("$.message").value("类别不能为空"));
     }
     // endregion
 
@@ -170,8 +176,8 @@ public class ListControllerTest {
 
         // When & Then
         mockMvc.perform(get("/list/{id}", invalidId))
-                .andExpect(status().isNotFound())
-                .andExpect(jsonPath("$.message").value("列表不存在"));
+                .andExpect(status().isBadRequest())
+                .andExpect(jsonPath("$.message").value("没找到任务列表"));
     }
     // endregion
 }

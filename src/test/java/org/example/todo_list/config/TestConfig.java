@@ -1,4 +1,4 @@
-package org.example.todo_list.controller;
+package org.example.todo_list.config;
 
 import org.example.todo_list.security.JwtUtils;
 import org.example.todo_list.service.TaskService;
