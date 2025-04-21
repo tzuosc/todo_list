@@ -18,7 +18,7 @@ import java.util.Optional;
 @Slf4j
 @Service
 @RequiredArgsConstructor
-public class TaskService implements InterTaskService {
+public class TaskService {
     private final TaskRepository taskRepository;
     private final TodoListRepository todoListRepository;
     private final TodoListService todoListService;

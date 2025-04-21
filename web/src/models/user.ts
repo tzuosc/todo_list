@@ -3,4 +3,5 @@ export interface User {
     avatar?:string
     password?:string
     confirm_password?: string
+
 }
