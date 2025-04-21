@@ -60,8 +60,8 @@ class TodoListServiceTest {
 
         ListException exception = assertThrows(ListException.class,
                 () -> todoListService.create(WORK_CATEGORY));
-
-        assertListException(exception, 3001, "重复类型的任务");
+        System.out.println(exception.getMessage());
+        assertListException(exception, 3001, "已存在类别");
     }
     // endregion
 
@@ -114,7 +114,7 @@ class TodoListServiceTest {
         ListException exception = assertThrows(ListException.class,
                 () -> todoListService.changeListCategory(EXISTING_LIST_ID, "Duplicate"));
 
-        assertListException(exception, 3003, "已存在类别"); // 根据实际错误码调整
+        assertListException(exception, 3001, "已存在类别"); // 根据实际错误码调整
     }
     // endregion
 
@@ -149,7 +149,7 @@ class TodoListServiceTest {
         // Assert
         assertAll(
                 () -> assertEquals(2, result.size(), "列表数量不符"),
-                () -> assertResponse(result.get(0), 1L, WORK_CATEGORY, 101L, 102L),
+                () -> assertResponse(result.getFirst(), 1L, WORK_CATEGORY, 101L, 102L),
                 () -> assertResponse(result.get(1), 2L, PERSONAL_CATEGORY, 201L)
         );
     }

@@ -15,15 +15,15 @@ import java.util.Optional;
 
 @RequiredArgsConstructor
 @Service
-public class TodoListService implements InterTodoListService {
+public class TodoListService {
     private final TodoListRepository todoListRepository;
     private final TaskRepository taskRepository;
 
     public void create(String category) {
         if (todoListRepository.existsByCategory(category)) {
             throw new ListException(
-                    ListError.DUPLICATE_LIST.getCode(),
-                    ListError.DUPLICATE_LIST.getMessage()
+                    ListError.DUPLICATE_CATEGORY.getCode(),
+                    ListError.DUPLICATE_CATEGORY.getMessage()
             );
         }
 
