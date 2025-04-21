@@ -18,4 +18,6 @@ public interface TaskRepository extends JpaRepository<Task, Long> {
     List<Long> findIdsByTodoList_Id(Long id);
 
     boolean existsByName(String name);
+
+    boolean existsById(Long id);
 }

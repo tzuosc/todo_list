@@ -197,7 +197,7 @@ class TaskServiceTest {
         TaskException exception = assertThrows(TaskException.class,
                 () -> taskService.updateTask(1L, request));
 
-        assertEquals(2005, exception.getCode());
+        assertEquals(2001, exception.getCode());
         assertEquals("非法时间", exception.getMessage());
     }
 
