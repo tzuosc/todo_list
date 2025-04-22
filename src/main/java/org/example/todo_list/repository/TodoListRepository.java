@@ -29,6 +29,4 @@ public interface TodoListRepository extends JpaRepository<TodoList, Long> {
     @Query("select t from TodoList t  where t.user.id = ?2 and t.category=?1")
     TodoList findByCategory(String category, Long UserId);
 
-
-    Long user(User user);
 }

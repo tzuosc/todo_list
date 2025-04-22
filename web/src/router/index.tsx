@@ -32,7 +32,7 @@ export default createBrowserRouter([
                         path: ":category",
                         lazy:async()=>({
                             Component: (
-                                await import("@/pages/list/list_id")
+                                await import("@/pages/list/index.tsx")
                             ).default
                         })
                     }
