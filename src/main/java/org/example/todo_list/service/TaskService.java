@@ -11,6 +11,7 @@ import org.example.todo_list.model.Task;
 import org.example.todo_list.model.TodoList;
 import org.example.todo_list.repository.TaskRepository;
 import org.example.todo_list.repository.TodoListRepository;
+import org.example.todo_list.repository.UserRepository;
 import org.springframework.stereotype.Service;
 
 import java.util.Optional;
@@ -22,9 +23,10 @@ public class TaskService {
     private final TaskRepository taskRepository;
     private final TodoListRepository todoListRepository;
     private final TodoListService todoListService;
+    private final UserRepository userRepository;
 
 
-    public void createTask(CreateTaskRequest createTaskRequest) {
+    public void createTask(CreateTaskRequest createTaskRequest, Long userId) {
         /*
          * TODO 新建任务:
          *   你需要处理的业务异常:
@@ -34,8 +36,14 @@ public class TaskService {
          * */
 
         // 如果不存在对应的任务类别
-        if (!todoListRepository.existsByCategory(createTaskRequest.category())) {
-            todoListService.create(createTaskRequest.category());
+        TodoList list = todoListRepository.findByCategory(createTaskRequest.category(), userId);
+        if (list == null) {
+            todoListService.create(createTaskRequest.category(), userId);
+            TodoList newList = todoListRepository.findByCategory(createTaskRequest.category(), userId);
+
+            userRepository.findById(userId).ifPresent(user -> {
+                user.addTodoList(newList);
+            });
         }
 
         if (createTaskRequest.status() == null) {
@@ -62,9 +70,6 @@ public class TaskService {
 
         }
 
-
-        TodoList list = todoListRepository.findByCategory(createTaskRequest.category());
-
         Task task = Task.builder()
                 .name(createTaskRequest.name())
                 .deadline(createTaskRequest.deadline())
@@ -73,6 +78,7 @@ public class TaskService {
                 .todoList(list)
                 .build();
         taskRepository.save(task);
+        list.addTask(task);
     }
 
     public GetTaskResponse getTask(Long id) {
@@ -108,7 +114,7 @@ public class TaskService {
     }
 
 
-    public void updateTask(Long id, UpdateTaskRequest oldTask) {
+    public void updateTask(Long id, UpdateTaskRequest oldTask, Long userId) {
 
         /*
          * TODO 更新任务
@@ -140,10 +146,10 @@ public class TaskService {
                     if (oldTask.status() != null) newTask.setStatus(oldTask.status());
                     // 修改任务类别
                     if (oldTask.category() != null) {
-                        if (!todoListRepository.existsByCategory(oldTask.category())) {
-                            todoListService.create(oldTask.category());
+                        if (!todoListRepository.existsByCategory(oldTask.category(), userId)) {
+                            todoListService.create(oldTask.category(), userId);
                         }
-                        TodoList list = todoListRepository.findByCategory(oldTask.category());
+                        TodoList list = todoListRepository.findByCategory(oldTask.category(), userId);
                         list.addTask(newTask);
                     }
                     //修改任务名

@@ -7,6 +7,8 @@ import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.example.todo_list.dto.request.LoginRegisterRequest;
 import org.example.todo_list.dto.request.UpdateUserRequest;
+import org.example.todo_list.model.User;
+import org.example.todo_list.repository.UserRepository;
 import org.example.todo_list.security.JwtUtils;
 import org.example.todo_list.service.UserService;
 import org.example.todo_list.utils.ApiResponse;
@@ -20,6 +22,7 @@ import org.springframework.web.bind.annotation.*;
 public class UserController {
     private final JwtUtils jwtUtils;
     private final UserService userService;
+    private final UserRepository userRepository;
 
     @Operation(summary = "登录",
             description = "传入用户名和密码")
@@ -27,8 +30,12 @@ public class UserController {
     public ApiResponse<String> login(@Valid @RequestBody LoginRegisterRequest request,
                                      HttpServletResponse response) {
         // TODO 登录, 传入 LoginRegisterRequest, HttpServletResponse, 登录成功后为 HttpServletResponse 添加 setCookie 响应头, 值为 token
+
+        User user = userRepository.findByUsername(request.username());
+        String token = jwtUtils.generateToken(user.getId());
+
         if (userService.login(request)) {
-            CookieUtil.setCookie(response, jwtUtils.generateToken(request.username()));
+            CookieUtil.setCookie(response, token);
         }
         return ApiResponse.success("登录成功");
     }

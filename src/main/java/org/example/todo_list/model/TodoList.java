@@ -37,6 +37,11 @@ public class TodoList {
     @JsonIgnoreProperties(value = "todoList")
     private List<Task> tasks;
 
+    @ManyToOne(fetch = FetchType.LAZY)
+    @ToString.Exclude
+    @JoinColumn(name = "user_id")
+    private User user;
+
     public void addTask(Task task) {
         tasks.add(task);
         task.setTodoList(this);

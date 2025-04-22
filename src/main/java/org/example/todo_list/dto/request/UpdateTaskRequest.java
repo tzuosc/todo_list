@@ -30,7 +30,7 @@ public record UpdateTaskRequest(
         @Schema(name = "description", example = "this is a task")
         String description,
 
-        @Schema(name = "deadline", example = "2177423998")
+        @Schema(name = "deadline", example = "2147483642")
         Long deadline
 ) {
 }

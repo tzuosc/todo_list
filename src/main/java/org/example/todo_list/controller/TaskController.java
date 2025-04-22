@@ -23,9 +23,9 @@ public class TaskController {
     @Operation(summary = "新建一个任务",
             description = "传入任务名, 类别.这两个是必须的. 还有非必须的 任务备注, 任务状态(是否完成, true 或者 false), 截至日期(时间戳)")
     @PostMapping({"/", ""})
-    public ApiResponse<String> createTask(@Valid @RequestBody CreateTaskRequest createTaskRequest) {
+    public ApiResponse<String> createTask(@Valid @RequestBody CreateTaskRequest createTaskRequest, @RequestAttribute("userId") Long userId) {
         //  TODO 新建任务, 传入 createTaskRequest 如果成功调用 service 对应的 creatTask 函数, 就返回 ApiResponse.success("创建任务成功")
-        taskService.createTask(createTaskRequest);
+        taskService.createTask(createTaskRequest, userId);
         return ApiResponse.success("创建任务成功");
     }
 
@@ -40,9 +40,9 @@ public class TaskController {
     @Operation(summary = "更新任务对应的参数")
     @PatchMapping({"/{id}"})
     public ApiResponse<?> updateTask(@PathVariable Long id,
-                                     @Valid @RequestBody UpdateTaskRequest updateTaskRequest) {
+                                     @Valid @RequestBody UpdateTaskRequest updateTaskRequest, @RequestAttribute("userId") Long userId) {
         // TODO 根据id更新任务, 传入的参数都是非必须的, 传入 id , updateTaskRequest
-        taskService.updateTask(id, updateTaskRequest);
+        taskService.updateTask(id, updateTaskRequest, userId);
         return ApiResponse.success(null);
     }
 
