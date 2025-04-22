@@ -21,8 +21,8 @@ public class JwtUtils {
 
 
     // 生成 Token
-    public String generateToken(String username) {
-        return Jwts.builder().subject(username)                  // 用户标识（推荐用唯一ID）
+    public String generateToken(Long userId) {
+        return Jwts.builder().claim("userId", userId)                 // 用户标识（推荐用唯一ID）
                 .issuedAt(new Date())               // 签发时间
                 .expiration(new Date(System.currentTimeMillis() + expirationSeconds * 1000)) // 过期时间
                 .signWith(getSecretKey())           // 密钥签名

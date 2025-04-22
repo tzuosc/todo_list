@@ -1,12 +1,10 @@
 package org.example.todo_list.model;
 
-import jakarta.persistence.Entity;
-import jakarta.persistence.GeneratedValue;
-import jakarta.persistence.GenerationType;
-import jakarta.persistence.Id;
+import jakarta.persistence.*;
 import lombok.*;
 import org.hibernate.proxy.HibernateProxy;
 
+import java.util.List;
 import java.util.Objects;
 
 @Getter
@@ -24,11 +22,18 @@ public class User {
     private String password;
     private String avatarUrl;
 
+    @OneToMany(cascade = CascadeType.ALL, fetch = FetchType.LAZY, mappedBy = "user")
+    @ToString.Exclude
+    private List<TodoList> todoLists;
 
-    public User(String username, String password, String avatarUrl) {
-        this.username = username;
-        this.password = password;
-        this.avatarUrl = avatarUrl;
+    public void addTodoList(TodoList todoList) {
+        todoLists.add(todoList);
+        todoList.setUser(this);
+    }
+
+    public void removeTodoList(TodoList todoList) {
+        todoLists.remove(todoList);
+        todoList.setUser(null);
     }
 
     @Override
