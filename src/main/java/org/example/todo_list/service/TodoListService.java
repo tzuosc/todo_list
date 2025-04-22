@@ -22,8 +22,8 @@ public class TodoListService {
     public void create(String category) {
         if (todoListRepository.existsByCategory(category)) {
             throw new ListException(
-                    ListError.DUPLICATE_LIST.getCode(),
-                    ListError.DUPLICATE_LIST.getMessage()
+                    ListError.DUPLICATE_CATEGORY.getCode(),
+                    ListError.DUPLICATE_CATEGORY.getMessage()
             );
         }
 

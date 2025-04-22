@@ -65,7 +65,7 @@ public class TaskService {
                 .todoList(list)
                 .build();
         taskRepository.save(task);
-        list.addTask(task);
+//        list.addTask(task);
 
     }
 
