@@ -50,7 +50,7 @@ export function InfoSwitch(
 
 
     }
-
+    /*const username = */
     return (
         <SidebarMenu>
             <SidebarMenuItem>
@@ -78,7 +78,10 @@ export function InfoSwitch(
                         side={isMobile ? "bottom" : "right"}
                         sideOffset={4}
                     >
-                        <DropdownMenuLabel className="text-xs text-muted-foreground">Navigation</DropdownMenuLabel>
+                        <DropdownMenuLabel className="text-xs text-muted-foreground">
+                            Navigation
+                        </DropdownMenuLabel>
+
                         {items.map((item) => (
                             <DropdownMenuItem key={item.title} onClick={() => handleItemClick(item)} className="gap-2 p-2">
                                 <div className="flex size-6 items-center justify-center rounded-sm border">
@@ -87,7 +90,9 @@ export function InfoSwitch(
                                 {item.title}
                             </DropdownMenuItem>
                         ))}
+
                     </DropdownMenuContent>
+
                 </DropdownMenu>
             </SidebarMenuItem>
         </SidebarMenu>
