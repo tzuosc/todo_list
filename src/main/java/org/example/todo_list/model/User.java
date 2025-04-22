@@ -25,12 +25,6 @@ public class User {
     private String avatarUrl;
 
 
-    public User(String username, String password, String avatarUrl) {
-        this.username = username;
-        this.password = password;
-        this.avatarUrl = avatarUrl;
-    }
-
     @Override
     public final boolean equals(Object o) {
         if (this == o) return true;

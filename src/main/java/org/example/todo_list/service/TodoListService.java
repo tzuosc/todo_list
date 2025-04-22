@@ -20,6 +20,10 @@ public class TodoListService {
     private final TaskRepository taskRepository;
 
     public void create(String category) {
+        /*
+         * TODO 新建任务列表: 如果你没有对应的类别的 todolist 你需要新建一个 todolist
+         * */
+
         if (todoListRepository.existsByCategory(category)) {
             throw new ListException(
                     ListError.DUPLICATE_CATEGORY.getCode(),
@@ -35,6 +39,7 @@ public class TodoListService {
     }
 
     public void delete(Long id) {
+        // TODO 删除 todolist 如果你在模型没有设置级联删除, 那么你需要在这里一个个删除所有 task. 你需要处理 id 对应的 todolist 不存在的情况
         if (!todoListRepository.existsById(id)) {
             throw new ListException(
                     ListError.LIST_NOT_FOUND.getCode(),
@@ -45,6 +50,13 @@ public class TodoListService {
     }
 
     public void changeListCategory(Long id, String newCategory) {
+
+        /*
+         * TODO 更新 todolist 的类别
+         *   你需要处理:
+         *   - 类别已存在
+         *   - id 对应的 todolist 不存在
+         * */
         if (todoListRepository.existsByCategory(newCategory)) {
             throw new ListException(
                     ListError.DUPLICATE_CATEGORY.getCode(),
@@ -63,6 +75,11 @@ public class TodoListService {
 
 
     public List<GetListResponse> getAllLists() {
+        /*
+         * TODO 获取所有 todolist
+         *   循环获取所有 list, 为此, 我准备了 taskRepository.findTaskIdsByCategory
+         * */
+
         List<TodoList> allList = todoListRepository.findAll();
         List<GetListResponse> responses = new ArrayList<>();
         allList.forEach(todoList -> {
@@ -73,6 +90,8 @@ public class TodoListService {
     }
 
     public GetListResponse getListById(Long id) {
+
+        // TODO 根据 id 获取 todolist, 你只需要判断 id 对应的 todolist 是否存在就行了
         Optional<TodoList> listById = todoListRepository.findById(id);
         if (listById.isPresent()) {
             List<Long> allByTodoListId = taskRepository.findIdsByTodoList_Id(id);

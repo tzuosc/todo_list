@@ -2,12 +2,16 @@ package org.example.todo_list.dto.request;
 
 
 import io.swagger.v3.oas.annotations.media.Schema;
-
 import jakarta.validation.constraints.NotBlank;
 import lombok.Builder;
 
 
-/*登录或者注册的 DTO*/
+/*
+ * TODO 用于登录和注册的 DTO 请求
+ *  字段说明:
+ *  - username 必须, :String 类型
+ *  - password 必须, :String 类型
+ * */
 
 @Schema(name = "登录请求")
 @Builder

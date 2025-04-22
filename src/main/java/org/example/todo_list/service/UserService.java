@@ -22,6 +22,14 @@ public class UserService {
 
     public boolean login(LoginRegisterRequest request) {
 
+        /*
+         * TODO 登录
+         *    你需要处理
+         *    - 如果用户名不存在
+         *    - 如果密码错误
+         * */
+
+
         User user = userRepository.findByUsername(request.username());
 
         // 如果用户名不存在
@@ -79,6 +87,11 @@ public class UserService {
 
 
     public void updateUser(Long id, UpdateUserRequest newUser) {
+        /*TODO
+         *  更新用户
+         *  你需要处理的业务异常与注册差不多. 这是增量更新, 只需要判断需要更新的字段的业务异常就可以了
+         * */
+
         userRepository.findById(id).ifPresentOrElse(
                 user -> {
                     if (newUser.username() != null) {

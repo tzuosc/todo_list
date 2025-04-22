@@ -6,6 +6,15 @@ import org.hibernate.proxy.HibernateProxy;
 
 import java.util.Objects;
 
+/*
+ * TODO Task 模型
+ *   id: Long
+ *   description: String
+ *   deadline: Long 使用时间戳表示时间
+ *   status: boolean 表示任务是否完成
+ *   todoList(todo_list_id): TodoList 多对一关系, 外键名为 todo_list_id
+ * */
+
 @Builder
 @Entity
 @Getter
