@@ -10,7 +10,7 @@ import { Input } from "@/components/ui/input.tsx";
 import { Button } from "@/components/ui/button.tsx";
 import { Dialog, DialogContent, DialogTitle, DialogTrigger } from "@/components/ui/dialog.tsx";
 
-function AddTask() {
+function CreateDialog() {
     const { category } = useParams<{ category: string }>();
     const [loading, setLoading] = useState(false);
     const navigate = useNavigate();
@@ -103,4 +103,4 @@ function AddTask() {
     );
 }
 
-export { AddTask };
+export { CreateDialog };
