@@ -35,7 +35,7 @@ export interface DeleteTaskRequest {
 }
 
 export async function deleteTask(request:DeleteTaskRequest) {
-    return alova.Delete<WebResponse<never>>(`/task/${request.id}`);
+    return alova.Delete<WebResponse<string>>(`/task/${request.id}`);
 }
 
 /* 改 */

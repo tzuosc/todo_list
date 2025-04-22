@@ -1,18 +1,16 @@
 import { useMemo, useState } from "react";
 import { ColumnDef } from "@tanstack/react-table";
 import { DataTable } from "@/components/ui/data-table";
-import { Checkbox } from "@/components/ui/checkbox";
-import { EditTaskButton } from "@/components/widgets/editTask/editTaskButton/editTaskButton.tsx";
-import { deleteTask, updateTask } from "@/api/task";
+import { updateTask } from "@/api/task";
 import { toast } from "sonner";
 import { Switch } from "@/components/ui/switch.tsx";
 import { ArrowDown, ArrowUp, ArrowUpDown, EditIcon, TrashIcon } from "lucide-react";
 import { cn } from "@/utils";
 import { Button } from "@/components/ui/button.tsx";
-import { useSharedStore } from "@/storages/shared.ts";
 import { Dialog, DialogContent } from "@/components/ui/dialog.tsx";
-import { UpdateTaskDialog } from "@/pages/lists/list_id/updateTaskDialog.tsx";
-import { Card } from "@/components/ui/card.tsx";
+import { UpdateTaskDialog } from "@/pages/list/list_id/updateTaskDialog.tsx";
+import { DeleteTaskDialog } from "@/pages/list/list_id/deleteTaskDialog.tsx";
+import { fetchByListId, getAllTodoLists } from "@/api/todolist";
 
 // 删除不需要的状态声明，直接使用 props 传递过来的值
 export interface TaskRow{
@@ -27,11 +25,33 @@ interface ColumnProps {
     loading: boolean;  // 添加 loading 属性
     onUpdated?:()=>void;
 }
-
-
 export function Columns({ tasks, loading,onUpdated }: ColumnProps) {
-    // 表格列定义
-    const [createDialogOpen, setCreateDialogOpen] = useState<boolean>(false);
+    const refreshTasks = (category: string) => {
+        console.log("Refreshing tasks...");
+
+        // 获取所有任务列表
+        getAllTodoLists().then((response) => {
+            if (response.code === 200) {
+                // 获取指定 category 下的 list id
+                const list = response.data?.find((list) => list.category === category);
+                if (list) {
+                    // 根据 list id 获取任务
+                    fetchByListId(list.id).then((taskResponse) => {
+                        if (taskResponse.code === 200) {
+                            // 更新 tasks 数据
+                            onUpdated?.();
+                        } else {
+                            console.error('获取任务失败', taskResponse.msg);
+                        }
+                    });
+                } else {
+                    console.error('找不到对应分类');
+                }
+            } else {
+                console.error('获取任务列表失败');
+            }
+        });
+    };
     const columns: ColumnDef<TaskRow>[] = useMemo(() => [
         {
             accessorKey:"status",
@@ -40,7 +60,7 @@ export function Columns({ tasks, loading,onUpdated }: ColumnProps) {
             cell:({row})=>{
                 const  status = row.getValue<boolean>("status")
                 const name =row.getValue<string>("name")
-                const id = row.getValue<number>("id")
+
                 const [checked,setChecked] = useState(status)
                 function handleTaskChange(){
                     const newValue = !checked;
@@ -48,7 +68,7 @@ export function Columns({ tasks, loading,onUpdated }: ColumnProps) {
 
                     /* 调用之前封装好的跟新Task接口*/
                     updateTask({
-                        id,
+                        id:row.original.id,
                         status: newValue,
                     }).then((res) => {
                         if (res.code === 200) {
@@ -58,6 +78,7 @@ export function Columns({ tasks, loading,onUpdated }: ColumnProps) {
                                     id: "is_finished",
                                 }
                             );
+                            refreshTasks(row.original.category)
                         }
                     })
                 }
@@ -116,26 +137,8 @@ export function Columns({ tasks, loading,onUpdated }: ColumnProps) {
             id:"action",
             header:()=><div className={cn(["justify-self-center"])}>操作</div>,
             cell:({row})=>{
-                const id = row.getValue<number>("id")
-                const name = row.getValue<string>("name")
-                const sharedStore = useSharedStore()
-                const [deleteDialogOpen, setDeleteDialogOpen] =
-                    useState<boolean>(false);
-
-                /* 调用删除接口 */
-                function  handleDelete(){
-                    deleteTask({
-                        id
-                    }).then((res)=>{
-                        if(res.code===200){
-                            toast.success(`任务 ${name} 删除成功`);
-                            setDeleteDialogOpen(false);
-                        }
-                    }).finally(() => {
-                        sharedStore?.setRefresh();
-                    })
-                }
-
+                const [deleteDialogOpen, setDeleteDialogOpen] = useState<boolean>(false);
+                const [updateDialogOpen, setUpdateDialogOpen] = useState<boolean>(false);
                 return(
                     <div
                         className={cn([
@@ -150,18 +153,20 @@ export function Columns({ tasks, loading,onUpdated }: ColumnProps) {
                             size={"sm"}
                             square
                             icon={EditIcon}
-                            onClick={()=>setCreateDialogOpen(true)}
+                            onClick={()=>setUpdateDialogOpen(true)}
                         />
                         <Dialog
-                            open={createDialogOpen}
-                            onOpenChange={setCreateDialogOpen}
+                            open={updateDialogOpen}
+                            onOpenChange={setUpdateDialogOpen}
                         >
                             <DialogContent>
-                                <UpdateTaskDialog taskId={row.original.id}></UpdateTaskDialog>
+                                <UpdateTaskDialog
+                                    taskId={row.original.id}
+                                    onSuccess={onUpdated}
+                                    onClose={()=>setUpdateDialogOpen(false)}
+                                ></UpdateTaskDialog>
                             </DialogContent>
                         </Dialog>
-
-
 
                         <Button
                             level={"error"}
@@ -176,41 +181,12 @@ export function Columns({ tasks, loading,onUpdated }: ColumnProps) {
                             onOpenChange={setDeleteDialogOpen}
                         >
                             <DialogContent>
-                                <Card
-                                    className={cn([
-                                        "flex",
-                                        "flex-col",
-                                        "p-5",
-                                        "min-h-32",
-                                        "w-72",
-                                        "gap-5",
-                                    ])}
-                                >
-                                    <div
-                                        className={cn([
-                                            "flex",
-                                            "gap-2",
-                                            "items-center",
-                                            "text-sm",
-                                        ])}
-                                    >
-                                        <TrashIcon className={cn(["size-4"])} />
-                                        删除任务
-                                    </div>
-                                    <p className={cn(["text-sm"])}>
-                                        你确定要删除任务 {name} 吗？
-                                    </p>
-                                    <div className={cn(["flex", "justify-end"])}>
-                                        <Button
-                                            level={"error"}
-                                            variant={"tonal"}
-                                            size={"sm"}
-                                            onClick={handleDelete}
-                                        >
-                                            确定
-                                        </Button>
-                                    </div>
-                                </Card>
+                                <DeleteTaskDialog
+                                    taskId={row.original.id}
+                                    taskName={row.original.name}
+                                    onClose={()=>setDeleteDialogOpen(false)}
+                                    onDelete={onUpdated}
+                                ></DeleteTaskDialog>
                             </DialogContent>
                         </Dialog>
                     </div>

@@ -18,17 +18,13 @@ export default function ListDetailPage() {
         setLoading(true); // 开始加载
 
         try {
-            // 获取所有的 todolist
             const res = await getAllTodoLists();
             const allLists = res.data || [];
             const matched = allLists.find((list) => list.category === category);
-
             if (!matched) {
                 toast.error("找不到该分类");
-                return; // 找不到对应分类，退出
+                return;
             }
-
-            // 获取匹配的列表的任务
             const res2 = await fetchByListId(matched.id);
             const todoList = res2.data;
             if (!todoList?.tasks || todoList.tasks.length === 0) {
@@ -36,7 +32,6 @@ export default function ListDetailPage() {
                 return;
             }
 
-            // 使用 Promise.all 来并发获取任务详情
             const taskList = await Promise.all(
                 todoList.tasks.map(async (id) => {
                     const taskRes = await getTask(id);
@@ -52,14 +47,12 @@ export default function ListDetailPage() {
                     return null;
                 })
             );
-
-            // 过滤掉返回 null 的任务
             setTasks(taskList.filter((task) => task !== null) as TaskRow[]);
         } catch (error) {
             toast.error("获取任务列表失败");
-            console.error(error); // 打印出错误以便调试
+            console.error(error);
         } finally {
-            setLoading(false); // 无论如何都设置加载完成
+            setLoading(false);
         }
     };
 

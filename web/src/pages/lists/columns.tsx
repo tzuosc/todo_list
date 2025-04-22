@@ -10,7 +10,7 @@ import { Button } from "@/components/ui/button.tsx";
 import { useSharedStore } from "@/storages/shared.ts";
 import { Dialog, DialogContent } from "@/components/ui/dialog.tsx";
 import { Card } from "@/components/ui/card.tsx";
-import { UpdateTaskDialog } from "@/pages/lists/list_id/updateTaskDialog.tsx";
+import { UpdateTaskDialog } from "@/pages/list/list_id/updateTaskDialog.tsx";
 
 /* Task是一个ts的接口(可以理解为数据类型，看 /models/task) */
 const [createDialogOpen, setCreateDialogOpen] = useState<boolean>(false);

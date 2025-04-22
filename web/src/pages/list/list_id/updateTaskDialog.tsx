@@ -17,22 +17,22 @@ import { format } from "date-fns";
 import { Calendar } from "@/components/ui/calendar.tsx";
 import { zhCN } from "date-fns/locale";
 
-function UpdateTaskDialog({taskId}:{taskId:number}){
-
+function UpdateTaskDialog({taskId, onSuccess, onClose}:{taskId:number; onSuccess?:()=>void; onClose:() => void}) {
     const sharedStore = useSharedStore();
     const [loading, setLoading] = useState<boolean>(false);
     const [task, setTask] = useState<any>(null); // 存储任务数据
-    const  formSchema = z.object({
-        name:z.string({
-            message:"请编辑任务名称"
+    const formSchema = z.object({
+        name: z.string({
+            message: "请编辑任务名称"
         }),
-        description:z.string({
-            message:"请编辑任务描述"
+        description: z.string({
+            message: "请编辑任务描述"
         }).optional(),
-        deadline:z.date({
-            message:"请编辑任务截止时间"
+        deadline: z.date({
+            message: "请编辑任务截止时间"
         }).optional()
-    })
+    });
+
     const form = useForm<z.infer<typeof formSchema>>({
         resolver: zodResolver(formSchema),
         defaultValues: {
@@ -64,6 +64,7 @@ function UpdateTaskDialog({taskId}:{taskId:number}){
             })
             .finally(() => setLoading(false));
     }, [taskId, form]);
+
     function onSubmit(values: z.infer<typeof formSchema>) {
         if (!task) return;
 
@@ -81,13 +82,16 @@ function UpdateTaskDialog({taskId}:{taskId:number}){
                 if (res.code === 200) {
                     toast.success(`任务 ${res?.data?.name} 更新成功`);
                     sharedStore.setRefresh();
+                    onSuccess?.();
+                    onClose();  // 成功后关闭弹窗
                 } else {
                     toast.error("任务更新失败");
                 }
             })
             .finally(() => setLoading(false));
     }
-    return(
+
+    return (
         <Card className="p-4 space-y-4">
             <h2 className="text-lg font-semibold">编辑任务</h2>
             {task ? (
@@ -163,6 +167,7 @@ function UpdateTaskDialog({taskId}:{taskId:number}){
                 <div>加载任务数据...</div>
             )}
         </Card>
-    )
+    );
 }
-export {UpdateTaskDialog}
+
+export { UpdateTaskDialog };
