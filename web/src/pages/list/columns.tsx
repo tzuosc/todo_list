@@ -10,7 +10,6 @@ import { Button } from "@/components/ui/button.tsx";
 import { Dialog, DialogContent } from "@/components/ui/dialog.tsx";
 import { UpdateTaskDialog } from "@/pages/list/list_id/updateTaskDialog.tsx";
 import { DeleteTaskDialog } from "@/pages/list/list_id/deleteTaskDialog.tsx";
-import { fetchByListId, getAllTodoLists } from "@/api/todolist";
 
 // 删除不需要的状态声明，直接使用 props 传递过来的值
 export interface TaskRow{
@@ -26,32 +25,6 @@ interface ColumnProps {
     onUpdated?:()=>void;
 }
 export function Columns({ tasks, loading,onUpdated }: ColumnProps) {
-    const refreshTasks = (category: string) => {
-        console.log("Refreshing tasks...");
-
-        // 获取所有任务列表
-        getAllTodoLists().then((response) => {
-            if (response.code === 200) {
-                // 获取指定 category 下的 list id
-                const list = response.data?.find((list) => list.category === category);
-                if (list) {
-                    // 根据 list id 获取任务
-                    fetchByListId(list.id).then((taskResponse) => {
-                        if (taskResponse.code === 200) {
-                            // 更新 tasks 数据
-                            onUpdated?.();
-                        } else {
-                            console.error('获取任务失败', taskResponse.msg);
-                        }
-                    });
-                } else {
-                    console.error('找不到对应分类');
-                }
-            } else {
-                console.error('获取任务列表失败');
-            }
-        });
-    };
     const columns: ColumnDef<TaskRow>[] = useMemo(() => [
         {
             accessorKey:"status",
@@ -78,7 +51,6 @@ export function Columns({ tasks, loading,onUpdated }: ColumnProps) {
                                     id: "is_finished",
                                 }
                             );
-                            refreshTasks(row.original.category)
                         }
                     })
                 }
