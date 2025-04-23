@@ -7,8 +7,6 @@ import jakarta.validation.constraints.NotBlank;
 import lombok.Builder;
 
 
-/*登录或者注册的 DTO*/
-
 @Schema(name = "登录请求")
 @Builder
 public record LoginRegisterRequest(

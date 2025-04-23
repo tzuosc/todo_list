@@ -38,6 +38,7 @@ public class GlobalExceptionHandler {
 
     // 自定义的异常处理
 
+    @ResponseStatus(HttpStatus.BAD_REQUEST)
     @ExceptionHandler(BaseException.class)
     public ResponseEntity<ApiResponse<Void>> handleAuthException(BaseException ex) {
         log.warn("业务异常: {}", ex.getMessage());
@@ -111,6 +112,7 @@ public class GlobalExceptionHandler {
     }
 
     // 兜底异常处理
+    @ResponseStatus(HttpStatus.INTERNAL_SERVER_ERROR)
     @ExceptionHandler(Exception.class)
     public ResponseEntity<ApiResponse<Void>> handleGlobalException(Exception ex) {
         log.error("系统异常: ", ex);
