@@ -51,6 +51,7 @@ web/                                     // 前端代码
 
 ### USER
 
+
 - username -> 用户名 : String
 - password -> 密码(需要加密) : String
 - avatar_url -> 头像 : String
@@ -261,3 +262,5 @@ http://localhost:8080/swagger-ui/index.html
 >
 > 为了方便教学, 所有业务逻辑异常的状态码统一为 400
 
+- 重复类型的任务(3001) 新建任务列表的时候传入了重复的类别
+- 没找到任务列表(3002) 更新或者获取的时候传入非法 id

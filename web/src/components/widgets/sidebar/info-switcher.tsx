@@ -10,21 +10,23 @@ import {
     DropdownMenuItem,
     DropdownMenuLabel,
     DropdownMenuTrigger,
-} from "@/components/ui/dropdown-menu"
-import { SidebarMenu, SidebarMenuButton, SidebarMenuItem, useSidebar } from "@/components/ui/sidebar"
+} from "@/components/ui/dropdown-menu.tsx"
+import { SidebarMenu, SidebarMenuButton, SidebarMenuItem, useSidebar } from "@/components/ui/sidebar.tsx"
 import { Avatar } from "@/components/ui/avatar.tsx";
 
 // Example data structure
 type InfoItem = {
     title: string
     logo: React.ElementType
-    url: string
+    url?: string
+    onClick?:()=>void
 }
 
-export function InfoSwitch({
-                               items,
-                               defaultSelected = 0,
-                           }: {
+export function InfoSwitch(
+    {
+        items,
+        defaultSelected = 0,
+    }: {
     items: InfoItem[]
     defaultSelected?: number
 }) {
@@ -37,8 +39,16 @@ export function InfoSwitch({
     }
 
     const handleItemClick = (item: InfoItem) => {
-        setActiveItem(item)
-        navigate(item.url)
+        if (item.onClick) {
+            item.onClick(); // If there is an onClick handler, call it
+        }else {
+            setActiveItem(item);
+            if (item.url) {
+                navigate(item.url); // Normal navigation
+            }
+        }
+
+
     }
 
     return (
