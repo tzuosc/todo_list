@@ -57,6 +57,8 @@ public class JwtInterceptor implements HandlerInterceptor {
             }
         }
         if (!res.isEmpty()) {
+            Long userId = res.getFirst().get("userId", Long.class);
+            request.setAttribute("userId", userId);
             return true;
         } else throw new UserException(
                 UserError.NO_COOKIE.getCode(),

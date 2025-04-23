@@ -7,6 +7,8 @@ import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.example.todo_list.dto.request.LoginRegisterRequest;
 import org.example.todo_list.dto.request.UpdateUserRequest;
+import org.example.todo_list.model.User;
+import org.example.todo_list.repository.UserRepository;
 import org.example.todo_list.security.JwtUtils;
 import org.example.todo_list.service.UserService;
 import org.example.todo_list.utils.ApiResponse;
@@ -20,14 +22,20 @@ import org.springframework.web.bind.annotation.*;
 public class UserController {
     private final JwtUtils jwtUtils;
     private final UserService userService;
+    private final UserRepository userRepository;
 
     @Operation(summary = "登录",
             description = "传入用户名和密码")
     @PostMapping("/login")
     public ApiResponse<String> login(@Valid @RequestBody LoginRegisterRequest request,
                                      HttpServletResponse response) {
+        // TODO 登录, 传入 LoginRegisterRequest, HttpServletResponse, 登录成功后为 HttpServletResponse 添加 setCookie 响应头, 值为 token
+
+        User user = userRepository.findByUsername(request.username());
+        String token = jwtUtils.generateToken(user.getId());
+
         if (userService.login(request)) {
-            CookieUtil.setCookie(response, jwtUtils.generateToken(request.username()));
+            CookieUtil.setCookie(response, token);
         }
         return ApiResponse.success("登录成功");
     }
@@ -42,12 +50,15 @@ public class UserController {
 
     @PatchMapping("/{id}")
     public ApiResponse<String> update(@PathVariable Long id, @RequestBody @Valid UpdateUserRequest request) {
+        // TODO 更新用户, 传入 id , UpdateUser(所有参数都是非必须的)
         userService.updateUser(id, request);
         return ApiResponse.success("更新成功");
     }
 
     @GetMapping("/logout")
     public void logout(HttpServletResponse response) {
+        // TODO 登出, 直接调用 cookieUtil 的删除 cookie 的函数就行了
+
         CookieUtil.deleteCookie(response);
     }
 }
