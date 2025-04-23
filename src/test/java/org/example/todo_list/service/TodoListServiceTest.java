@@ -1,58 +1,78 @@
-//package org.example.todo_list.service;
-//
-//import org.example.todo_list.dto.response.GetListResponse;
-//import org.example.todo_list.exception.ListException;
-//import org.example.todo_list.model.TodoList;
-//import org.example.todo_list.repository.TaskRepository;
-//import org.example.todo_list.repository.TodoListRepository;
-//import org.junit.jupiter.api.Test;
-//import org.junit.jupiter.api.extension.ExtendWith;
-//import org.mockito.InjectMocks;
-//import org.mockito.Mock;
-//import org.mockito.junit.jupiter.MockitoExtension;
-//
-//import java.util.Arrays;
-//import java.util.Collections;
-//import java.util.List;
-//import java.util.Optional;
-//
-//import static org.junit.jupiter.api.Assertions.*;
-//import static org.mockito.ArgumentMatchers.*;
-//import static org.mockito.Mockito.verify;
-//import static org.mockito.Mockito.when;
-//
-//@ExtendWith(MockitoExtension.class)
-//class TodoListServiceTest {
-//
-//    // region Test Data Builders
-//    private static final Long EXISTING_LIST_ID = 1L;
-//    private static final Long NON_EXISTING_LIST_ID = 999L;
-//    private static final String WORK_CATEGORY = "Work";
-//    private static final String PERSONAL_CATEGORY = "Personal";
-//    @Mock
-//    private TodoListRepository todoListRepository;
-//    @Mock
-//    private TaskRepository taskRepository;
-//    @InjectMocks
-//    private TodoListService todoListService;
-//
-//    private List<Long> mockTaskIds(Long... ids) {
-//        return Arrays.asList(ids);
-//    }
-//    // endregion
-//
-//    // region Create List Tests
-//    @Test
-//    void create_WithNewCategory_SavesNewList() {
-//        when(todoListRepository.existsByCategory(WORK_CATEGORY)).thenReturn(false);
-//
-//        todoListService.create(WORK_CATEGORY);
-//
-//        verify(todoListRepository).save(argThat(list ->
-//                list.getCategory().equals(WORK_CATEGORY) &&
-//                        list.getTasks().isEmpty()
-//        ));
-//    }
+package org.example.todo_list.service;
+
+import jakarta.persistence.EntityManager;
+import org.example.todo_list.dto.response.GetListResponse;
+import org.example.todo_list.exception.ListException;
+import org.example.todo_list.model.TodoList;
+import org.example.todo_list.model.User;
+import org.example.todo_list.repository.TaskRepository;
+import org.example.todo_list.repository.TodoListRepository;
+import org.example.todo_list.repository.UserRepository;
+import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.extension.ExtendWith;
+import org.mockito.InjectMocks;
+import org.mockito.Mock;
+import org.mockito.junit.jupiter.MockitoExtension;
+
+import java.util.Arrays;
+import java.util.List;
+import java.util.Optional;
+
+import static org.junit.jupiter.api.Assertions.*;
+import static org.mockito.ArgumentMatchers.*;
+import static org.mockito.Mockito.verify;
+import static org.mockito.Mockito.when;
+
+@ExtendWith(MockitoExtension.class)
+class TodoListServiceTest {
+
+    // region Test Data Builders
+    private static final Long EXISTING_LIST_ID = 1L;
+    private static final Long NON_EXISTING_LIST_ID = 999L;
+    private static final String WORK_CATEGORY = "Work";
+    private static final String PERSONAL_CATEGORY = "Personal";
+    @Mock
+    private EntityManager entityManager;
+    @Mock
+    private TodoListRepository todoListRepository;
+    @Mock
+    private TaskRepository taskRepository;
+    @InjectMocks
+    private TodoListService todoListService;
+
+    @Mock
+    private UserRepository userRepository;
+
+    private List<Long> mockTaskIds(Long... ids) {
+        return Arrays.asList(ids);
+    }
+
+    void contextLoads() {
+        assertNotNull(todoListService);
+        assertNotNull(todoListRepository);
+        assertNotNull(taskRepository);
+    }
+
+    // 新建一个任务, 如果任务类别不存在, 那么需要新建一个任务类别.
+    @Test
+    void create_WithNewCategory_SavesNewList() {
+        when(todoListRepository.existsByCategory(eq(WORK_CATEGORY), anyLong())).thenReturn(false);
+        when(userRepository.findById(anyLong())).thenReturn(Optional.of(User.builder()
+                .username("username")
+                .password("password")
+                .avatarUrl("xxx")
+                .id(1L).build()));
+        
+        todoListService.create(WORK_CATEGORY, 1L);
+//        entityManager.flush();
+//        TodoList savedList = todoListRepository.findByCategory("work", 1L).orElseThrow();
+//        assertNotNull(savedList.getId());
+
+        verify(todoListRepository).save(argThat(list ->
+                list.getCategory().equals(WORK_CATEGORY) &&
+                        list.getTasks().isEmpty()
+        ));
+    }
 //
 //    @Test
 //    void create_WithExistingCategory_ThrowsDuplicateError() {
@@ -153,64 +173,64 @@
 //                () -> assertResponse(result.get(1), 2L, PERSONAL_CATEGORY, 201L)
 //        );
 //    }
-//    // endregion
-//
-//    // region Get List by ID Tests
-//    @Test
-//    void getListById_WithExistingId_ReturnsCorrectData() {
-//        // Arrange
-//        TodoList mockList = buildTodoListWithTasks(EXISTING_LIST_ID, WORK_CATEGORY);
-//        when(todoListRepository.findById(EXISTING_LIST_ID))
-//                .thenReturn(Optional.of(mockList));
-//        when(taskRepository.findIdsByTodoList_Id(EXISTING_LIST_ID))
-//                .thenReturn(mockTaskIds(101L, 102L));
-//
-//        // Act
-//        GetListResponse response = todoListService.getListById(EXISTING_LIST_ID);
-//
-//        // Assert
-//        assertResponse(response, EXISTING_LIST_ID, WORK_CATEGORY, 101L, 102L);
-//    }
-//
-//    @Test
-//    void getListById_WithNonExistingId_ThrowsNotFoundError() {
-//        when(todoListRepository.findById(NON_EXISTING_LIST_ID))
-//                .thenReturn(Optional.empty());
-//
-//        ListException exception = assertThrows(ListException.class,
-//                () -> todoListService.getListById(NON_EXISTING_LIST_ID));
-//
-//        assertListException(exception, 3002, "没找到任务列表");
-//    }
-//    // endregion
-//
-//    // region Helper Methods
-//    private TodoList buildTodoListWithTasks(Long id, String category, Long... taskIds) {
-//        return TodoList.builder()
-//                .id(id)
-//                .category(category)
-//                .build();
-//    }
-//
-//    private void assertListException(ListException exception,
-//                                     int expectedCode,
-//                                     String expectedMessage) {
-//        assertAll(
-//                () -> assertEquals(expectedCode, exception.getCode(), "错误码不匹配"),
-//                () -> assertTrue(exception.getMessage().contains(expectedMessage), "错误信息不匹配")
-//        );
-//    }
-//
-//    private void assertResponse(GetListResponse response,
-//                                Long expectedId,
-//                                String expectedCategory,
-//                                Long... expectedTaskIds) {
-//        assertAll(
-//                () -> assertEquals(expectedId, response.id(), "ID不匹配"),
-//                () -> assertEquals(expectedCategory, response.category(), "分类不匹配"),
-//                () -> assertArrayEquals(expectedTaskIds, response.tasks().toArray(), "任务列表不匹配")
-//        );
-//    }
-//    // endregion
-//}
+    // endregion
+
+    // region Get List by ID Tests
+    @Test
+    void getListById_WithExistingId_ReturnsCorrectData() {
+        // Arrange
+        TodoList mockList = buildTodoListWithTasks(EXISTING_LIST_ID, WORK_CATEGORY);
+        when(todoListRepository.findById(EXISTING_LIST_ID))
+                .thenReturn(Optional.of(mockList));
+        when(taskRepository.findIdsByTodoList_Id(EXISTING_LIST_ID))
+                .thenReturn(mockTaskIds(101L, 102L));
+
+        // Act
+        GetListResponse response = todoListService.getListById(EXISTING_LIST_ID);
+
+        // Assert
+        assertResponse(response, EXISTING_LIST_ID, WORK_CATEGORY, 101L, 102L);
+    }
+
+    @Test
+    void getListById_WithNonExistingId_ThrowsNotFoundError() {
+        when(todoListRepository.findById(NON_EXISTING_LIST_ID))
+                .thenReturn(Optional.empty());
+
+        ListException exception = assertThrows(ListException.class,
+                () -> todoListService.getListById(NON_EXISTING_LIST_ID));
+
+        assertListException(exception, 3002, "没找到任务列表");
+    }
+    // endregion
+
+    // region Helper Methods
+    private TodoList buildTodoListWithTasks(Long id, String category, Long... taskIds) {
+        return TodoList.builder()
+                .id(id)
+                .category(category)
+                .build();
+    }
+
+    private void assertListException(ListException exception,
+                                     int expectedCode,
+                                     String expectedMessage) {
+        assertAll(
+                () -> assertEquals(expectedCode, exception.getCode(), "错误码不匹配"),
+                () -> assertTrue(exception.getMessage().contains(expectedMessage), "错误信息不匹配")
+        );
+    }
+
+    private void assertResponse(GetListResponse response,
+                                Long expectedId,
+                                String expectedCategory,
+                                Long... expectedTaskIds) {
+        assertAll(
+                () -> assertEquals(expectedId, response.id(), "ID不匹配"),
+                () -> assertEquals(expectedCategory, response.category(), "分类不匹配"),
+                () -> assertArrayEquals(expectedTaskIds, response.tasks().toArray(), "任务列表不匹配")
+        );
+    }
+    // endregion
+}
 

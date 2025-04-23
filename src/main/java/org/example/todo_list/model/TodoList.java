@@ -5,6 +5,7 @@ import jakarta.persistence.*;
 import lombok.*;
 import org.hibernate.proxy.HibernateProxy;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
 
@@ -35,7 +36,7 @@ public class TodoList {
             mappedBy = "todoList")
     @ToString.Exclude
     @JsonIgnoreProperties(value = "todoList")
-    private List<Task> tasks;
+    private List<Task> tasks = new ArrayList<>();
 
     @ManyToOne(fetch = FetchType.LAZY)
     @ToString.Exclude

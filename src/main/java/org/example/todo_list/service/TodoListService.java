@@ -1,5 +1,6 @@
 package org.example.todo_list.service;
 
+import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
 import org.example.todo_list.dto.response.GetListResponse;
 import org.example.todo_list.exception.ListException;
@@ -26,6 +27,7 @@ public class TodoListService {
     private final UserRepository userRepository;
     private final JwtUtils jwtUtils;
 
+    @Transactional
     public void create(String category, Long userId) {
         /*
          * TODO 新建任务列表: 如果你没有对应的类别的 todolist 你需要新建一个 todolist
@@ -36,14 +38,15 @@ public class TodoListService {
                     ListError.DUPLICATE_CATEGORY.getMessage()
             );
         }
-        TodoList todoList = TodoList.builder()
-                .category(category)
-                .tasks(new ArrayList<>())
-                .build();
-        todoListRepository.save(todoList);
 
         userRepository.findById(userId).ifPresentOrElse(
                 user -> {
+                    TodoList todoList = TodoList.builder()
+                            .category(category)
+                            .tasks(new ArrayList<>())
+                            .user(user)
+                            .build();
+                    todoListRepository.save(todoList);
                     user.addTodoList(todoList);
                 },
                 () -> {
