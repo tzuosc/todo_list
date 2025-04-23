@@ -36,6 +36,7 @@ public class TaskService {
 
         if (!todoListRepository.existsByCategory(createTaskRequest.category(), userId)) {
             todoListService.create(createTaskRequest.category(), userId);
+
         }
 
         if (createTaskRequest.status() == null) {
@@ -76,6 +77,7 @@ public class TaskService {
                 user.addTodoList(todoList);
             });
         });
+
     }
 
     public GetTaskResponse getTask(Long id) {
@@ -149,6 +151,7 @@ public class TaskService {
                         todoListRepository.findByCategory(oldTask.category(), userId).ifPresent(todoList -> {
                             todoList.addTask(newTask);
                         });
+
                     }
                     //修改任务名
                     if (oldTask.name() != null) newTask.setName(oldTask.name());

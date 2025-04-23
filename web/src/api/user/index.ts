@@ -18,13 +18,21 @@ export async function logout() {
 
 /*注册需要用到的类型*/
 export interface UserRegisterRequest {
-
     username: string;
     password: string;
     confirm_password: string;
 
 }
-
 export async function register(request: UserRegisterRequest) {
     return alova.Post<WebResponse<User>>("/auth/register", request);
+}
+
+export interface UserUpdateRequest{
+    id:number
+    username: string;
+    password: string;
+    avatar_url:string;
+}
+export async function updateUser(request:UserUpdateRequest){
+    return alova.Patch<WebResponse<User>>(`auth/${request.id}`,request)
 }

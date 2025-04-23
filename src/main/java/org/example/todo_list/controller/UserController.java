@@ -58,6 +58,7 @@ public class UserController {
 
     @PatchMapping("/{id}")
     public ApiResponse<UserResponse> update(@PathVariable Long id, @RequestBody @Valid UpdateUserRequest request) {
+
         // TODO 更新用户, 传入 id , UpdateUser(所有参数都是非必须的)
         userService.updateUser(id, request);
 
