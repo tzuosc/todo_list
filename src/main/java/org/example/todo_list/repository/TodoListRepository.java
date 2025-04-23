@@ -9,6 +9,8 @@ import org.springframework.stereotype.Repository;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
+import java.util.Optional;
+
 
 @Repository
 public interface TodoListRepository extends JpaRepository<TodoList, Long> {
@@ -27,6 +29,7 @@ public interface TodoListRepository extends JpaRepository<TodoList, Long> {
 
     @Transactional
     @Query("select t from TodoList t  where t.user.id = ?2 and t.category=?1")
-    TodoList findByCategory(String category, Long UserId);
+    Optional<TodoList> findByCategory(String category, Long UserId);
+
 
 }

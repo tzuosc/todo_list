@@ -8,7 +8,6 @@ import org.example.todo_list.dto.response.GetTaskResponse;
 import org.example.todo_list.exception.TaskException;
 import org.example.todo_list.exception.errors.TaskError;
 import org.example.todo_list.model.Task;
-import org.example.todo_list.model.TodoList;
 import org.example.todo_list.repository.TaskRepository;
 import org.example.todo_list.repository.TodoListRepository;
 import org.example.todo_list.repository.UserRepository;
@@ -35,15 +34,9 @@ public class TaskService {
          *   - 如果截至日期超过了 2038 年, 也就是 2147483647L(时间戳表示的最大数)
          * */
 
-        // 如果不存在对应的任务类别
-        TodoList list = todoListRepository.findByCategory(createTaskRequest.category(), userId);
-        if (list == null) {
+        if (!todoListRepository.existsByCategory(createTaskRequest.category(), userId)) {
             todoListService.create(createTaskRequest.category(), userId);
-            TodoList newList = todoListRepository.findByCategory(createTaskRequest.category(), userId);
 
-            userRepository.findById(userId).ifPresent(user -> {
-                user.addTodoList(newList);
-            });
         }
 
         if (createTaskRequest.status() == null) {
@@ -52,7 +45,7 @@ public class TaskService {
                     TaskError.INVALID_STATUS.getMessage()
             );
         }
-
+        // 时间异常处理
         if (createTaskRequest.deadline() != null) {
             // 如果不是将来的时间
             if (createTaskRequest.deadline() < System.currentTimeMillis() / 1000) {
@@ -67,18 +60,24 @@ public class TaskService {
                         TaskError.INVALID_TIME.getMessage()
                 );
             }
-
         }
 
-        Task task = Task.builder()
-                .name(createTaskRequest.name())
-                .deadline(createTaskRequest.deadline())
-                .description(createTaskRequest.taskDescription())
-                .status(createTaskRequest.status())
-                .todoList(list)
-                .build();
-        taskRepository.save(task);
-        list.addTask(task);
+
+        todoListRepository.findByCategory(createTaskRequest.category(), userId).ifPresent(todoList -> {
+            Task task = Task.builder()
+                    .name(createTaskRequest.name())
+                    .status(createTaskRequest.status())
+                    .deadline(createTaskRequest.deadline())
+                    .description(createTaskRequest.taskDescription())
+                    .todoList(todoList)
+                    .build();
+            taskRepository.save(task);
+            todoList.addTask(task);
+            userRepository.findById(userId).ifPresent(user -> {
+                user.addTodoList(todoList);
+            });
+        });
+
     }
 
     public GetTaskResponse getTask(Long id) {
@@ -149,8 +148,10 @@ public class TaskService {
                         if (!todoListRepository.existsByCategory(oldTask.category(), userId)) {
                             todoListService.create(oldTask.category(), userId);
                         }
-                        TodoList list = todoListRepository.findByCategory(oldTask.category(), userId);
-                        list.addTask(newTask);
+                        todoListRepository.findByCategory(oldTask.category(), userId).ifPresent(todoList -> {
+                            todoList.addTask(newTask);
+                        });
+
                     }
                     //修改任务名
                     if (oldTask.name() != null) newTask.setName(oldTask.name());
