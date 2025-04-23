@@ -51,7 +51,6 @@ web/                                     // 前端代码
 
 ### USER
 
-
 - username -> 用户名 : String
 - password -> 密码(需要加密) : String
 - avatar_url -> 头像 : String
@@ -67,7 +66,7 @@ web/                                     // 前端代码
 ### TODOLIST(一对多)
 
 - category -> 任务类型 : String
-- user_id -> user 的外键 :Long   
+- user_id -> user 的外键 :Long
 
 ## 接口设计
 
@@ -157,7 +156,7 @@ web/                                     // 前端代码
 > [!warning]
 >
 > 注意: 如果你写的代码对边界情况考虑的不充分, 当产生了异常, 却没有被你捕获的时候, 代码会抛出 `500` 异常 并显示
-> `系统繁忙，请稍后重试`. 
+> `系统繁忙，请稍后重试`.
 >
 > 为了方便教学, 所有业务逻辑异常的状态码统一为 400.
 
@@ -190,7 +189,7 @@ C:\Users\你的用户名\.m2\settings.xml
 然后到 IDEA 运行
 
 ```angular2html
-mvn clean install -U
+mvn clean install -T 1C
 ```
 
 ## 设置 jdk

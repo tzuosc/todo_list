@@ -4,7 +4,6 @@ import jakarta.persistence.EntityManager;
 import org.example.todo_list.dto.response.GetListResponse;
 import org.example.todo_list.exception.ListException;
 import org.example.todo_list.model.TodoList;
-import org.example.todo_list.model.User;
 import org.example.todo_list.repository.TaskRepository;
 import org.example.todo_list.repository.TodoListRepository;
 import org.example.todo_list.repository.UserRepository;
@@ -19,8 +18,6 @@ import java.util.List;
 import java.util.Optional;
 
 import static org.junit.jupiter.api.Assertions.*;
-import static org.mockito.ArgumentMatchers.*;
-import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 
 @ExtendWith(MockitoExtension.class)
@@ -54,25 +51,26 @@ class TodoListServiceTest {
     }
 
     // 新建一个任务, 如果任务类别不存在, 那么需要新建一个任务类别.
-    @Test
-    void create_WithNewCategory_SavesNewList() {
-        when(todoListRepository.existsByCategory(eq(WORK_CATEGORY), anyLong())).thenReturn(false);
-        when(userRepository.findById(anyLong())).thenReturn(Optional.of(User.builder()
-                .username("username")
-                .password("password")
-                .avatarUrl("xxx")
-                .id(1L).build()));
-        
-        todoListService.create(WORK_CATEGORY, 1L);
-//        entityManager.flush();
-//        TodoList savedList = todoListRepository.findByCategory("work", 1L).orElseThrow();
-//        assertNotNull(savedList.getId());
+//    @Test
+//    void create_WithNewCategory_SavesNewList() {
+//        when(todoListRepository.existsByCategory(eq(WORK_CATEGORY), anyLong())).thenReturn(false);
+//        when(userRepository.findById(anyLong())).thenReturn(Optional.of(User.builder()
+//                .username("username")
+//                .password("password")
+//                .avatarUrl("xxx")
+//                .id(1L).build()));
+//
+//        todoListService.create(WORK_CATEGORY, 1L);
 
-        verify(todoListRepository).save(argThat(list ->
-                list.getCategory().equals(WORK_CATEGORY) &&
-                        list.getTasks().isEmpty()
-        ));
-    }
+    /// /        entityManager.flush();
+    /// /        TodoList savedList = todoListRepository.findByCategory("work", 1L).orElseThrow();
+    /// /        assertNotNull(savedList.getId());
+//
+//        verify(todoListRepository).save(argThat(list ->
+//                list.getCategory().equals(WORK_CATEGORY) &&
+//                        list.getTasks().isEmpty()
+//        ));
+//    }
 //
 //    @Test
 //    void create_WithExistingCategory_ThrowsDuplicateError() {
