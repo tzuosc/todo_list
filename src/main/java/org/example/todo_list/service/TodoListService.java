@@ -36,14 +36,16 @@ public class TodoListService {
                     ListError.DUPLICATE_CATEGORY.getMessage()
             );
         }
-        TodoList todoList = TodoList.builder()
-                .category(category)
-                .tasks(new ArrayList<>())
-                .build();
-        todoListRepository.save(todoList);
+
 
         userRepository.findById(userId).ifPresentOrElse(
                 user -> {
+                    TodoList todoList = TodoList.builder()
+                            .category(category)
+                            .tasks(new ArrayList<>())
+                            .user(user)
+                            .build();
+                    todoListRepository.save(todoList);
                     user.addTodoList(todoList);
                 },
                 () -> {
