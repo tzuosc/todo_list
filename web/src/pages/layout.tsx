@@ -17,7 +17,7 @@ export default function layout(){
                         <main
                             className={cn([
 
-                                "flex", "flex-col", "min-h-[calc(100vh-64px)]","p-4","justify-center"
+                                "flex", "flex-col", /*"min-h-[calc(100vh-64px)]",*/"p-4","justify-center","h-full"
                             ])}
                         >
                             <Outlet/>

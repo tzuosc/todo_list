@@ -1,5 +1,5 @@
 import { LogIn, LogOut, Settings, SquareChartGantt, Star, Sun } from "lucide-react";
-import { Link, useLocation } from "react-router-dom";
+import { Link, useLocation, useNavigate } from "react-router-dom";
 import {
     Sidebar,
     SidebarContent, SidebarFooter,
@@ -21,6 +21,8 @@ import {
 } from "@/components/ui/context-menu.tsx";
 import { toast } from "sonner";
 import { logout } from "@/api/user";
+import * as React from "react";
+import { useAuthStore } from "@/storages/auth.ts";
 
 // 静态项有图标
 type StaticItem = {
@@ -31,9 +33,10 @@ type StaticItem = {
 
 // 动态项没有图标
 type DynamicItem = {
-    title: string;
-    path: string;
-    id: number;
+    title: string; //category
+    path: string; //
+    /*icon:React.ElementType;*/
+    id: number;   //list_id
 };
 
 // 联合类型
@@ -55,44 +58,6 @@ const staticNavItems =[
     },
 ]
 
-const infoItem = [
-    {
-        title : "settings",
-        logo : Settings,
-
-        url : "/account/settings"
-
-    },
-    {
-        title: "login/register",
-        logo: LogIn,
-
-        url: "/account/login"
-    },
-    {
-        title: "logout",
-        logo:LogOut,
-        onClick:async () => {
-            try {
-                // 调用登出API
-                const response = await logout();
-                if (response.code === 200) {
-                    // 如果登出成功，清除本地存储的认证信息
-                    localStorage.removeItem("token");
-                    sessionStorage.removeItem("token");
-                    // 跳转到登录页面
-                    window.location.href = "/account/login";
-                    toast.success("已成功登出！");
-                } else {
-                    toast.error("登出失败：" + response.msg);
-                }
-            } catch (error) {
-                toast.error("登出失败，请稍后再试");
-            }
-        }
-    }
-]
-
 export default function AppSidebar(){
     const [lists, setLists] = useState<DynamicItem[]>([])
     const location = useLocation()
@@ -103,7 +68,7 @@ export default function AppSidebar(){
                 const fetchedLists = res.data.map((item) => ({
                     title: item.category,
                     path: `/list/${item.category}`,
-                    id: item.id
+                    id: item.id,
                 }));
                 setLists(fetchedLists);
             }
@@ -111,34 +76,69 @@ export default function AppSidebar(){
             console.error("获取列表失败", err);
         }
     };
+    const authStore =useAuthStore()
+    const navigate = useNavigate()
+    const infoItem = [
+        {
+            title : "settings",
+            logo : Settings,
 
+            url : "/account/settings"
+
+        },
+        {
+            title: "login/register",
+            logo: LogIn,
+
+            url: "/account/login"
+        },
+        {
+            title: "logout",
+            logo: LogOut,
+            onClick: async () => {
+                try {
+                    const res = await logout();
+                    if (res.code === 200) {
+                        authStore.clear()
+                        /*localStorage.removeItem("token");
+                        sessionStorage.removeItem("token");
+                        toast.success("已成功登出！");
+                        navigate("/account/login");*/
+                    } else {
+                        toast.error("登出失败：" + res.msg);
+                    }
+                } catch (error) {
+                    toast.error("登出失败，请稍后再试");
+                }
+            }
+        }
+
+    ]
     useEffect(() => {
         fetchLists();
     }, []);
     const allNavItems :NavItem[]= [...staticNavItems, ...lists];
     return(
-        <Sidebar collapsible={"icon"}>
+        <Sidebar
+            className={cn(["w-1/5",
+                "flex","flex-col",
+                "items-center","justify-between"])}
+            collapsible={"icon"}> {/* 当侧边栏处于折叠状态时，只显示图标（icon），不显示文字 */}
 
-
-            <SidebarHeader>
-
-                <InfoSwitch items={infoItem}/>
+            <SidebarHeader className={cn(["h-1/3"])}>
+                <InfoSwitch  items={infoItem}/> {/*user's chart*/}
             </SidebarHeader>
 
-
             <SidebarContent>
-                <SidebarMenu>
+                <SidebarMenu className={cn(["flex","justify-center","px-8"])}>
                     {allNavItems
                         .filter(Boolean)    // 过滤掉 null 或 undefined
                         .map((item)=>{
                         const isActive =location.pathname === item.path
                         const isStatic = "icon" in item;
                         const Icon = isStatic ? item.icon : null;
-
-                        // 从 path 中提取 id 或 category
-                        const category = item.title;
+                        const category = item.title; // 从 path 中提取 id 或 category
                         return(
-                            /* */
                             <SidebarMenuItem key={item.path}>
                                 <ContextMenu>
                                     <ContextMenuTrigger>
@@ -155,6 +155,7 @@ export default function AppSidebar(){
                                     </ContextMenuTrigger>
                                     {!isStatic && (
                                         <ContextMenuContent>
+
                                             <ContextMenuItem
                                                 onClick={async () => {
                                                     const confirmed = window.confirm(`确认删除 "${category}" 吗？`);
@@ -172,7 +173,7 @@ export default function AppSidebar(){
                                                         toast.error("删除失败");
                                                     }
                                                 }}
-                                            >删除 </ContextMenuItem>
+                                            >删除</ContextMenuItem>
                                             <ContextMenuItem
                                                 onClick={async () => {
                                                     const newCategory = prompt(`请输入新的列表名称（原名称为：${item.title}）`, item.title);
@@ -194,9 +195,7 @@ export default function AppSidebar(){
                                                         toast.error("修改失败");
                                                     }
                                                 }}
-                                            >
-                                                修改
-                                            </ContextMenuItem>
+                                            >修改</ContextMenuItem>
 
                                         </ContextMenuContent>
                                             )}
@@ -207,13 +206,9 @@ export default function AppSidebar(){
                     })}
                 </SidebarMenu>
             </SidebarContent>
-            <SidebarFooter>
-                <div className={cn([" "])}>
-                    {/*<div className={cn(["rounded-lg bg-muted p-2"])}>
-                        <p>Sidebar footer</p>
-                    </div>*/}
+
+            <SidebarFooter className={cn(["h-1/3","justify-center"])}>
                     <AddList onAddSuccess={()=>fetchLists()}/>
-                </div>
             </SidebarFooter>
 
         </Sidebar>

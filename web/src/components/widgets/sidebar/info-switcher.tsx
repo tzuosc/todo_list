@@ -2,8 +2,6 @@
 
 import * as React from "react"
 import { useNavigate } from "react-router-dom"
-
-
 import {
     DropdownMenu,
     DropdownMenuContent,
@@ -13,6 +11,9 @@ import {
 } from "@/components/ui/dropdown-menu.tsx"
 import { SidebarMenu, SidebarMenuButton, SidebarMenuItem, useSidebar } from "@/components/ui/sidebar.tsx"
 import { Avatar } from "@/components/ui/avatar.tsx";
+import { cn } from "@/utils";
+import { useAuthStore } from "@/storages/auth.ts";
+
 
 // Example data structure
 type InfoItem = {
@@ -30,6 +31,7 @@ export function InfoSwitch(
     items: InfoItem[]
     defaultSelected?: number
 }) {
+    /*const {user} =*/
     const { isMobile } = useSidebar()
     const navigate = useNavigate()
     const [activeItem, setActiveItem] = React.useState<InfoItem | null>(items.length > 0 ? items[defaultSelected] : null)
@@ -47,27 +49,42 @@ export function InfoSwitch(
                 navigate(item.url); // Normal navigation
             }
         }
-
-
     }
-    /*const username = */
+    const user = useAuthStore((state)=>state.user)
     return (
-        <SidebarMenu>
-            <SidebarMenuItem>
+        <SidebarMenu className={cn([ "w-full","h-full","justify-center"])}>
+            <SidebarMenuItem className={cn(["flex",
+                "flex","lg:flex-col","flex-row",
+                "w-full",
+                "justify-center","items-center"])}>
+
+                {/* 如果没有登录则显示未登录 登录状态存储在AuthStore里(/storages/auth) */}
+                {user?(
+                    < Avatar src={"https://avatars.githubusercontent.com/u/149759599?v=4"}
+                             className={cn([
+                                 "lg:w-60","lg:h-60",
+                                 "w-[20vw]","h-[20vw]",
+                             ])}
+                             fallback={"CN"} />
+                ):(<span>没有登录</span>)}
+
                 <DropdownMenu>
-                    <DropdownMenuTrigger asChild>
+                    <DropdownMenuTrigger className={"h-auto"} asChild>
                         <SidebarMenuButton
                             size="lg"
-                            className="data-[state=open]:bg-sidebar-accent data-[state=open]:text-sidebar-accent-foreground"
+                            className={cn(["mt-4"
+                                /*"data-[state=open]:bg-sidebar-accent data-[state=open]:text-sidebar-accent-foreground",*/
+                            ])}
                         >
-
-                                < Avatar src={"https://avatars.githubusercontent.com/u/149759599?v=4"}
-                                         className="size-12"
-                                         fallback={"CN"}
-                                />
-
-                            <div className="grid flex-1 text-left text-sm leading-tight">
-                                username's chat
+                            {/*leading-tight 是 Tailwind CSS 中的一个实用类，用来控制 行高（line-height）*/}
+                            <div className={cn([
+                                "flex-1",
+                                "text-center ",
+                                "lg:text-2xl",
+                                "leading-tight","font-sans","font-medium",
+                                "w-full"
+                            ])}>
+                                {user ? `${user.username}'s chat` : "Guest"}
                             </div>
 
                         </SidebarMenuButton>
@@ -78,10 +95,7 @@ export function InfoSwitch(
                         side={isMobile ? "bottom" : "right"}
                         sideOffset={4}
                     >
-                        <DropdownMenuLabel className="text-xs text-muted-foreground">
-                            Navigation
-                        </DropdownMenuLabel>
-
+                        <DropdownMenuLabel className="text-xs text-muted-foreground">Menu</DropdownMenuLabel>
                         {items.map((item) => (
                             <DropdownMenuItem key={item.title} onClick={() => handleItemClick(item)} className="gap-2 p-2">
                                 <div className="flex size-6 items-center justify-center rounded-sm border">
