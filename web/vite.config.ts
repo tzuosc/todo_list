@@ -15,7 +15,8 @@ export default defineConfig({
     },//全局配置
     plugins: [
           tailwindcss(),
-          react()
+          react(),
+
     ],
     resolve: {
         alias: {

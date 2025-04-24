@@ -74,9 +74,10 @@ public class UserController {
     }
 
     @GetMapping("/logout")
-    public void logout(HttpServletResponse response) {
+    public ApiResponse<String> logout(HttpServletResponse response) {
         // TODO 登出, 直接调用 cookieUtil 的删除 cookie 的函数就行了
 
         CookieUtil.deleteCookie(response);
+        return ApiResponse.success(null);
     }
 }

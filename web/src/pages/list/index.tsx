@@ -61,12 +61,28 @@ export default function ListDetailPage() {
     }, [category]);
 
     return (
-        <div className={cn(["flex", "flex-col", "items-center", "justify-center"])} >
-            <div className={cn(["flex-col", "items-center", "justify-center"])} >
-                <h1 className="text-2xl font-bold mb-4">{category} 分类任务</h1>
-                <Columns tasks={tasks} loading={loading} onUpdated={fetchTasks} />
+        /*item-end */
+        <div className={cn(["flex","w-full","h-full","justify-end"])}>
+            <div className={cn([
+                "flex", "flex-col",
+                "h-full","w-4/5"
+            ])} >
+                <div className={cn(["w-full","items-start","basis-1/5"])}>
+                    <p className="lg:text-2xl font-bold mb-4">{category}</p>
+                </div>
+
+                <div className={cn(["flex","w-full","flex-col" ,"basis-4/5"])} >
+
+                    <div className={cn([ "flex","px-8","h-full","flex-col"])}>
+                        <Columns tasks={tasks} loading={loading} onUpdated={fetchTasks} />
+                    </div>
+
+                    <div className={cn(["flex","h-1/3","justify-end","w-full"])}>
+                        <CreateDialog />
+                    </div>
+                </div>
+
             </div>
-            <CreateDialog />
         </div>
     );
 }
