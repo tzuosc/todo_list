@@ -98,12 +98,13 @@ export default function AppSidebar(){
             onClick: async () => {
                 try {
                     const res = await logout();
+                    console.log(res.code)
                     if (res.code === 200) {
                         authStore.clear()
-                        /*localStorage.removeItem("token");
+                        localStorage.removeItem("token");
                         sessionStorage.removeItem("token");
-                        toast.success("已成功登出！");
-                        navigate("/account/login");*/
+                        console.log("logout")
+                        navigate("/account/login");
                     } else {
                         toast.error("登出失败：" + res.msg);
                     }

@@ -1,6 +1,6 @@
 @import "tailwindcss";
-@plugin "tailwindcss-animate";
-@plugin "@tailwindcss/typography";
+
+
 /* 在 main.css 顶部引入 Google Fonts */
 
 @custom-variant dark (&:is(.dark *));

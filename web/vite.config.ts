@@ -16,7 +16,7 @@ export default defineConfig({
     plugins: [
           tailwindcss(),
           react(),
-          require('tailwindcss-animate'),
+
     ],
     resolve: {
         alias: {
