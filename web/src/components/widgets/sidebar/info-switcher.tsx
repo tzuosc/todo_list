@@ -66,7 +66,12 @@ export function InfoSwitch(
                                  "w-[20vw]","h-[20vw]",
                              ])}
                              fallback={"CN"} />
-                ):(<span>没有登录</span>)}
+                ):(< Avatar src={""}
+                            className={cn([
+                                "lg:w-60","lg:h-60",
+                                "w-[20vw]","h-[20vw]",
+                            ])}
+                            fallback={"CN"} />)}
 
                 <DropdownMenu>
                     <DropdownMenuTrigger className={"h-auto"} asChild>
@@ -84,7 +89,7 @@ export function InfoSwitch(
                                 "leading-tight","font-sans","font-medium",
                                 "w-full"
                             ])}>
-                                {user ? `${user.username}'s chat` : "Guest"}
+                                {user ? `${user.username}'s chat` : "未登录"}
                             </div>
 
                         </SidebarMenuButton>

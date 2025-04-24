@@ -30,9 +30,9 @@ export async function register(request: UserRegisterRequest) {
 
 export interface UserUpdateRequest{
     id:number
-    username: string;
-    password: string;
-    avatar_url:string;
+    username?: string;
+    password?: string;
+    avatar_url?:string;
 }
 export async function updateUser(request:UserUpdateRequest){
     return alova.Patch<WebResponse<User>>(`auth/${request.id}`,request)

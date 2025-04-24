@@ -6,15 +6,49 @@ import { Textarea } from "@/components/ui/textarea"
 
 
 
-import React, {useRef} from "react";
+import React, { useRef, useState } from "react";
 import { useAuthStore } from "@/storages/auth.ts";
 import { cn } from "@/utils";
+import { z } from "zod";
+import { useForm } from "react-hook-form";
+import { zodResolver } from "@hookform/resolvers/zod";
+import { Form } from "@/components/ui/form.tsx";
+import { updateUser } from "@/api/user";
+import { useSharedStore } from "@/storages/shared.ts";
 
-const MyProfile = () => {
-    const user = useAuthStore((state)=>state.user?.username)
-    const handleSubmit = async(e:React.FormEvent)=>{
-        e.preventDefault()
-        /*  */
+function MyProfile() {
+    const [loading, setLoading] = useState<boolean>(false);
+    const sharedStore = useSharedStore();
+    const currentUser = useAuthStore().user
+    const username = useAuthStore((state)=>state.user?.username)
+    const userId = useAuthStore((state)=>state.user?.id)
+    const formSchema = z.object({
+        username: z.string().optional(),
+        password: z.string().optional(),
+        avatar_url: z.string().optional()
+    });
+    const form = useForm<z.infer<typeof formSchema>>({
+        resolver:zodResolver(formSchema)
+    })
+
+    function onSubmit(values:z.infer<typeof formSchema>){
+        if (!userId) return
+        setLoading(true)
+        updateUser({
+                id:userId,
+                username:values.username,
+                password:values.password,
+                avatar_url:values.avatar_url
+            }
+        )
+            .then((res)=>{
+                if (res.code===200){
+                    console.log(`user ${res.data?.username}更新成功`) /*myself*/
+                    sharedStore.setRefresh()
+                }else {
+                    console.log(("更新失败"))
+                }
+            }).finally(()=>setLoading(false))
     }
     const fileInputRef = useRef<HTMLInputElement | null>(null)
 
@@ -61,7 +95,7 @@ const MyProfile = () => {
                         />
                     </div>
                     <div className={"flex flex-col mt-0 lg:mt-5  items-center justify-center pl-5 lg:pl-0"}> {/* items-center不能删*/}
-                        <div className={cn(["lg:text-2xl", "text-[32px]", "font-medium"," w-75"])}>{user}</div>
+                        <div className={cn(["lg:text-2xl", "text-[32px]", "font-medium"," w-75"])}>{username}</div>
                         <div className={cn(["lg:text-[20px] text-[25px] font-sans text-[#59636e] w-75 italic"])}>Setting </div>
                     </div>
                 </div>
@@ -72,7 +106,7 @@ const MyProfile = () => {
                         ref={fileInputRef}
                         style={{ display: "none" }} /* 隐藏原生文件选择框 */
                     />
-                    <Button onClick={handleClick} className={"lg:w-75 w-full"}>
+                    <Button onClick={handleClick} variant={"outline"} className={"lg:w-75 w-full"}>
                         Edit You Avatar
                     </Button>
                 </div>
@@ -81,51 +115,32 @@ const MyProfile = () => {
 
             <Card className="m-3 flex-1 p-6 md:basis-2/3">
                 <CardHeader>
-                    <CardTitle className={"text-[32px] "}>{user}</CardTitle>
+                    <CardTitle className={"text-[32px] "}>{username}</CardTitle>
                     <hr className={"my-1 border-gray-300"}/>
                 </CardHeader>
                 <CardContent>
                     <div className="mb-3">
                         <Label htmlFor="name" className={"text-[20px]"}>username</Label>
-                        <br />
-                        <br />
-                        <br />
-                        <br />
-                        <br />
-                        <br />
-                        <br />
-                        <br />
-                        <br />
-                        <br />
-                        <br />
-                        <br />
-                        <br />
-                        <br />
-                        <br />
-                        <br />
-                        <br />
-                        <br />
-                        <br />
-                        <br />
-                        <br />
-                        <br />
-                        <br />
-                    </div>
-                    <form onSubmit={handleSubmit}>
-                        <div className="flex flex-col">
-                            <Label htmlFor="descrip" className={"text-[20px]"}>Introduce</Label>
-                            <hr className={"my-1 border-gray-300"}/>
-                            <Textarea placeholder="Introduce youself here"
-                                      className={
-                                          "mt-2 mb-2 h-100 bg-gray-200 border border-gray-300" +
-                                          "focus-visible:ring-2 focus-visible:ring-gray-200/25"
 
-                                      }/>
-                            <div className={"flex justify-end"}>
-                                <Button type="submit"> SAVE</Button>
+
+
+                    </div>
+                    <Form {...form}>
+                        <form onSubmit={form.handleSubmit(onSubmit)}>
+                            <div className="flex flex-col">
+                                <Label htmlFor="descrip" className={"text-[20px]"}>Introduce</Label>
+                                <hr className={"my-1 border-gray-300"}/>
+                                <Textarea placeholder="Introduce youself here"
+                                          className={
+                                              "mt-2 mb-2 h-100 bg-gray-200 border border-gray-300" +
+                                              "focus-visible:ring-2 focus-visible:ring-gray-200/25"
+                                          }/>
+                                <div className={"flex justify-end"}>
+                                    <Button type="submit"> SAVE</Button>
+                                </div>
                             </div>
-                        </div>
-                    </form>
+                        </form>
+                    </Form>
                 </CardContent>
             </Card>
 
@@ -136,4 +151,4 @@ const MyProfile = () => {
     {/* <div>Welcome Back {nickname} !</div> */}
 }
 
-export default MyProfile
+export  default MyProfile

@@ -44,7 +44,6 @@ function UpdateTaskDialog({taskId, onSuccess, onClose}:{taskId:number; onSuccess
 
     // 获取任务详情并设置表单初始值
     useEffect(() => {
-        console.log("当前任务 ID:", taskId);
         if (!taskId) return;
         setLoading(true);
         getTask(taskId)

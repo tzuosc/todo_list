@@ -65,15 +65,10 @@ export default createBrowserRouter([
                         })
                     },
                 ]
-            },
-            {
-                path:"/:username",
-                lazy:async ()=>({
-                    Component:(
-                        await import("@/pages/users/profile.tsx")
-                    ).default
-                })
             }
+
+
+
         ]
     }
 ])

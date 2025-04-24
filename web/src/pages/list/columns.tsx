@@ -8,8 +8,8 @@ import { ArrowDown, ArrowUp, ArrowUpDown, EditIcon, TrashIcon } from "lucide-rea
 import { cn } from "@/utils";
 import { Button } from "@/components/ui/button.tsx";
 import { Dialog, DialogContent } from "@/components/ui/dialog.tsx";
-import { UpdateTaskDialog } from "@/pages/list/list_id/updateTaskDialog.tsx";
-import { DeleteTaskDialog } from "@/pages/list/list_id/deleteTaskDialog.tsx";
+import { UpdateTaskDialog } from "@/pages/list/list_id/update-task-dialog.tsx";
+import { DeleteTaskDialog } from "@/pages/list/list_id/delete-task-dialog.tsx";
 
 // 删除不需要的状态声明，直接使用 props 传递过来的值
 export interface TaskRow{

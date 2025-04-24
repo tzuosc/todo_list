@@ -1,0 +1,101 @@
+import { useEffect, useState } from "react"
+import { useForm } from "react-hook-form"
+import { z } from "zod"
+import { zodResolver } from "@hookform/resolvers/zod"
+import { useSharedStore } from "@/storages/shared.ts"
+import { Card } from "@/components/ui/card.tsx"
+import { changeTodoListCategory } from "@/api/todolist"
+import { cn } from "@/utils"
+import {
+    Form,
+    FormControl,
+    FormField,
+    FormItem,
+    FormLabel,
+    FormMessage,
+} from "@/components/ui/form.tsx"
+import { Input } from "@/components/ui/input.tsx"
+import { Button } from "@/components/ui/button.tsx"
+import { SaveIcon } from "lucide-react"
+
+interface UpdateListDialogProps {
+    listId: number
+    category: string
+    onClose: () => void
+}
+
+const schema = z.object({
+    category: z.string().min(1, "名称不能为空"),
+})
+
+type FormValues = z.infer<typeof schema>
+
+export function UpdateListDialog({
+                                     listId,
+                                     category,
+                                     onClose,
+                                 }: UpdateListDialogProps) {
+    const [loading, setLoading] = useState(false)
+    const sharedStore = useSharedStore()
+
+    const form = useForm<FormValues>({
+        resolver: zodResolver(schema),
+        defaultValues: { category },
+    })
+
+    // 如果外部 category 变了，更新表单初始值
+    useEffect(() => {
+        form.reset({ category })
+    }, [category])
+
+    const onSubmit = form.handleSubmit(async (values) => {
+        setLoading(true)
+        try {
+            const res = await changeTodoListCategory({
+                id: listId,
+                category: values.category,
+            })
+            if (res.code === 200) {
+                sharedStore.setRefresh()
+                onClose()
+            } else {
+                toast.error("更新失败：" + res.msg)
+            }
+        } catch (err) {
+            toast.error("更新异常，请重试")
+        } finally {
+            setLoading(false)
+        }
+    })
+
+    return (
+        <Card className="p-4 space-y-4 w-72">
+            <h2 className="text-lg font-semibold">编辑列表名称</h2>
+            <Form {...form}>
+                <form onSubmit={onSubmit} className="space-y-4">
+                    <FormField
+                        control={form.control}
+                        name="category"
+                        render={({ field }) => (
+                            <FormItem>
+                                <FormLabel>列表名称</FormLabel>
+                                <FormControl>
+                                    <Input {...field} placeholder="请输入新的列表名称" />
+                                </FormControl>
+                                <FormMessage />
+                            </FormItem>
+                        )}
+                    />
+                    <Button
+                        type="submit"
+                        icon={SaveIcon}
+                        loading={loading}
+                        className={cn("w-full")}
+                    >
+                        保存
+                    </Button>
+                </form>
+            </Form>
+        </Card>
+    )
+}
