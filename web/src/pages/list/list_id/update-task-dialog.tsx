@@ -91,7 +91,7 @@ function UpdateTaskDialog({taskId, onSuccess, onClose}:{taskId:number; onSuccess
     }
 
     return (
-        <Card className="p-4 space-y-4">
+        <Card className={cn(["p-4","space-y-4"])}>
             <h2 className="text-lg font-semibold">编辑任务</h2>
             {task ? (
                 <Form {...form}>

@@ -56,42 +56,63 @@ export function InfoSwitch(
             <SidebarMenuItem className={cn(["flex",
                 "flex","lg:flex-col","flex-row",
                 "w-full",
+                "h-full",
                 "justify-center","items-center"])}>
 
                 {/* 如果没有登录则显示未登录 登录状态存储在AuthStore里(/storages/auth) */}
                 {user?(
                     < Avatar src={"https://avatars.githubusercontent.com/u/149759599?v=4"}
                              className={cn([
-                                 "lg:w-60","lg:h-60",
+                                 "lg:w-65","lg:h-65",
                                  "w-[20vw]","h-[20vw]",
                              ])}
                              fallback={"CN"} />
                 ):(< Avatar src={""}
                             className={cn([
-                                "lg:w-60","lg:h-60",
+                                "lg:w-65","lg:h-65",
                                 "w-[20vw]","h-[20vw]",
                             ])}
                             fallback={"CN"} />)}
-
                 <DropdownMenu>
                     <DropdownMenuTrigger className={"h-auto"} asChild>
                         <SidebarMenuButton
                             size="lg"
-                            className={cn(["mt-4"
+                            className={cn(["mt-6"
                                 /*"data-[state=open]:bg-sidebar-accent data-[state=open]:text-sidebar-accent-foreground",*/
                             ])}
                         >
                             {/*leading-tight 是 Tailwind CSS 中的一个实用类，用来控制 行高（line-height）*/}
-                            <div className={cn([
+                            {/*<p
+                                className={cn([
+                                    "flex-1",
+                                    "text-center",
+                                    "leading-tight",
+                                    "font-sans",
+                                    "w-full",
+                                ])}
+                            >
+                                {user ? (
+                                    <>
+                                        <p className="text-2xl lg:text-3xl font-bold align-baseline inline-block">
+                                            {user.username}
+                                        </p>
+                                        <p className="text-base lg:text-xl font-medium ml-1 align-baseline inline-block">
+                                            's chat
+                                        </p>
+                                    </>
+                                ) : (
+                                    "未登录"
+                                )}
+                            </p>*/}
+                            <p className={cn([
                                 "flex-1",
                                 "text-center ",
-                                "lg:text-2xl",
-                                "leading-tight","font-sans","font-medium",
+                                "lg:text-3xl","align-baseline","inline-block",
+                                "leading-tight","font-sans","font-bold",
                                 "w-full"
                             ])}>
                                 {user ? `${user.username}'s chat` : "未登录"}
-                            </div>
-
+                            </p>
                         </SidebarMenuButton>
                     </DropdownMenuTrigger>
                     <DropdownMenuContent
@@ -114,6 +135,9 @@ export function InfoSwitch(
 
                 </DropdownMenu>
             </SidebarMenuItem>
+            <div className={cn(["px-5"])}>
+                <hr className={cn(["my-2"," border-gray-300",])}/>
+            </div>
         </SidebarMenu>
     )
 }

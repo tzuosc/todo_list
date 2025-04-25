@@ -17,17 +17,10 @@ export async function createTodoList(category: string) {
 export async function getAllTodoLists() {
     return alova.Get<WebResponse<GetAllListResponse[]>>("/list");
 }
-export interface ChangeTodoListCategory {
-    id: number
-    newCategory: string
-}
-export async function changeTodoListCategory(request: ChangeTodoListCategory) {
-    return alova.Patch<WebResponse<TodoList>>(
-        `/list/change_category/${request.id}`,
-        { params: { newCategory: request.newCategory } }
-    )
-}
 
+export async function changeTodoListCategory(id: number, newCategory: string) {
+    return alova.Patch<WebResponse<string>>(`/list/change_category/${id}?newCategory=${encodeURIComponent(newCategory)}`)
+}
 
 export async function fetchByListId(id:number){
     return alova.Get<WebResponse<TodoList>>(`/list/${id}`)

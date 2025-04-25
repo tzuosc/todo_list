@@ -1,6 +1,6 @@
 import { useEffect, useState } from "react"
 import { useForm } from "react-hook-form"
-import { z } from "zod"
+import { z } from "zod";
 import { zodResolver } from "@hookform/resolvers/zod"
 import { useSharedStore } from "@/storages/shared.ts"
 import { Card } from "@/components/ui/card.tsx"
@@ -17,29 +17,21 @@ import {
 import { Input } from "@/components/ui/input.tsx"
 import { Button } from "@/components/ui/button.tsx"
 import { SaveIcon } from "lucide-react"
-
-interface UpdateListDialogProps {
+import { toast } from "sonner";
+export function UpdateListDialog
+({ listId, category, onClose, }
+ : {
     listId: number
     category: string
     onClose: () => void
-}
-
-const schema = z.object({
-    category: z.string().min(1, "名称不能为空"),
-})
-
-type FormValues = z.infer<typeof schema>
-
-export function UpdateListDialog({
-                                     listId,
-                                     category,
-                                     onClose,
-                                 }: UpdateListDialogProps) {
+}) {
     const [loading, setLoading] = useState(false)
     const sharedStore = useSharedStore()
-
-    const form = useForm<FormValues>({
-        resolver: zodResolver(schema),
+    const formSchema = z.object({
+        category: z.string().min(1, "名称不能为空"),
+    })
+    const form = useForm<z.infer<typeof formSchema>>({
+        resolver: zodResolver(formSchema),
         defaultValues: { category },
     })
 
@@ -51,10 +43,8 @@ export function UpdateListDialog({
     const onSubmit = form.handleSubmit(async (values) => {
         setLoading(true)
         try {
-            const res = await changeTodoListCategory({
-                id: listId,
-                category: values.category,
-            })
+            const res = await changeTodoListCategory(listId, values.category)
+
             if (res.code === 200) {
                 sharedStore.setRefresh()
                 onClose()
@@ -69,8 +59,8 @@ export function UpdateListDialog({
     })
 
     return (
-        <Card className="p-4 space-y-4 w-72">
-            <h2 className="text-lg font-semibold">编辑列表名称</h2>
+        <Card className={cn(["p-4 space-y-4 w-full"])}>
+            <h2 className={cn(["text-lg font-semibold"])}>编辑列表名称</h2>
             <Form {...form}>
                 <form onSubmit={onSubmit} className="space-y-4">
                     <FormField

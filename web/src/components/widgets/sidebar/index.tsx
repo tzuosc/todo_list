@@ -16,14 +16,14 @@ import { Dialog, DialogContent } from "@/components/ui/dialog.tsx"
 import { Button } from "@/components/ui/button.tsx"
 import { EditIcon, TrashIcon, LogIn, LogOut, Settings } from "lucide-react"
 import { cn } from "@/utils"
-import { AddList } from "@/components/widgets/add-list"
-import { InfoSwitch } from "@/components/widgets/sidebar/info-switcher"
+import { AddList } from "@/components/widgets/sidebar/edit-list/add-list"
+import { InfoSwitch } from "@/components/widgets/sidebar/info-switcher.tsx"
 import { getAllTodoLists, deleteByListId, changeTodoListCategory } from "@/api/todolist"
 import { logout } from "@/api/user"
 import { toast } from "sonner"
 import { useAuthStore } from "@/storages/auth.ts"
-import { DeleteListDialog } from "@/components/widgets/sidebar/edit-list/delete-list-dialog"
-import { UpdateListDialog } from "@/components/widgets/sidebar/edit-list/update-list-dialog"
+import { DeleteListDialog } from "@/components/widgets/sidebar/edit-list/delete-list-dialog.tsx"
+import { UpdateListDialog } from "@/components/widgets/sidebar/edit-list/update-list-dialog.tsx"
 
 type NavItem = { title: string; path: string; id: number }
 
@@ -47,23 +47,30 @@ function NavListItem({ item, onRefresh }: { item: NavItem; onRefresh: () => void
                     <Button
                         asChild
                         variant={"ghost"}
-                        className="w-full justify-start px-4 py-2"
+                        className={cn(["w-full justify-start px-6 py-2",
+                            "text-lg",
+                            "font-medium",
+
+                        ])}
                     >
                         <Link to={item.path}>{item.title}</Link>
                     </Button>
                 </ContextMenuTrigger>
                 <ContextMenuContent>
+
                     <ContextMenuItem onClick={() => setShowUpdate(true)}>
                         <EditIcon className="w-4 h-4 mr-2" /> 修改
                     </ContextMenuItem>
+
                     <ContextMenuItem onClick={() => setShowDelete(true)}>
                         <TrashIcon className="w-4 h-4 mr-2" /> 删除
                     </ContextMenuItem>
+
                 </ContextMenuContent>
             </ContextMenu>
 
             <Dialog open={showDelete} onOpenChange={setShowDelete}>
-                <DialogContent>
+                <DialogContent className={cn(["flex","items-center","justify-center"])}>
                     <DeleteListDialog
                         listId={item.id}
                         category={item.title}
@@ -126,18 +133,23 @@ export default function AppSidebar() {
         <Sidebar className={cn("w-1/5 flex flex-col justify-between")} collapsible="icon">
             <SidebarHeader className="h-1/3">
                 <InfoSwitch items={infoItems} />
+
             </SidebarHeader>
 
-            <SidebarContent className="overflow-auto">
-                <nav className="space-y-1">
+            <SidebarContent className={cn(["overflow-auto","px-15"])}>
+
+                <nav className={cn(["space-y-1 "])}>
                     {lists.map((item) => (
                         <NavListItem key={item.id} item={item} onRefresh={fetchLists} />
                     ))}
                 </nav>
             </SidebarContent>
 
-            <SidebarFooter className="h-1/3 flex items-center justify-center">
-                <AddList onAddSuccess={fetchLists} />
+            <SidebarFooter className="h-1/3 flex items-center justify-center px-10">
+
+                <AddList onAddSuccess={fetchLists}  />
+
+
             </SidebarFooter>
         </Sidebar>
     )
