@@ -1,5 +1,5 @@
 import { useState, useEffect } from "react"
-import { Link, useLocation, useNavigate } from "react-router-dom"
+import { Link, useNavigate } from "react-router-dom"
 import {
     Sidebar,
     SidebarHeader,
@@ -18,7 +18,7 @@ import { EditIcon, TrashIcon, LogIn, LogOut, Settings } from "lucide-react"
 import { cn } from "@/utils"
 import { AddList } from "@/components/widgets/sidebar/edit-list/add-list"
 import { InfoSwitch } from "@/components/widgets/sidebar/info-switcher.tsx"
-import { getAllTodoLists, deleteByListId, changeTodoListCategory } from "@/api/todolist"
+import { getAllTodoLists } from "@/api/todolist"
 import { logout } from "@/api/user"
 import { toast } from "sonner"
 import { useAuthStore } from "@/storages/auth.ts"

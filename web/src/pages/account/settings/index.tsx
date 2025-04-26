@@ -2,8 +2,6 @@ import { Avatar} from "@/components/ui/avatar"
 import { Button } from "@/components/ui/button"
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card"
 import { Label } from "@/components/ui/label"
-import { Textarea } from "@/components/ui/textarea"
-
 
 
 import React, { useRef, useState } from "react";
@@ -12,9 +10,12 @@ import { cn } from "@/utils";
 import { z } from "zod";
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
-import { Form } from "@/components/ui/form.tsx";
-import { updateUser } from "@/api/user";
+import { Form, FormControl, FormField, FormItem, FormLabel, FormMessage } from "@/components/ui/form.tsx";
+
 import { useSharedStore } from "@/storages/shared.ts";
+import { Input } from "@/components/ui/input.tsx";
+import { updateUser } from "@/api/user";
+import { toast } from "sonner";
 
 function MyProfile() {
     const [loading, setLoading] = useState<boolean>(false);
@@ -27,34 +28,38 @@ function MyProfile() {
         avatar_url: z.string().optional()
     });
     const form = useForm<z.infer<typeof formSchema>>({
-        resolver:zodResolver(formSchema)
+        resolver:zodResolver(formSchema),
     })
 
-    function onSubmit(values:z.infer<typeof formSchema>){
-        if (!userId) return
-        setLoading(true)
-        updateUser({
-                id:userId,
-                username:values.username,
-                password:values.password,
-                avatar_url:values.avatar_url
-            }
-        )
-            .then((res)=>{
-                if (res.code===200){
-                    console.log(`user ${res.data?.username}更新成功`) /*myself*/
-                    sharedStore.setRefresh()
-                }else {
-                    console.log(("更新失败"))
-                }
-            }).finally(()=>setLoading(false))
-    }
-    const fileInputRef = useRef<HTMLInputElement | null>(null)
+    async function onSubmit(values: z.infer<typeof formSchema>) {
+        setLoading(true);
+        if (!userId) return;
 
+        try {
+            const res = await updateUser({
+                id: userId,
+                username: values.username,
+                password: values.password,
+                avatar_url: values.avatar_url
+            });
+            if (res.code === 200) {
+                console.log("success");
+                sharedStore.setRefresh();
+            } else {
+                toast.error("更新失败：" + res.msg);
+            }
+        } catch (error) {
+            toast.error("请求异常，请稍后重试");
+        } finally {
+            setLoading(false); // 保证结束 loading 状态
+        }
+    }
+
+
+    const fileInputRef = useRef<HTMLInputElement | null>(null)
     const handleClick = () => {
         fileInputRef.current?.click()
     }
-
     const handleFileChange = (e: React.ChangeEvent<HTMLInputElement>) => {
         const file = e.target.files?.[0]
         if (file) {
@@ -112,17 +117,17 @@ function MyProfile() {
 
             <Card className={cn(["m-3","flex-1","p-6","md:basis-2/3"])}>
                 <CardHeader>
-                    <CardTitle className={cn(["text-[32px] "])}>{username}</CardTitle>
+                    <CardTitle className={cn(["text-[32px] "])}>Public profile</CardTitle>
                     <hr className={cn(["my-1"," border-gray-300"])}/>
                 </CardHeader>
                 <CardContent>
                     <div className="mb-3">
-                        <Label htmlFor="name" className={cn(["text-[20px]"])}>username</Label>
+                        <Label htmlFor="name" className={cn(["text-[20px]"])}>{username}</Label>
 
 
 
                     </div>
-                    <Form {...form}>
+                    {/*<Form {...form}>
                         <form onSubmit={form.handleSubmit(onSubmit)}>
                             <div className={cn(["flex","flex-col"])}>
                                 <Label htmlFor="descrip" className={"text-[20px]"}>Introduce</Label>
@@ -136,8 +141,50 @@ function MyProfile() {
                                     <Button type="submit"> SAVE</Button>
                                 </div>
                             </div>
+
+                        </form>
+                    </Form>*/}
+                    <Form {...form}>
+                        <form onSubmit={form.handleSubmit(onSubmit)} className={cn(["space-y-4"])}>
+                            <FormField
+                                control={form.control}
+                                name="username"
+                                render={({ field }) => (
+                                    <FormItem>
+                                        <FormLabel>Name</FormLabel>
+                                        <FormControl>
+                                            <Input {...field} placeholder="请输入新用户名" />
+                                        </FormControl>
+                                        <FormMessage />
+                                    </FormItem>
+                                )}
+                            />
+
+                            <FormField
+                                control={form.control}
+                                name="password"
+                                render={({ field }) => (
+                                    <FormItem>
+                                        <FormLabel>新密码</FormLabel>
+                                        <FormControl>
+                                            <Input type="password" {...field}
+                                                   placeholder="请输入新密码"
+                                            />
+                                        </FormControl>
+                                        <FormMessage />
+                                    </FormItem>
+                                )}
+                            />
+
+                            <Button
+                                type="submit"
+                                loading={loading}
+                                className="w-full">
+                                保存更改
+                            </Button>
                         </form>
                     </Form>
+
                 </CardContent>
             </Card>
 
