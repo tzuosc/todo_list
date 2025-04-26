@@ -44,7 +44,6 @@ function UpdateTaskDialog({taskId, onSuccess, onClose}:{taskId:number; onSuccess
 
     // 获取任务详情并设置表单初始值
     useEffect(() => {
-        console.log("当前任务 ID:", taskId);
         if (!taskId) return;
         setLoading(true);
         getTask(taskId)
@@ -92,7 +91,7 @@ function UpdateTaskDialog({taskId, onSuccess, onClose}:{taskId:number; onSuccess
     }
 
     return (
-        <Card className="p-4 space-y-4">
+        <Card className={cn(["p-4","space-y-4"])}>
             <h2 className="text-lg font-semibold">编辑任务</h2>
             {task ? (
                 <Form {...form}>

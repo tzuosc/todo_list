@@ -8,7 +8,7 @@ import { UserRoundPlus } from "lucide-react";
 export default function(){
     return(
         <div
-        className={cn("flex flex-1" +
+        className={cn("flex flex-1" ,
             "items-center justify-center")}>
             <Card className={cn("overflow-hidden")}>
                 <CardHeader>
