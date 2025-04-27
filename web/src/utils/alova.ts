@@ -21,25 +21,26 @@ export const alova = createAlova({
 
     responded: {
         onSuccess: async (response, _method) => {
-            if (response.status === 1004) {
+            const res = await response.json()
+            if (res.code === 1004) {
                 globalRouter?.navigate?.("/account/login");
                 toast.warning("请先登录", {
                     id: "please-login",
                     description: "登录后才能继续操作",
                 });
                 useAuthStore?.getState()?.clear();
-                return Promise.reject(response);
+                return Promise.reject(res);
             }
 
-            if (response.status === 502) {
+            if (res.code === 502) {
                 toast.error("服务器离线", {
                     id: "502-backend-offline",
                     description: "服务器暂时无法处理请求",
                 });
-                return Promise.reject(response);
+                return Promise.reject(res);
             }
 
-            return response.json();
+            return res;
         },
     },
 });

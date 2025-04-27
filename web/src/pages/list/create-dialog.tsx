@@ -9,6 +9,8 @@ import { Form, FormControl, FormField, FormItem, FormLabel } from "@/components/
 import { Input } from "@/components/ui/input.tsx";
 import { Button } from "@/components/ui/button.tsx";
 import { Dialog, DialogContent, DialogTitle, DialogTrigger } from "@/components/ui/dialog.tsx";
+import { Card } from "@/components/ui/card.tsx";
+import { cn } from "@/utils";
 
 function CreateDialog() {
     const { category } = useParams<{ category: string }>();
@@ -31,73 +33,77 @@ function CreateDialog() {
             <DialogTrigger asChild>
                 <Button variant="outline">Add Task</Button>
             </DialogTrigger>
-            <DialogContent>
-                <DialogTitle>Add Task</DialogTitle>
-                <Form {...form}>
-                    <form onSubmit={form.handleSubmit((values) => {
-                        if (!category) {
-                            toast.error("缺少任务分类信息");
-                            return;
-                        }
+            <DialogContent className={cn("p-8")}>
+                {/*<Card>*/}
+                    <DialogTitle>Add Task</DialogTitle>
+                    <Form {...form}>
+                        <form onSubmit={form.handleSubmit((values) => {
+                            if (!category) {
+                                toast.error("缺少任务分类信息");
+                                return;
+                            }
 
-                        setLoading(true);
+                            setLoading(true);
 
-                        createTask({
-                            ...values,
-                            deadline: 1830268799,
-                            status: false,
-                            category,
-                        })
-                            .then((res) => {
-                                if (res.code === 200) {
-                                    toast.success("任务添加成功", {
-                                        id: "add-success",
-                                        description: "finish",
-                                    });
-
-                                    setOpen(false); // 关闭弹窗
-                                    navigate(0);
-                                } else {
-                                    toast.error("任务添加失败", {
-                                        id: "add-error",
-                                        description: res.msg,
-                                    });
-                                }
+                            createTask({
+                                ...values,
+                                deadline: 1830268799,
+                                status: false,
+                                category,
                             })
-                            .finally(() => setLoading(false));
-                    })}
-                    >
-                        <div>
-                            <FormField
-                                control={form.control}
-                                name="name"
-                                render={({ field }) => (
-                                    <FormItem>
-                                        <FormLabel>任务名称</FormLabel>
-                                        <FormControl>
-                                            <Input {...field} />
-                                        </FormControl>
-                                    </FormItem>
-                                )}
-                            />
-                            <FormField
-                                control={form.control}
-                                name="description"
-                                render={({ field }) => (
-                                    <FormItem>
-                                        <FormLabel>任务描述</FormLabel>
-                                        <FormControl>
-                                            <Input {...field} />
-                                        </FormControl>
-                                    </FormItem>
-                                )}
-                            />
-                            <Button type="submit" variant="outline" disabled={loading}>
-                                {loading ? "添加中..." : "Add"}
-                            </Button>
-                        </div>
-                    </form>
-                </Form>
+                                .then((res) => {
+                                    if (res.code === 200) {
+                                        toast.success("任务添加成功", {
+                                            id: "add-success",
+                                            description: "finish",
+                                        });
+
+                                        setOpen(false); // 关闭弹窗
+                                        navigate(0);
+                                    } else {
+                                        toast.error("任务添加失败", {
+                                            id: "add-error",
+                                            description: res.msg,
+                                        });
+                                    }
+                                })
+                                .finally(() => setLoading(false));
+                        })}
+                        >
+                            <div className={cn(["grid","gap-y-2",""])}>
+                                <FormField
+                                    control={form.control}
+                                    name="name"
+                                    render={({ field }) => (
+                                        <FormItem className={cn([""])}>
+                                            <FormLabel>Task Name</FormLabel>
+                                            <FormControl>
+                                                <Input {...field} />
+                                            </FormControl>
+                                        </FormItem>
+                                    )}
+                                />
+                                <FormField
+                                    control={form.control}
+                                    name="description"
+                                    render={({ field }) => (
+                                        <FormItem>
+                                            <FormLabel>Task Description</FormLabel>
+                                            <FormControl>
+                                                <Input {...field} />
+                                            </FormControl>
+                                        </FormItem>
+                                    )}
+                                />
+                                <div className={cn(["flex","justify-end",])}>
+                                    <Button type="submit" variant="outline" disabled={loading} className={cn(["w-1/3",{/*"accent-green-400"*/}])}>
+                                        {loading ? "添加中..." : "Add Task"}
+                                    </Button>
+                                </div>
+                            </div>
+                        </form>
+                    </Form>
+                {/*</Card>*/}
             </DialogContent>
         </Dialog>
     );

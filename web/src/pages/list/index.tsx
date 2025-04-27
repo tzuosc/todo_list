@@ -78,7 +78,7 @@ export default function ListDetailPage() {
                     </div>
 
                     <div className={cn(["flex","h-1/3","justify-end","w-full"])}>
-                        <CreateDialog />
+                        <CreateDialog/>
                     </div>
                 </div>
 

@@ -7,7 +7,7 @@ import { useAuthStore } from "@/storages/auth.ts";
 import { useEffect } from "react";
 
 export default function layout(){
-    const navigate = useNavigate()
+    /*const navigate = useNavigate()
     const user = useAuthStore((state)=>state.user)
     useEffect(() => {
         if (!user) {
@@ -16,7 +16,7 @@ export default function layout(){
     }, [user, navigate]);
 
     globalRouter.navigate = navigate;
-    globalRouter.navigate = navigate
+    globalRouter.navigate = navigate*/
     return(
         <div className={cn(["flex h-screen flex-col"])}>
 
