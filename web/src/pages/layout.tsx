@@ -7,6 +7,9 @@ import { useAuthStore } from "@/storages/auth.ts";
 import { useEffect } from "react";
 
 export default function layout(){
+    /*globalRouter.navigate 被初始化赋值，实现没有登录自动跳转login界面*/
+    const navigate = useNavigate();
+    globalRouter.navigate = navigate;
     /*const navigate = useNavigate()
     const user = useAuthStore((state)=>state.user)
     useEffect(() => {

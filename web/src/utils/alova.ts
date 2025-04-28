@@ -22,7 +22,9 @@ export const alova = createAlova({
     responded: {
         onSuccess: async (response, _method) => {
             const res = await response.json()
+            console.log(res)
             if (res.code === 1004) {
+
                 globalRouter?.navigate?.("/account/login");
                 toast.warning("请先登录", {
                     id: "please-login",
