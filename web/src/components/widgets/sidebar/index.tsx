@@ -111,10 +111,10 @@ export default function AppSidebar() {
     useEffect(() => { fetchLists() }, [])
 
     const infoItems = [
-        { title: "settings", logo: Settings, url: "/account/settings" },
-        { title: "login/register", logo: LogIn, url: "/account/login" },
+        { title: "个人设置", logo: Settings, url: "/account/settings" },
+        { title: "登录/注册", logo: LogIn, url: "/account/login" },
         {
-            title: "logout",
+            title: "登出",
             logo: LogOut,
             onClick: async () => {
                 const res = await logout()

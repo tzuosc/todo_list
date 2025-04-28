@@ -111,7 +111,7 @@ export function InfoSwitch(
                                 "leading-tight","font-sans","font-bold",
                                 "w-full"
                             ])}>
-                                {user ? `${user.username}'s chat` : "未登录"}
+                                {user ? `${user.username}` : "未登录"}
                             </p>
                         </SidebarMenuButton>
                     </DropdownMenuTrigger>
@@ -123,9 +123,9 @@ export function InfoSwitch(
                     >
                         <DropdownMenuLabel className="text-xs text-muted-foreground">Menu</DropdownMenuLabel>
                         {items.map((item) => (
-                            <DropdownMenuItem key={item.title} onClick={() => handleItemClick(item)} className="gap-2 p-2">
+                            <DropdownMenuItem key={item.title} onClick={() => handleItemClick(item)} className="gap-2 p-2 font-medium">
                                 <div className="flex size-6 items-center justify-center rounded-sm border">
-                                    <item.logo className="size-4 shrink-0" />
+                                    <item.logo className="size-5 shrink-0" />
                                 </div>
                                 {item.title}
                             </DropdownMenuItem>

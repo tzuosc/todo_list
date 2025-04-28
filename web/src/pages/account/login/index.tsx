@@ -48,6 +48,7 @@ export default function(){
                                 variant={"tonal"}
                                 icon={UserRoundPlus}
                             >
+                                {/*还没有账号？注册！*/}
                                 <Link to={"/account/register"}>还没有账号？注册！</Link>
                             </Button>
                         </div>

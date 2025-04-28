@@ -86,7 +86,7 @@ function LoginForm(){
                     name={"password"}
                     render={({field})=>(
                         <FormItem>
-                            <FormLabel>Password</FormLabel>
+                            <FormLabel>密码</FormLabel>
                             <FormControl>
                                 <Input
                                 placeholder={"password"}
@@ -97,8 +97,19 @@ function LoginForm(){
                         </FormItem>
                     )}
                 ></FormField>
-                <Button type="submit" className="w-full" loading={loading}>
-                    Login
+                <Button
+                    type="submit"
+                    className={cn(["w-full",
+                        "bg-green-600",
+                        "text-white",
+                        "text-lg",
+                        "hover:bg-green-700",
+                        "focus:ring-2"," focus:ring-green-500 ","focus:ring-offset-2"
+                    ])}
+                    loading={loading}
+                    variant={"solid"}
+                    level={"success"}>
+                    登录
                 </Button>
 
 
