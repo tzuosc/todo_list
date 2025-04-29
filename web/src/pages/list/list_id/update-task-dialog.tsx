@@ -55,7 +55,7 @@ function UpdateTaskDialog({taskId, onSuccess, onClose}:{taskId:number; onSuccess
                     form.reset({
                         name: taskData.name || "",
                         description: taskData.description || "",
-                        deadline: taskData.deadline ? new Date(taskData.deadline * 1000) : undefined, // 转换为日期格式
+                        deadline: taskData.deadline ? new Date(taskData.deadline * 1000) : new Date(),
                     });
                 } else {
                     toast.error("获取任务失败");
@@ -73,7 +73,9 @@ function UpdateTaskDialog({taskId, onSuccess, onClose}:{taskId:number; onSuccess
             id: taskId,
             name: values.name,
             description: values.description,
-            deadline: values.deadline ? Math.floor(values.deadline.getTime() / 1000) : undefined, // 转换为时间戳
+            deadline: values.deadline
+                ? Math.floor(values.deadline.getTime() / 1000)
+                : Math.floor(Date.now() / 1000),
             status: task.status,
             category: task.category,
         })
@@ -128,7 +130,7 @@ function UpdateTaskDialog({taskId, onSuccess, onClose}:{taskId:number; onSuccess
                             render={({ field }) => (
                                 <FormItem>
                                     <FormLabel>截止时间</FormLabel>
-                                    <Popover>
+                                    <Popover modal>
                                         <PopoverTrigger asChild>
                                             <Button
                                                 variant="outline"

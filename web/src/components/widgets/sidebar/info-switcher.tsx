@@ -63,13 +63,13 @@ export function InfoSwitch(
                 {user?(
                     < Avatar src={"https://avatars.githubusercontent.com/u/149759599?v=4"}
                              className={cn([
-                                 "lg:w-[13vw]","lg:h-[13vw]",
+                                 "lg:w-[12vw]","lg:h-[12vw]",
                                  "w-[20vw]","h-[20vw]",
                              ])}
                              fallback={"CN"} />
                 ):(< Avatar src={""}
                             className={cn([
-                                "lg:w-[13vw]","lg:h-[13vw]",
+                                "lg:w-[12vw]","lg:h-[12vw]",
                                 "w-[20vw]","h-[20vw]",
                             ])}
                             fallback={"CN"} />)}
@@ -105,7 +105,7 @@ export function InfoSwitch(
                                 )}
                             </p>*/}
                             <p className={cn([
-                                "flex-1","flex",
+                                "flex",
                                 "text-center ",
                                 "lg:text-3xl","align-baseline","inline-block",
                                 "leading-tight","font-sans","font-bold",

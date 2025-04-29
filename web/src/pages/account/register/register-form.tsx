@@ -170,6 +170,8 @@ function RegisterForm() {
                         "focus:ring-2"," focus:ring-green-500 ","focus:ring-offset-2"
                     ])}
                     loading={loading}
+                    size={"lg"}
+                    icon={Check}
                     variant={"solid"}
                     level={"success"}>
                     注册

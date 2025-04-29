@@ -2,16 +2,22 @@ import { useEffect, useState } from "react";
 import { useParams } from "react-router-dom";
 import { getAllTodoLists, fetchByListId } from "@/api/todolist";
 import { toast } from "sonner";
-import { CreateDialog } from "@/pages/list/create-dialog.tsx";
+import { CreateTask } from "@/pages/list/create-task.tsx";
 import { Columns, TaskRow } from "@/pages/list/columns.tsx";
-import { getTask } from "@/api/task";
+import { createTask, getTask } from "@/api/task";
 import { cn } from "@/utils";
+import { Input } from "@/components/ui/input.tsx";
+import { Plus } from "lucide-react";
+import { Button } from "@/components/ui/button.tsx";
+import { z } from "zod";
+import { useForm } from "react-hook-form";
+import { zodResolver } from "@hookform/resolvers/zod";
+import { Form, FormControl, FormField, FormItem} from "@/components/ui/form.tsx";
 
 export default function ListDetailPage() {
     const { category } = useParams<{ category: string }>();
     const [loading, setLoading] = useState(true);
     const [tasks, setTasks] = useState<TaskRow[]>([]);
-
     // 更新任务列表
     const fetchTasks = async () => {
         if (!category) return; // 如果没有 category，不执行后续操作
@@ -55,11 +61,17 @@ export default function ListDetailPage() {
             setLoading(false);
         }
     };
-
     useEffect(() => {
         fetchTasks(); // 当 `category` 变化时重新调用 fetchTasks
     }, [category]);
 
+
+    const formSchema = z.object({
+        name: z.string({ message: "请写任务名称" }),
+    });
+    const form = useForm<z.infer<typeof formSchema>>({
+        resolver: zodResolver(formSchema),
+    });
     return (
         /*item-end */
         <div className={cn(["flex","w-full","h-full","justify-end"])}>
@@ -77,8 +89,64 @@ export default function ListDetailPage() {
                         <Columns tasks={tasks} loading={loading} onUpdated={fetchTasks} />
                     </div>
 
-                    <div className={cn(["flex","h-1/3","justify-end","w-full"])}>
-                        <CreateDialog/>
+                    <div className={cn(["flex","h-1/3","items-center","justify-center","w-full","space-x-2","p-8"])}>
+                        <Form {...form}>
+                            <form
+                                onSubmit={form.handleSubmit((values) => {
+                                    if (!category) {
+                                        toast.error("缺少任务分类信息");
+                                        return;
+                                    }
+                                    setLoading(true);
+                                    createTask({
+                                        ...values,
+                                        deadline: Math.floor(new Date().setHours(23, 59, 59, 999) / 1000), //默认为今天
+                                        status: false,
+                                        category,
+                                    })
+                                        .then((res) => {
+                                            if (res.code === 200) {
+                                                toast.success("任务添加成功", {
+                                                    id: "add-success",
+                                                    description: "finish",
+                                                });
+                                                form.reset({name: " "}); // 清空输入框
+                                                fetchTasks(); // 重新获取任务列表
+                                            } else {
+                                                toast.error("任务添加失败", {
+                                                    id: "add-error",
+                                                    description: res.msg,
+                                                });
+                                            }
+                                        })
+                                        .finally(() => setLoading(false));
+                                })}
+                                className="flex w-full space-x-2"
+                            >
+                                <FormField control={form.control} name={"name"}
+                                           render={({ field }) => (
+                                               <FormItem className={cn("w-full",)}>
+                                                   <FormControl>
+                                                       <Input
+                                                           className={cn(["w-full"])}
+                                                           icon={Plus}
+                                                           {...field}
+                                                           placeholder={"请添加任务名称"}
+                                                       />
+                                                   </FormControl>
+                                               </FormItem>
+                                           )}
+                                />
+                                <div className={cn(["flex","items-center"])}>
+                                    <Button variant={"outline"} className={""}
+                                            type={"submit"}
+                                            disabled={loading}
+                                    >{loading ? "添加中..." : "添加任务"}
+                                    </Button>
+                                </div>
+                            </form>
+                        </Form>
+                        {/*<CreateTask/> 钓鱼*/}
                     </div>
                 </div>
 

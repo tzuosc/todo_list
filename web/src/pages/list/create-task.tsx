@@ -9,10 +9,9 @@ import { Form, FormControl, FormField, FormItem, FormLabel } from "@/components/
 import { Input } from "@/components/ui/input.tsx";
 import { Button } from "@/components/ui/button.tsx";
 import { Dialog, DialogContent, DialogTitle, DialogTrigger } from "@/components/ui/dialog.tsx";
-import { Card } from "@/components/ui/card.tsx";
 import { cn } from "@/utils";
 
-function CreateDialog() {
+function CreateTask() {
     const { category } = useParams<{ category: string }>();
     const [loading, setLoading] = useState(false);
     const navigate = useNavigate();
@@ -47,7 +46,7 @@ function CreateDialog() {
 
                             createTask({
                                 ...values,
-                                deadline: 1830268799,
+                                deadline: Math.floor(new Date().setHours(23, 59, 59, 999) / 1000), //默认为今天
                                 status: false,
                                 category,
                             })
@@ -109,4 +108,4 @@ function CreateDialog() {
     );
 }
 
-export { CreateDialog };
+export { CreateTask };
