@@ -110,7 +110,7 @@ public class UserService {
                         user.setPassword(encodedPassword);
                     }
 //                    if (newUser.avatarUrl() != null) user.setAvatarUrl(newUser.avatarUrl());
-//                    userRepository.save(user);
+                    userRepository.save(user);
                 },
                 () -> {
                     throw new UserException(

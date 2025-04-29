@@ -16,8 +16,11 @@ import { useSharedStore } from "@/storages/shared.ts";
 import { Input } from "@/components/ui/input.tsx";
 import { updateUser } from "@/api/user";
 import { toast } from "sonner";
+import { User } from "@/models/user.ts";
+
 
 function MyProfile() {
+    const authStore =useAuthStore()
     const [loading, setLoading] = useState<boolean>(false);
     const sharedStore = useSharedStore();
     const username = useAuthStore((state)=>state.user?.username)
@@ -25,34 +28,34 @@ function MyProfile() {
     const formSchema = z.object({
         username: z.string().optional(),
         password: z.string().optional(),
-        avatar_url: z.string().optional()
     });
     const form = useForm<z.infer<typeof formSchema>>({
         resolver:zodResolver(formSchema),
+        defaultValues: {
+            username: "",
+            password: "",
+        },
     })
-
-    async function onSubmit(values: z.infer<typeof formSchema>) {
+    function onSubmit(values: z.infer<typeof formSchema>) {
         setLoading(true);
-        if (!userId) return;
-
-        try {
-            const res = await updateUser({
-                id: userId,
-                username: values.username,
-                password: values.password,
-                avatar_url: values.avatar_url
-            });
-            if (res.code === 200) {
-                console.log("success");
-                sharedStore.setRefresh();
-            } else {
-                toast.error("更新失败：" + res.msg);
-            }
-        } catch (error) {
-            toast.error("请求异常，请稍后重试");
-        } finally {
-            setLoading(false); // 保证结束 loading 状态
+        console.log("onSubmit")//
+        console.log(userId)//
+        if (!userId) {
+            toast.error("userId 缺失");
+            return
         }
+        updateUser({id:userId,username:values.username,password:values.password})
+            .then((res)=>{
+            if (res.code === 200){
+                console.log(res.data)//
+                toast.success(`用户更新成功`)
+                authStore.setUser(res.data as User)
+                sharedStore.setRefresh()
+            }else {
+                toast.error("用户更新失败")
+            }
+        })
+            .finally(()=>setLoading(false))
     }
 
 
@@ -67,6 +70,7 @@ function MyProfile() {
             // 可加入上传逻辑
         }
     }
+
     return(
 
 
@@ -167,15 +171,16 @@ function MyProfile() {
                                     <FormItem>
                                         <FormLabel>新密码</FormLabel>
                                         <FormControl>
-                                            <Input type="password" {...field}
-                                                   placeholder="请输入新密码"
+                                            <Input
+                                                type="password"
+                                                {...field}
+                                                placeholder="请输入新密码"
                                             />
                                         </FormControl>
                                         <FormMessage />
                                     </FormItem>
                                 )}
                             />
-
                             <Button
                                 type="submit"
                                 loading={loading}

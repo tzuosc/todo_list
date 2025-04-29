@@ -37,6 +37,7 @@ function LoginForm(){
         })
             .then((res)=>{
             if(res.code===200){
+                console.log(res.data)
                 authStore.setUser(res.data)
             toast.success("success to login",{
                 id:"login-success",

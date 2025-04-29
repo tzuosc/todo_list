@@ -43,6 +43,7 @@ public class UserController {
 
         UserResponse userResponse = UserResponse.builder()
                 .username(user.getUsername())
+                .id(user.getId())
 //                .avatarUrl(user.getAvatarUrl())
                 .build();
         return ApiResponse.success(userResponse);
@@ -65,6 +66,7 @@ public class UserController {
         return userRepository.findById(id)
                 .map(user -> ApiResponse.success(UserResponse.builder()
 //                        .avatarUrl(user.getAvatarUrl())
+                                        .id(user.getId())
                         .username(user.getUsername())
                         .build()
                 )).orElseThrow(() -> new UserException(

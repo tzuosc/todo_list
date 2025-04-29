@@ -32,7 +32,6 @@ export interface UserUpdateRequest{
     id:number
     username?: string;
     password?: string;
-    avatar_url?:string;
 }
 export async function updateUser (request: UserUpdateRequest) {
     return alova.Patch<WebResponse<string>>(`auth/${request.id}`, request);
