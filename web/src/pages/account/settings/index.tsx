@@ -196,7 +196,6 @@ function MyProfile() {
 
         </div>
     )
-    {/* <div>Welcome Back {nickname} !</div> */}
 }
 
 export  default MyProfile
