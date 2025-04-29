@@ -109,8 +109,8 @@ public class UserService {
                         String encodedPassword = passwordEncoder.encode(newUser.password());
                         user.setPassword(encodedPassword);
                     }
-                    if (newUser.avatarUrl() != null) user.setAvatarUrl(newUser.avatarUrl());
-                    userRepository.save(user);
+//                    if (newUser.avatarUrl() != null) user.setAvatarUrl(newUser.avatarUrl());
+//                    userRepository.save(user);
                 },
                 () -> {
                     throw new UserException(

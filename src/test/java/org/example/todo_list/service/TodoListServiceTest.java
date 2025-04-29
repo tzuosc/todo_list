@@ -31,7 +31,7 @@ class TodoListServiceTest {
     @Mock
     private UserRepository userRepository;
     @Mock
-    private JwtUtils jwtUtils; // 虽然测试中未使用，但需要保持依赖完整
+    private JwtUtils jwtUtils;
     @InjectMocks
     private TodoListService todoListService;
 
@@ -50,7 +50,6 @@ class TodoListServiceTest {
 
     @Test
     void create_WithExistingCategory_ThrowsListException() {
-        // 配置模拟行为（网页6的异常模拟方式）
         when(todoListRepository.existsByCategory(validCategory, testUserId)).thenReturn(true);
 
         // 执行并验证异常
@@ -60,7 +59,6 @@ class TodoListServiceTest {
 
     @Test
     void delete_WithValidId_RemovesList() {
-        // 配置模拟对象链（网页9的依赖注入模式）
         TodoList mockList = new TodoList();
         when(todoListRepository.findById(anyLong())).thenReturn(Optional.of(mockList));
         when(userRepository.findById(testUserId)).thenReturn(Optional.of(new User()));
@@ -74,7 +72,6 @@ class TodoListServiceTest {
 
     @Test
     void changeListCategory_WithNewCategory_UpdatesSuccessfully() {
-        // 配置模拟行为（网页1的参数匹配方法）
         when(todoListRepository.existsByCategory("NewCategory", testUserId)).thenReturn(false);
         when(todoListRepository.updateCategoryById(any(), anyLong())).thenReturn(1);
 
@@ -82,29 +79,9 @@ class TodoListServiceTest {
         assertDoesNotThrow(() ->
                 todoListService.changeListCategory(1L, "NewCategory", testUserId));
     }
-//
-//    @Test
-//    void getAllLists_ReturnsFormattedResponses() {
-//        // 准备测试数据（网页3的测试数据构造方式）
-//        List<TodoList> mockLists = List.of(
-//                TodoList.builder().id(1L).category("Work").build(),
-//                TodoList.builder().id(2L).category("Personal").build()
-//        );
-//
-//        // 配置模拟行为
-//        when(todoListRepository.findTodoListByUserId(testUserId)).thenReturn(mockLists);
-//
-//        // 执行测试
-//        List<GetListResponse> result = todoListService.getAllLists(testUserId);
-//
-//        // 验证结果
-//        assertEquals(2, result.size());
-//        assertEquals("Work", result.getFirst().category());
-//    }
 
     @Test
     void getListById_WithInvalidId_ThrowsException() {
-        // 配置模拟行为（网页8的异常抛出方式）
         when(todoListRepository.findById(999L)).thenReturn(Optional.empty());
 
         // 执行并验证异常

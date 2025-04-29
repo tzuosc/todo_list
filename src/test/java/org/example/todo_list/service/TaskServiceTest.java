@@ -35,26 +35,6 @@ class TaskServiceTest {
     @InjectMocks
     private TaskService taskService;
 
-//
-//    @Test
-//    void createTask_WithNewCategory_CreatesTodoList() {
-//        // 准备请求对象
-//        CreateTaskRequest request = new CreateTaskRequest(
-//                "Design Doc", "Work", false, "Finish system design", validDeadline
-//        );
-//
-//        // 模拟依赖行为
-//        when(todoListRepository.existsByCategory(validCategory, testUserId)).thenReturn(false);
-//        when(todoListRepository.findByCategory(validCategory, testUserId))
-//                .thenReturn(Optional.of(new TodoList()));
-//
-//        // 执行测试
-//        assertDoesNotThrow(() -> taskService.createTask(request, testUserId));
-//
-//        // 验证交互
-//        verify(todoListService).create(validCategory, testUserId);
-//        verify(taskRepository).save(any(Task.class));
-//    }
 
     @Test
     void createTask_WithExpiredDeadline_ThrowsException() {
