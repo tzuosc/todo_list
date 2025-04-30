@@ -2,8 +2,6 @@
 
 import * as React from "react"
 import { useNavigate } from "react-router-dom"
-
-
 import {
     DropdownMenu,
     DropdownMenuContent,
@@ -13,6 +11,9 @@ import {
 } from "@/components/ui/dropdown-menu.tsx"
 import { SidebarMenu, SidebarMenuButton, SidebarMenuItem, useSidebar } from "@/components/ui/sidebar.tsx"
 import { Avatar } from "@/components/ui/avatar.tsx";
+import { cn } from "@/utils";
+import { useAuthStore } from "@/storages/auth.ts";
+
 
 // Example data structure
 type InfoItem = {
@@ -30,6 +31,7 @@ export function InfoSwitch(
     items: InfoItem[]
     defaultSelected?: number
 }) {
+    /*const {user} =*/
     const { isMobile } = useSidebar()
     const navigate = useNavigate()
     const [activeItem, setActiveItem] = React.useState<InfoItem | null>(items.length > 0 ? items[defaultSelected] : null)
@@ -47,29 +49,70 @@ export function InfoSwitch(
                 navigate(item.url); // Normal navigation
             }
         }
-
-
     }
-    /*const username = */
+    const user = useAuthStore((state)=>state.user)
     return (
-        <SidebarMenu>
-            <SidebarMenuItem>
+        <SidebarMenu className={cn([ "w-full","h-full","justify-center"])}>
+            <SidebarMenuItem className={cn(["flex",
+                "flex","lg:flex-col","flex-row",
+                "w-full",
+                "h-full",
+                "justify-center","items-center"])}>
+
+                {/* 如果没有登录则显示未登录 登录状态存储在AuthStore里(/storages/auth) */}
+                {user?(
+                    < Avatar src={"https://avatars.githubusercontent.com/u/149759599?v=4"}
+                             className={cn([
+                                 "lg:w-[12vw]","lg:h-[12vw]",
+                                 "w-[20vw]","h-[20vw]",
+                             ])}
+                             fallback={"CN"} />
+                ):(< Avatar src={""}
+                            className={cn([
+                                "lg:w-[12vw]","lg:h-[12vw]",
+                                "w-[20vw]","h-[20vw]",
+                            ])}
+                            fallback={"CN"} />)}
                 <DropdownMenu>
-                    <DropdownMenuTrigger asChild>
+                    <DropdownMenuTrigger className={"h-auto"} asChild>
                         <SidebarMenuButton
                             size="lg"
-                            className="data-[state=open]:bg-sidebar-accent data-[state=open]:text-sidebar-accent-foreground"
+                            className={cn(["mt-6"
+                                /*"data-[state=open]:bg-sidebar-accent data-[state=open]:text-sidebar-accent-foreground",*/
+                            ])}
                         >
-
-                                < Avatar src={"https://avatars.githubusercontent.com/u/149759599?v=4"}
-                                         className="size-12"
-                                         fallback={"CN"}
-                                />
-
-                            <div className="grid flex-1 text-left text-sm leading-tight">
-                                username's chat
-                            </div>
-
+                            {/*leading-tight 是 Tailwind CSS 中的一个实用类，用来控制 行高（line-height）*/}
+                            {/*<p
+                                className={cn([
+                                    "flex-1",
+                                    "text-center",
+                                    "leading-tight",
+                                    "font-sans",
+                                    "w-full",
+                                ])}
+                            >
+                                {user ? (
+                                    <>
+                                        <p className="text-2xl lg:text-3xl font-bold align-baseline inline-block">
+                                            {user.username}
+                                        </p>
+                                        <p className="text-base lg:text-xl font-medium ml-1 align-baseline inline-block">
+                                            's chat
+                                        </p>
+                                    </>
+                                ) : (
+                                    "未登录"
+                                )}
+                            </p>*/}
+                            <p className={cn([
+                                "flex",
+                                "text-center ",
+                                "lg:text-3xl","align-baseline","inline-block",
+                                "leading-tight","font-sans","font-bold",
+                                "w-full"
+                            ])}>
+                                {user ? `${user.username}` : "未登录"}
+                            </p>
                         </SidebarMenuButton>
                     </DropdownMenuTrigger>
                     <DropdownMenuContent
@@ -78,14 +121,11 @@ export function InfoSwitch(
                         side={isMobile ? "bottom" : "right"}
                         sideOffset={4}
                     >
-                        <DropdownMenuLabel className="text-xs text-muted-foreground">
-                            Navigation
-                        </DropdownMenuLabel>
-
+                        <DropdownMenuLabel className="text-xs text-muted-foreground">Menu</DropdownMenuLabel>
                         {items.map((item) => (
-                            <DropdownMenuItem key={item.title} onClick={() => handleItemClick(item)} className="gap-2 p-2">
+                            <DropdownMenuItem key={item.title} onClick={() => handleItemClick(item)} className="gap-2 p-2 font-medium">
                                 <div className="flex size-6 items-center justify-center rounded-sm border">
-                                    <item.logo className="size-4 shrink-0" />
+                                    <item.logo className="size-5 shrink-0" />
                                 </div>
                                 {item.title}
                             </DropdownMenuItem>
@@ -95,6 +135,9 @@ export function InfoSwitch(
 
                 </DropdownMenu>
             </SidebarMenuItem>
+            <div className={cn(["px-5"])}>
+                <hr className={cn(["my-2"," border-gray-300",])}/>
+            </div>
         </SidebarMenu>
     )
 }

@@ -8,7 +8,7 @@ import { UserRoundPlus } from "lucide-react";
 export default function(){
     return(
         <div
-        className={cn("flex flex-1" +
+        className={cn("flex flex-1" ,
             "items-center justify-center")}>
             <Card className={cn("overflow-hidden")}>
                 <CardHeader>
@@ -48,6 +48,7 @@ export default function(){
                                 variant={"tonal"}
                                 icon={UserRoundPlus}
                             >
+                                {/*还没有账号？注册！*/}
                                 <Link to={"/account/register"}>还没有账号？注册！</Link>
                             </Button>
                         </div>

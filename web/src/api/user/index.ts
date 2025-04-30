@@ -13,7 +13,7 @@ export async function login(request: UserLoginRequest) {
     return alova.Post<WebResponse<User>>("/auth/login", request);
 }
 export async function logout() {
-    return alova.Post<WebResponse<never>>("/auth/logout");
+    return alova.Get<WebResponse<never>>("/auth/logout");
 }
 
 /*注册需要用到的类型*/
@@ -27,12 +27,12 @@ export async function register(request: UserRegisterRequest) {
     return alova.Post<WebResponse<User>>("/auth/register", request);
 }
 
+
 export interface UserUpdateRequest{
     id:number
-    username: string;
-    password: string;
-    avatar_url:string;
+    username?: string;
+    password?: string;
 }
-export async function updateUser(request:UserUpdateRequest){
-    return alova.Patch<WebResponse<User>>(`auth/${request.id}`,request)
+export async function updateUser (request: UserUpdateRequest) {
+    return alova.Patch<WebResponse<string>>(`auth/${request.id}`, request);
 }

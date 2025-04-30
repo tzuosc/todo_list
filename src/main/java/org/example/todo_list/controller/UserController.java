@@ -35,15 +35,16 @@ public class UserController {
         // TODO 登录, 传入 LoginRegisterRequest, HttpServletResponse, 登录成功后为 HttpServletResponse 添加 setCookie 响应头, 值为 token
 
         User user = userRepository.findByUsername(request.username());
-        String token = jwtUtils.generateToken(user.getId());
 
         if (userService.login(request)) {
+            String token = jwtUtils.generateToken(user.getId());
             CookieUtil.setCookie(response, token);
         }
 
         UserResponse userResponse = UserResponse.builder()
                 .username(user.getUsername())
-                .avatarUrl(user.getAvatarUrl())
+                .id(user.getId())
+//                .avatarUrl(user.getAvatarUrl())
                 .build();
         return ApiResponse.success(userResponse);
     }
@@ -64,7 +65,8 @@ public class UserController {
 
         return userRepository.findById(id)
                 .map(user -> ApiResponse.success(UserResponse.builder()
-                        .avatarUrl(user.getAvatarUrl())
+//                        .avatarUrl(user.getAvatarUrl())
+                                        .id(user.getId())
                         .username(user.getUsername())
                         .build()
                 )).orElseThrow(() -> new UserException(
@@ -74,9 +76,10 @@ public class UserController {
     }
 
     @GetMapping("/logout")
-    public void logout(HttpServletResponse response) {
+    public ApiResponse<String> logout(HttpServletResponse response) {
         // TODO 登出, 直接调用 cookieUtil 的删除 cookie 的函数就行了
 
         CookieUtil.deleteCookie(response);
+        return ApiResponse.success(null);
     }
 }

@@ -1,7 +1,14 @@
 import { createBrowserRouter } from "react-router-dom";
 
 export default createBrowserRouter([
-
+    {
+        path:"/account/settings",
+        lazy:async ()=>({
+            Component:(
+                await import("@/pages/account/settings")
+            ).default
+        })
+    },
     {
         /* hydrateFallback */
         path:"/",
@@ -57,24 +64,11 @@ export default createBrowserRouter([
                             ).default
                         })
                     },
-                    {
-                        path:"settings",
-                        lazy:async ()=>({
-                            Component:(
-                                await import("@/pages/account/settings")
-                            ).default
-                        })
-                    }
                 ]
-            },
-            {
-                path:"/:username",
-                lazy:async ()=>({
-                    Component:(
-                        await import("@/pages/users/profile.tsx")
-                    ).default
-                })
             }
+
+
+
         ]
     }
 ])

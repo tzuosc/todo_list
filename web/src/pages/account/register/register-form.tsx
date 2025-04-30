@@ -161,14 +161,19 @@ function RegisterForm() {
                     />
                 </div>
                 <Button
-                    variant={"solid"}
-                    level={"info"}
-                    type={"submit"}
-                    size={"lg"}
-                    className={cn(["w-full"])}
-                    icon={Check}
+                    type="submit"
+                    className={cn(["w-full",
+                        "bg-green-600",
+                        "text-white",
+                        "text-lg",
+                        "hover:bg-green-700",
+                        "focus:ring-2"," focus:ring-green-500 ","focus:ring-offset-2"
+                    ])}
                     loading={loading}
-                >
+                    size={"lg"}
+                    icon={Check}
+                    variant={"solid"}
+                    level={"success"}>
                     注册
                 </Button>
             </form>

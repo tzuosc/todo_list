@@ -44,7 +44,6 @@ function UpdateTaskDialog({taskId, onSuccess, onClose}:{taskId:number; onSuccess
 
     // 获取任务详情并设置表单初始值
     useEffect(() => {
-        console.log("当前任务 ID:", taskId);
         if (!taskId) return;
         setLoading(true);
         getTask(taskId)
@@ -56,7 +55,7 @@ function UpdateTaskDialog({taskId, onSuccess, onClose}:{taskId:number; onSuccess
                     form.reset({
                         name: taskData.name || "",
                         description: taskData.description || "",
-                        deadline: taskData.deadline ? new Date(taskData.deadline * 1000) : undefined, // 转换为日期格式
+                        deadline: taskData.deadline ? new Date(taskData.deadline * 1000) : new Date(),
                     });
                 } else {
                     toast.error("获取任务失败");
@@ -74,7 +73,9 @@ function UpdateTaskDialog({taskId, onSuccess, onClose}:{taskId:number; onSuccess
             id: taskId,
             name: values.name,
             description: values.description,
-            deadline: values.deadline ? Math.floor(values.deadline.getTime() / 1000) : undefined, // 转换为时间戳
+            deadline: values.deadline
+                ? Math.floor(values.deadline.getTime() / 1000)
+                : Math.floor(Date.now() / 1000),
             status: task.status,
             category: task.category,
         })
@@ -92,7 +93,7 @@ function UpdateTaskDialog({taskId, onSuccess, onClose}:{taskId:number; onSuccess
     }
 
     return (
-        <Card className="p-4 space-y-4">
+        <Card className={cn(["p-4","space-y-4"])}>
             <h2 className="text-lg font-semibold">编辑任务</h2>
             {task ? (
                 <Form {...form}>
@@ -129,7 +130,7 @@ function UpdateTaskDialog({taskId, onSuccess, onClose}:{taskId:number; onSuccess
                             render={({ field }) => (
                                 <FormItem>
                                     <FormLabel>截止时间</FormLabel>
-                                    <Popover>
+                                    <Popover modal>
                                         <PopoverTrigger asChild>
                                             <Button
                                                 variant="outline"

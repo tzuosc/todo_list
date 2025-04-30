@@ -10,7 +10,8 @@ import lombok.Builder;
  * */
 @Builder
 public record UserResponse(
-        String username,
-        String avatarUrl
+        Long id,
+        String username
+//        String avatarUrl
 ) {
 }

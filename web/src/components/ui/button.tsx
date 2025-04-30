@@ -29,11 +29,13 @@ const buttonVariants = cva(
     {
       variants: {
         variant: {
+            /*实心*/
           solid: [
             "bg-[var(--color-button)]",
             "text-[var(--color-button-foreground)]",
             "hover:bg-[var(--color-button)]/80",
           ],
+            /*只有边框*/
           outline: [
             "border",
             "border-input",
@@ -41,11 +43,13 @@ const buttonVariants = cva(
             "text-[var(--color-button)]",
             "hover:bg-[var(--color-button)]/10",
           ],
+            /*柔色调，边框半透明*/
           tonal: [
             "bg-[var(--color-button)]/7.5",
             "text-[var(--color-button)]",
             "hover:bg-[var(--color-button)]/20",
           ],
+            /*背景透明*/
           ghost: [
             "text-[var(--color-button)]",
             "hover:bg-[var(--color-button)]/10",
