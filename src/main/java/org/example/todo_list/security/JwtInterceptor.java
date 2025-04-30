@@ -25,7 +25,7 @@ public class JwtInterceptor implements HandlerInterceptor {
             new ArrayList<>(Arrays.asList(
                     "/auth/**",
                     "/v3/api-docs/**",
-                    "/swagger-ui/**",
+                    "/swagger-ui*",
                     "/swagger-resources/**",
                     "/webjars/**"));
 

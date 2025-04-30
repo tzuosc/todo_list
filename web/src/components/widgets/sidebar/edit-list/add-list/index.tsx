@@ -9,6 +9,7 @@ import { useNavigate } from "react-router-dom";
 import { Button } from "@/components/ui/button.tsx";
 import { Form, FormControl, FormField, FormItem, FormLabel } from "@/components/ui/form.tsx";
 import { Input } from "@/components/ui/input.tsx";
+import { cn } from "@/utils";
 
 function AddList({onAddSuccess}:{onAddSuccess:()=>void}){
     const navigate = useNavigate();
@@ -47,8 +48,9 @@ function AddList({onAddSuccess}:{onAddSuccess:()=>void}){
 
     return(
         <Dialog open={open} onOpenChange={setOpen}>
-            <DialogTrigger asChild>
-                <Button variant="outline">Add List</Button>
+            <DialogTrigger asChild className={cn([])}>
+                {/*"bg-blue-500"*/}
+                <Button variant="outline" className={cn(["w-full","bg-white"])}>Add List</Button>
             </DialogTrigger>
             <DialogContent>
                 <DialogTitle>Add List</DialogTitle>
@@ -60,16 +62,18 @@ function AddList({onAddSuccess}:{onAddSuccess:()=>void}){
                                 name="category"
                                 render={({ field }) => (
                                     <FormItem>
-                                        <FormLabel>任务名称</FormLabel>
+                                        <FormLabel>列表名称</FormLabel>
                                         <FormControl>
                                             <Input placeholder="" {...field} />
                                         </FormControl>
                                     </FormItem>
                                 )}
                             />
-                            <Button type="submit" variant="outline" disabled={loading}>
-                                {loading ? "添加中..." : "Add"}
-                            </Button>
+                            <div className={cn(["mt-4","flex","justify-end"])}>
+                                <Button type="submit" variant="outline" disabled={loading}className={cn(["w-1/4"])} >
+                                    {loading ? "添加中..." : "Add"}
+                                </Button>
+                            </div>
                         </div>
                     </form>
                 </Form>

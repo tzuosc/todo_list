@@ -17,6 +17,9 @@ import org.example.todo_list.service.UserService;
 import org.example.todo_list.utils.ApiResponse;
 import org.example.todo_list.utils.CookieUtil;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.multipart.MultipartFile;
+
+import java.io.IOException;
 
 @Tag(name = "用户相关Api", description = "用于登录和注册")
 @RestController
@@ -35,15 +38,16 @@ public class UserController {
         // TODO 登录, 传入 LoginRegisterRequest, HttpServletResponse, 登录成功后为 HttpServletResponse 添加 setCookie 响应头, 值为 token
 
         User user = userRepository.findByUsername(request.username());
-        String token = jwtUtils.generateToken(user.getId());
 
         if (userService.login(request)) {
+            String token = jwtUtils.generateToken(user.getId());
             CookieUtil.setCookie(response, token);
         }
 
         UserResponse userResponse = UserResponse.builder()
                 .username(user.getUsername())
-                .avatarUrl(user.getAvatarUrl())
+                .id(user.getId())
+//                .avatarUrl(user.getAvatarUrl())
                 .build();
         return ApiResponse.success(userResponse);
     }
@@ -65,6 +69,7 @@ public class UserController {
         return userRepository.findById(id)
                 .map(user -> ApiResponse.success(UserResponse.builder()
                         .avatarUrl(user.getAvatarUrl())
+                        .id(user.getId())
                         .username(user.getUsername())
                         .build()
                 )).orElseThrow(() -> new UserException(
@@ -73,10 +78,17 @@ public class UserController {
                 );
     }
 
+    @PostMapping("/upload/{id}")
+    public ApiResponse<String> upload(@PathVariable Long id, @RequestParam("file") MultipartFile file) throws IOException {
+        String msg = userService.upload(id, file);
+        return ApiResponse.success(msg);
+    }
+
     @GetMapping("/logout")
-    public void logout(HttpServletResponse response) {
+    public ApiResponse<String> logout(HttpServletResponse response) {
         // TODO 登出, 直接调用 cookieUtil 的删除 cookie 的函数就行了
 
         CookieUtil.deleteCookie(response);
+        return ApiResponse.success(null);
     }
 }

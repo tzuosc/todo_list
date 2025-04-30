@@ -8,8 +8,8 @@ import { ArrowDown, ArrowUp, ArrowUpDown, EditIcon, TrashIcon } from "lucide-rea
 import { cn } from "@/utils";
 import { Button } from "@/components/ui/button.tsx";
 import { Dialog, DialogContent } from "@/components/ui/dialog.tsx";
-import { UpdateTaskDialog } from "@/pages/list/list_id/updateTaskDialog.tsx";
-import { DeleteTaskDialog } from "@/pages/list/list_id/deleteTaskDialog.tsx";
+import { UpdateTaskDialog } from "@/pages/list/list_id/update-task-dialog.tsx";
+import { DeleteTaskDialog } from "@/pages/list/list_id/delete-task-dialog.tsx";
 
 // 删除不需要的状态声明，直接使用 props 传递过来的值
 export interface TaskRow{
@@ -29,7 +29,7 @@ export function Columns({ tasks, loading,onUpdated }: ColumnProps) {
         {
             accessorKey:"status",
             id:"status",
-            header:"状态",
+            header:()=><div className={"justify-self-center"}>状态</div>,
             cell:({row})=>{
                 const  status = row.getValue<boolean>("status")
                 const name =row.getValue<string>("name")
@@ -65,7 +65,7 @@ export function Columns({ tasks, loading,onUpdated }: ColumnProps) {
         },
         {
             accessorKey: "name",
-            header: "任务名称",
+            header: ()=><div className={"justify-self-center"}>任务名称</div>,
             cell: ({ row }) => {
                 const name = row.getValue("name") as string
                 return name || "-"
@@ -87,7 +87,7 @@ export function Columns({ tasks, loading,onUpdated }: ColumnProps) {
                     }
                 },[column.getIsSorted()])
                 return(
-                    <div className={cn(["flex", "gap-1", "items-center"])}>
+                    <div className={cn(["flex", "gap-1", "justify-self-center","items-center"])}>
                         截止于
                         <Button
                             icon={Icon}

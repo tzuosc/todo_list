@@ -19,9 +19,7 @@ export async function getAllTodoLists() {
 }
 
 export async function changeTodoListCategory(id: number, newCategory: string) {
-    return alova.Patch<WebResponse<string>>(`/list/change_category/${id}`,{
-        params: { newCategory },
-    });
+    return alova.Patch<WebResponse<string>>(`/list/change_category/${id}?newCategory=${encodeURIComponent(newCategory)}`)
 }
 
 export async function fetchByListId(id:number){

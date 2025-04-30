@@ -8,8 +8,17 @@ import org.example.todo_list.exception.UserException;
 import org.example.todo_list.exception.errors.UserError;
 import org.example.todo_list.model.User;
 import org.example.todo_list.repository.UserRepository;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
+import org.springframework.web.multipart.MultipartFile;
+
+import java.io.IOException;
+import java.nio.file.Files;
+import java.nio.file.Path;
+import java.nio.file.Paths;
+import java.nio.file.StandardCopyOption;
+import java.util.UUID;
 
 @Slf4j
 @Service
@@ -19,6 +28,8 @@ public class UserService {
     private final UserRepository userRepository;
     private final BCryptPasswordEncoder passwordEncoder;
 
+    @Value("${file.upload-dir}")
+    private String uploadDir;
 
     public boolean login(LoginRegisterRequest request) {
 
@@ -87,6 +98,13 @@ public class UserService {
         userRepository.save(user);
     }
 
+    public String storeFile(MultipartFile file) throws IOException {
+        String filename = UUID.randomUUID() + "_" + file.getOriginalFilename();
+        Path path = Paths.get(uploadDir).resolve(filename);
+        Files.createDirectories(path.getParent());
+        Files.copy(file.getInputStream(), path, StandardCopyOption.REPLACE_EXISTING);
+        return filename;
+    }
 
     public void updateUser(Long id, UpdateUserRequest newUser) {
         /*TODO
@@ -109,7 +127,14 @@ public class UserService {
                         String encodedPassword = passwordEncoder.encode(newUser.password());
                         user.setPassword(encodedPassword);
                     }
-                    if (newUser.avatarUrl() != null) user.setAvatarUrl(newUser.avatarUrl());
+//                    if (newUser.avatar() != null) {
+//
+//                        try {
+//                            storeFile(newUser.avatar());
+//                        } catch (IOException e) {
+//                            throw new RuntimeException(e);
+//                        }
+//                    }
                     userRepository.save(user);
                 },
                 () -> {
@@ -119,5 +144,23 @@ public class UserService {
                     );
                 }
         );
+    }
+
+    public String upload(Long id, MultipartFile file) throws IOException {
+        if (file.isEmpty()) throw new UserException(UserError.EMPTY_FILE.getCode(), UserError.EMPTY_FILE.getMessage());
+        try {
+            // 保存文件到本地
+            String filename = file.getOriginalFilename();
+            Path path = Paths.get(uploadDir + filename);
+            Files.createDirectories(path.getParent());
+            Files.write(path, file.getBytes());
+            userRepository.findById(id).ifPresent(user -> {
+                user.setAvatarUrl(uploadDir + filename);
+            });
+            return uploadDir + filename;
+        } catch (IOException exception) {
+            log.error(exception.getMessage());
+            return "上传失败";
+        }
     }
 }

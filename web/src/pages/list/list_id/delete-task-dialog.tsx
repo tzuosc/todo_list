@@ -40,24 +40,25 @@ function DeleteTaskDialog({taskId,taskName,onClose,onDelete}:DeleteTaskDialogPro
                 className={cn([
                     "flex",
                     "flex-col",
-                    "p-5",
+                    "p-5","m-1",
                     "min-h-32",
-                    "w-72",
-                    "gap-5",
-                ])}
-            >
+                    "w-full",
+                    "gap-10",
+                ])}>
                 <div
                     className={cn([
                         "flex",
                         "gap-2",
                         "items-center",
-                        "text-sm",
+                        "text-2xl",
+                        "font-bold"
                     ])}
                 >
-                    <TrashIcon className={cn(["size-4"])} />
+                    <TrashIcon className={cn(["size-8"])} />
                     删除任务
                 </div>
-                <p className={cn(["text-sm"])}>
+                {/*"opacity-50"*/}
+                <p className={cn(["text-lg","font-medium","text-center"])}>
                     你确定要删除任务 {taskName} 吗？
                 </p>
                 <div className={cn(["flex", "justify-end"])}>
