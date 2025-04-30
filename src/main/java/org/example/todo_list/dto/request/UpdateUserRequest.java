@@ -20,8 +20,6 @@ public record UpdateUserRequest(
 
         @Schema(name = "password", example = "123456")
         String password
-//
-//        @Schema(name = "avatarUrl", example = "xxxx")
-//        String avatarUrl
+
 ) {
 }

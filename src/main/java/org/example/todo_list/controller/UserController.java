@@ -17,6 +17,9 @@ import org.example.todo_list.service.UserService;
 import org.example.todo_list.utils.ApiResponse;
 import org.example.todo_list.utils.CookieUtil;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.multipart.MultipartFile;
+
+import java.io.IOException;
 
 @Tag(name = "用户相关Api", description = "用于登录和注册")
 @RestController
@@ -65,14 +68,20 @@ public class UserController {
 
         return userRepository.findById(id)
                 .map(user -> ApiResponse.success(UserResponse.builder()
-//                        .avatarUrl(user.getAvatarUrl())
-                                        .id(user.getId())
+                        .avatarUrl(user.getAvatarUrl())
+                        .id(user.getId())
                         .username(user.getUsername())
                         .build()
                 )).orElseThrow(() -> new UserException(
                         UserError.NO_USER.getCode(),
                         UserError.NO_USER.getMessage())
                 );
+    }
+
+    @PostMapping("/upload/{id}")
+    public ApiResponse<String> upload(@PathVariable Long id, @RequestParam("file") MultipartFile file) throws IOException {
+        String msg = userService.upload(id, file);
+        return ApiResponse.success(msg);
     }
 
     @GetMapping("/logout")

@@ -2,15 +2,19 @@ package org.example.todo_list.config;
 
 import lombok.RequiredArgsConstructor;
 import org.example.todo_list.security.JwtInterceptor;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.web.servlet.config.annotation.CorsRegistry;
 import org.springframework.web.servlet.config.annotation.InterceptorRegistry;
+import org.springframework.web.servlet.config.annotation.ResourceHandlerRegistry;
 import org.springframework.web.servlet.config.annotation.WebMvcConfigurer;
 
 @Configuration
 @RequiredArgsConstructor
 public class WebMVCConfig implements WebMvcConfigurer {
     private final JwtInterceptor jwtInterceptor;
+    @Value("${file.upload-dir}")
+    private String uploadDir;
 
     @Override
     public void addCorsMappings(CorsRegistry registry) {
@@ -33,5 +37,11 @@ public class WebMVCConfig implements WebMvcConfigurer {
                         "/swagger-ui/**",
                         "/swagger-resources/**",
                         "/webjars/**");
+    }
+
+    @Override
+    public void addResourceHandlers(ResourceHandlerRegistry registry) {
+        registry.addResourceHandler("/avatars/**")
+                .addResourceLocations("file:" + uploadDir + "/");
     }
 }

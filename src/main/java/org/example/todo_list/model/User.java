@@ -21,7 +21,7 @@ public class User {
     private Long id;
     private String username;
     private String password;
-//    private String avatarUrl;
+    private String avatarUrl;
 
     @OneToMany(cascade = CascadeType.ALL, fetch = FetchType.LAZY, mappedBy = "user")
     @ToString.Exclude
