@@ -50,7 +50,13 @@ function AddList({onAddSuccess}:{onAddSuccess:()=>void}){
         <Dialog open={open} onOpenChange={setOpen}>
             <DialogTrigger asChild className={cn([])}>
                 {/*"bg-blue-500"*/}
-                <Button variant="outline" className={cn(["w-full","bg-white"])}>Add List</Button>
+                <Button
+
+                    variant="outline"
+                    className={cn(["w-full","bg-white"])}
+                >
+                    新建列表
+                </Button>
             </DialogTrigger>
             <DialogContent>
                 <DialogTitle>Add List</DialogTitle>

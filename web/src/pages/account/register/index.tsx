@@ -39,7 +39,7 @@ export default function(){
                                 "text-secondary-foreground",
                             ])}
                         >
-                            注册以继续浏览 todolist
+                            注册以继续浏览 Todo-List
                         </div>
                         <div className={cn(["pt-6"])}>
                             <RegisterForm />

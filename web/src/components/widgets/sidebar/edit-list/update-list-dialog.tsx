@@ -3,7 +3,6 @@ import { useForm } from "react-hook-form"
 import { z } from "zod";
 import { zodResolver } from "@hookform/resolvers/zod"
 import { useSharedStore } from "@/storages/shared.ts"
-import { Card } from "@/components/ui/card.tsx"
 import { changeTodoListCategory } from "@/api/todolist"
 import { cn } from "@/utils"
 import {
@@ -59,7 +58,7 @@ export function UpdateListDialog
     })
 
     return (
-        <Card className={cn(["p-4 space-y-4 w-full"])}>
+        <div className={cn(["p-4 space-y-4 w-full"])}>
             <h2 className={cn(["text-lg font-semibold"])}>编辑列表名称</h2>
             <Form {...form}>
                 <form onSubmit={onSubmit} className="space-y-4">
@@ -86,6 +85,6 @@ export function UpdateListDialog
                     </Button>
                 </form>
             </Form>
-        </Card>
+        </div>
     )
 }

@@ -6,13 +6,13 @@ import {
     DropdownMenu,
     DropdownMenuContent,
     DropdownMenuItem,
-    DropdownMenuLabel,
     DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu.tsx"
 import { SidebarMenu, SidebarMenuButton, SidebarMenuItem, useSidebar } from "@/components/ui/sidebar.tsx"
 import { Avatar } from "@/components/ui/avatar.tsx";
 import { cn } from "@/utils";
 import { useAuthStore } from "@/storages/auth.ts";
+import { CircleUser } from "lucide-react";
 
 
 // Example data structure
@@ -67,12 +67,13 @@ export function InfoSwitch(
                                  "w-[20vw]","h-[20vw]",
                              ])}
                              fallback={"CN"} />
-                ):(< Avatar src={""}
+                ):(< CircleUser
+                     strokeWidth={1.25}
                             className={cn([
                                 "lg:w-[12vw]","lg:h-[12vw]",
                                 "w-[20vw]","h-[20vw]",
                             ])}
-                            fallback={"CN"} />)}
+                             />)}
                 <DropdownMenu>
                     <DropdownMenuTrigger className={"h-auto"} asChild>
                         <SidebarMenuButton
@@ -115,13 +116,13 @@ export function InfoSwitch(
                             </p>
                         </SidebarMenuButton>
                     </DropdownMenuTrigger>
+
                     <DropdownMenuContent
                         className="w-[--radix-dropdown-menu-trigger-width] min-w-56 rounded-lg"
                         align="start"
                         side={isMobile ? "bottom" : "right"}
                         sideOffset={4}
                     >
-                        <DropdownMenuLabel className="text-xs text-muted-foreground">Menu</DropdownMenuLabel>
                         {items.map((item) => (
                             <DropdownMenuItem key={item.title} onClick={() => handleItemClick(item)} className="gap-2 p-2 font-medium">
                                 <div className="flex size-6 items-center justify-center rounded-sm border">

@@ -2,7 +2,7 @@ import { useState } from "react";
 import { useSharedStore } from "@/storages/shared.ts";
 
 import { deleteByListId } from "@/api/todolist";
-import { Card } from "@/components/ui/card.tsx";
+/*import { Card } from "@/components/ui/card.tsx";*/
 import { cn } from "@/utils";
 import { TrashIcon } from "lucide-react";
 import { Button } from "@/components/ui/button.tsx";
@@ -36,8 +36,9 @@ function DeleteListDialog(
     }
     return(
         <>
-            <Card
+            <form
                 className={cn([
+                    "p-0",
                     "flex",
                     "flex-col",
                     "p-5","m-1",
@@ -71,7 +72,7 @@ function DeleteListDialog(
                         {loading ? "删除中..." : "确定"}
                     </Button>
                 </div>
-            </Card>
+            </form>
 
         </>
     )

@@ -131,7 +131,7 @@ export function Columns({ tasks, loading,onUpdated }: ColumnProps) {
                             open={updateDialogOpen}
                             onOpenChange={setUpdateDialogOpen}
                         >
-                            <DialogContent>
+                            <DialogContent className={cn("")}>
                                 <UpdateTaskDialog
                                     taskId={row.original.id}
                                     onSuccess={onUpdated}
