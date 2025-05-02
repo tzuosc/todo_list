@@ -1,5 +1,5 @@
 import { cn } from "@/utils";
-import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card.tsx";
+import { Card, CardContent } from "@/components/ui/card.tsx";
 import { LoginForm } from "@/pages/account/login/login-form.tsx";
 import { Button } from "@/components/ui/button.tsx";
 import { Link } from "react-router-dom";
@@ -11,7 +11,7 @@ export default function(){
         <div
         className={cn("flex flex-1" ,
             "items-center justify-center")}>
-            <Card className={cn("p-2","w-[45rem]")}>
+            <Card className={cn("p-4","w-[40rem]")}>
                 <CardContent className={cn(["grid"," md:grid-cols-[1fr_auto_1fr]","px-0"])}>
                     {/*
                         两列的 grid

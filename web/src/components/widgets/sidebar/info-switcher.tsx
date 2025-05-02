@@ -83,28 +83,6 @@ export function InfoSwitch(
                             ])}
                         >
                             {/*leading-tight 是 Tailwind CSS 中的一个实用类，用来控制 行高（line-height）*/}
-                            {/*<p
-                                className={cn([
-                                    "flex-1",
-                                    "text-center",
-                                    "leading-tight",
-                                    "font-sans",
-                                    "w-full",
-                                ])}
-                            >
-                                {user ? (
-                                    <>
-                                        <p className="text-2xl lg:text-3xl font-bold align-baseline inline-block">
-                                            {user.username}
-                                        </p>
-                                        <p className="text-base lg:text-xl font-medium ml-1 align-baseline inline-block">
-                                            's chat
-                                        </p>
-                                    </>
-                                ) : (
-                                    "未登录"
-                                )}
-                            </p>*/}
                             <p className={cn([
                                 "flex",
                                 "text-center ",

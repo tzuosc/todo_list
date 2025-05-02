@@ -136,21 +136,22 @@ export default function AppSidebar() {
 
             </SidebarHeader>
 
-            <SidebarContent className={cn(["overflow-auto","px-15"])}>
+            <SidebarContent className={cn(["overflow-auto","flex","justify-between"])}>
 
-                <nav className={cn(["space-y-1 "])}>
+                <nav className={cn(["px-15","space-y-1 "])}>
                     {lists.map((item) => (
                         <NavListItem key={item.id} item={item} onRefresh={fetchLists} />
                     ))}
                 </nav>
+                <AddList onAddSuccess={fetchLists}  />
             </SidebarContent>
 
-            <SidebarFooter className="h-1/3 flex items-center justify-center px-10">
-
-                <AddList onAddSuccess={fetchLists}  />
+            {/*<SidebarFooter className={cn(["flex items-center justify-center px-10"])}>
 
 
-            </SidebarFooter>
+
+
+            </SidebarFooter>*/}
         </Sidebar>
     )
 }
