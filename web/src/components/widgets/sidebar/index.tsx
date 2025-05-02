@@ -4,7 +4,7 @@ import {
     Sidebar,
     SidebarHeader,
     SidebarContent,
-    SidebarFooter,
+
 } from "@/components/ui/sidebar.tsx"
 import {
     ContextMenu,
@@ -108,7 +108,11 @@ export default function AppSidebar() {
         }
     }
 
-    useEffect(() => { fetchLists() }, [])
+    useEffect(() => {
+        if (authStore.user){
+            fetchLists()    /* */
+        }else setLists([]) /*清空列表*/
+         }, [authStore.user])
 
     const infoItems = [
         { title: "个人设置", logo: Settings, url: "/account/settings" },
@@ -143,7 +147,11 @@ export default function AppSidebar() {
                         <NavListItem key={item.id} item={item} onRefresh={fetchLists} />
                     ))}
                 </nav>
-                <AddList onAddSuccess={fetchLists}  />
+
+                {authStore.user && (
+                    <AddList onAddSuccess={fetchLists} />
+                )}
+                {/* 登录状态下显示 AddList，未登录不显示 */}
             </SidebarContent>
 
             {/*<SidebarFooter className={cn(["flex items-center justify-center px-10"])}>
