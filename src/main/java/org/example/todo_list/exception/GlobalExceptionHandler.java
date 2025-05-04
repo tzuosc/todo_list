@@ -17,6 +17,7 @@ import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.bind.annotation.RestControllerAdvice;
 import org.springframework.web.method.annotation.MethodArgumentTypeMismatchException;
 
+import java.io.IOException;
 import java.time.format.DateTimeParseException;
 import java.util.Map;
 import java.util.Objects;
@@ -107,8 +108,15 @@ public class GlobalExceptionHandler {
         } else if (rootCause instanceof DateTimeParseException) {
             errorMessage = "日期格式错误，正确格式应为 yyyy-MM-dd HH:mm";
         }
-
         return ApiResponse.error(400, errorMessage);
+    }
+
+    @ResponseStatus(HttpStatus.BAD_REQUEST)
+    @ExceptionHandler(IOException.class)
+    public ResponseEntity<ApiResponse<Void>> handleIOException(IOException ex) {
+        log.error("IO 异常", ex);
+        return ResponseEntity.internalServerError()
+                .body(ApiResponse.error(400, "IO 异常"));
     }
 
     // 兜底异常处理

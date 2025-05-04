@@ -8,8 +8,17 @@ import org.example.todo_list.exception.UserException;
 import org.example.todo_list.exception.errors.UserError;
 import org.example.todo_list.model.User;
 import org.example.todo_list.repository.UserRepository;
+import org.springframework.beans.factory.annotation.Value;
+import org.springframework.http.ResponseEntity;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
+import org.springframework.web.multipart.MultipartFile;
+
+import java.io.File;
+import java.io.IOException;
+import java.nio.file.*;
+import java.security.NoSuchAlgorithmException;
+import java.util.UUID;
 
 @Slf4j
 @Service
@@ -19,6 +28,11 @@ public class UserService {
     private final UserRepository userRepository;
     private final BCryptPasswordEncoder passwordEncoder;
 
+    @Value("${file.access-path}")
+    private String accessPath;
+
+    @Value("${file.upload-dir}")
+    private String uploadDir;
 
     public boolean login(LoginRegisterRequest request) {
 
@@ -87,6 +101,55 @@ public class UserService {
         userRepository.save(user);
     }
 
+    public String storeFile(Long userId, MultipartFile file) throws IOException {
+       // TODO 存储头像图片. 随意你存储在哪里, 只要最终可以通过 http://localhost:8080/images/文件名 这个地址访问到对应的图片就算成功
+
+        try {
+            log.info("进入了服务类的方法");
+            // 校验文件是否为空
+            if (file.isEmpty()) {
+                throw new UserException(
+                        UserError.INVALID_FILE.getCode(),
+                        UserError.INVALID_FILE.getMessage()
+                );
+            }
+
+            // 生成随机文件名（UUID + 后缀）
+            String originalFilename = file.getOriginalFilename();
+            String fileExtension = null;
+            if (originalFilename != null) {
+                fileExtension = originalFilename.substring(originalFilename.lastIndexOf("."));
+            }
+            String randomFileName = UUID.randomUUID() + fileExtension;
+
+            // 创建存储目录（如果不存在）
+            Path uploadPath = Paths.get(uploadDir);
+            if (!Files.exists(uploadPath)) {
+                Files.createDirectories(uploadPath);
+            }
+
+            // 保存文件到本地
+            Path filePath = uploadPath.resolve(randomFileName);
+            file.transferTo(filePath.toFile());
+
+            // 返回可访问的URL路径（示例：http://localhost:8080/images/xxx.jpg）
+            String path = accessPath.replace("**", "") + randomFileName;
+            userRepository.findById(userId).ifPresentOrElse(user -> {
+                log.info("成功设置了用户头像");
+                user.setAvatarUrl(path);
+                userRepository.save(user);
+            }, () -> {
+                throw new UserException(
+                        UserError.NO_USER.getCode(),
+                        UserError.NO_USER.getMessage());
+            });
+            return path;
+
+        } catch (IOException e) {
+            log.error(e.getMessage());
+            return "上传失败：";
+        }
+    }
 
     public void updateUser(Long id, UpdateUserRequest newUser) {
         /*TODO
@@ -109,7 +172,6 @@ public class UserService {
                         String encodedPassword = passwordEncoder.encode(newUser.password());
                         user.setPassword(encodedPassword);
                     }
-//                    if (newUser.avatarUrl() != null) user.setAvatarUrl(newUser.avatarUrl());
                     userRepository.save(user);
                 },
                 () -> {
@@ -120,4 +182,6 @@ public class UserService {
                 }
         );
     }
+
+
 }
