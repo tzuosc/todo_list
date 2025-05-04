@@ -13,7 +13,6 @@ import { zodResolver } from "@hookform/resolvers/zod";
 
 import { Form, FormControl, FormField, FormItem, FormLabel, FormMessage } from "@/components/ui/form.tsx";
 import { login } from "@/api/user";
-import { CardDescription, CardHeader, CardTitle } from "@/components/ui/card.tsx";
 import { Lock, UserRound } from "lucide-react";
 
 function LoginForm(){

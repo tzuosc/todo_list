@@ -16,7 +16,7 @@ function AddList({onAddSuccess}:{onAddSuccess:()=>void}){
     const navigate = useNavigate();
     const [loading, setLoading] = useState(false);
     const formSchema = z.object({
-        category:z.string({message:"请填写List类型"})
+        category:z.string({message:"请填写列表类型"})
     })
     const form = useForm<z.infer<typeof formSchema>>({
         resolver:zodResolver(formSchema)
@@ -71,7 +71,7 @@ function AddList({onAddSuccess}:{onAddSuccess:()=>void}){
                                     <FormItem>
                                         <FormLabel>列表名称</FormLabel>
                                         <FormControl>
-                                            <Input placeholder="" {...field} />
+                                            <Input placeholder=" " {...field} />
                                         </FormControl>
                                     </FormItem>
                                 )}

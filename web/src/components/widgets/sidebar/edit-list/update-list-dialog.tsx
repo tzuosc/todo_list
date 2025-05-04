@@ -17,6 +17,7 @@ import { Input } from "@/components/ui/input.tsx"
 import { Button } from "@/components/ui/button.tsx"
 import { SaveIcon } from "lucide-react"
 import { toast } from "sonner";
+import { useNavigate } from "react-router-dom";
 export function UpdateListDialog
 ({ listId, category, onClose, }
  : {
@@ -24,6 +25,7 @@ export function UpdateListDialog
     category: string
     onClose: () => void
 }) {
+    const navigate = useNavigate();
     const [loading, setLoading] = useState(false)
     const sharedStore = useSharedStore()
     const formSchema = z.object({
@@ -47,6 +49,7 @@ export function UpdateListDialog
             if (res.code === 200) {
                 sharedStore.setRefresh()
                 onClose()
+                navigate(`/list/${values.category}`)
             } else {
                 toast.error("更新失败：" + res.msg)
             }
