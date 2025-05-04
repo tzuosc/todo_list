@@ -72,21 +72,25 @@ web/                                     // 前端代码
 
 ### 关于 USER
 
-- /auth/register -> 注册
+- /user/register -> 注册
     - POST
     - 传入参数: username, password
     - 返回: 注册成功
-- /auth/login -> 登录
+- /user/login -> 登录
     - POST
     - 传入参数: username, password
     - 返回: 登录成功添加响应头 setCookie, 值为 token, 前端拿到后持久化存储下来
-- /auth/logout -> 登出
+- /user/logout -> 登出
     - GET
     - 返回: 登出成功
-- /auth/{id} -> 更新用户
+- /user/{id} -> 更新用户
     - PATCH
     - 传入: username || password || avatarUrl (一个或多个都行)
     - 返回: 更新成功
+-  /user/upload/{id} -> 上传头像(图片)
+  - POST
+  - 传入: 用户id, 图片
+  - 返回: 图片地址
 
 ### 关于 TODOLIST
 
