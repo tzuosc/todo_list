@@ -14,9 +14,12 @@ import { Form, FormControl, FormField, FormItem, FormLabel, FormMessage } from "
 
 import { useSharedStore } from "@/storages/shared.ts";
 import { Input } from "@/components/ui/input.tsx";
-import { updateUser } from "@/api/user";
+import { updateUser, uploadAvatar } from "@/api/user";
 import { toast } from "sonner";
 import { User } from "@/models/user.ts";
+import { Link } from "react-router-dom";
+import { Textarea } from "@/components/ui/textarea.tsx";
+import { Lock, UserRound } from "lucide-react";
 
 
 function MyProfile() {
@@ -32,9 +35,10 @@ function MyProfile() {
     const form = useForm<z.infer<typeof formSchema>>({
         resolver:zodResolver(formSchema),
         defaultValues: {
-            username: "",
-            password: "",
-        },
+            username: authStore.user?.username ?? undefined,
+            password: undefined,
+        }
+
     })
     function onSubmit(values: z.infer<typeof formSchema>) {
         setLoading(true);
@@ -63,13 +67,36 @@ function MyProfile() {
     const handleClick = () => {
         fileInputRef.current?.click()
     }
-    const handleFileChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-        const file = e.target.files?.[0]
-        if (file) {
-            console.log("Selected file:", file)
-            // 可加入上传逻辑
+    const handleFileChange = async (e: React.ChangeEvent<HTMLInputElement>) => {
+        const file = e.target.files?.[0];
+        if (!file) return;
+
+        toast.loading("上传中...", { id: "user-avatar-upload" });
+
+        try {
+            const res = await uploadAvatar(file);
+
+            if (res.code === 200) {
+                toast.success("上传成功", { id: "user-avatar-upload" });
+                authStore.setUser({
+                    ...authStore.user!,
+                    avatar_url: res.data as string, // 这是图片 URL
+                });
+                sharedStore.setRefresh();
+            } else {
+                toast.error("上传失败", {
+                    id: "user-avatar-upload",
+                    description: res.msg,
+                });
+            }
+        } catch (err) {
+            toast.error("上传失败", {
+                id: "user-avatar-upload",
+                description: "网络或服务器错误",
+            });
         }
     }
+
 
     return(
 
@@ -82,7 +109,7 @@ function MyProfile() {
         mx-60( margin-x轴 左右 )
         mx-auto (auto 代表 自动计算外边距，它会使左右的外边距相等，从而实现居中效果)
       */}
-            <aside className={cn("lg:sticky"," lg:top-20 ","flex flex-col","pt-20 ","w-full","h-fit","md:basis-1/3")}>
+            <aside className={cn("lg:sticky"," lg:top-20 ","flex flex-col","pt-20 ","w-full","h-fit","md:basis-1/3","lg:gap-3")}>
                 {/*
         lg:top-20 是关键，保证往下拉，左侧始终与顶栏差20
         md:mr-5 md:w-75
@@ -91,30 +118,47 @@ function MyProfile() {
         sticky是对的！
         h-fit 是对的！
       */}
-                <div className={cn(["flex","flex-row"," lg:flex-col","mb-3","lg:mb-0","mx-3","lg:mx-0"])}>
+                <div className={cn(["flex","flex-row"," lg:flex-col","mb-3","lg:mb-0","mx-3","lg:mx-0","lg:gap-5"])}>
                     <div className={cn(["flex","justify-center"])}>{/*justify-center*/}
-                        <Avatar src={
-                            "https://avatars.githubusercontent.com/u/149759599?v=4"
-                        }
-                                fallback={"CN"}
+                        <Avatar src={authStore.user?.avatar_url || ""} fallback={"CN"}
                                 className={cn(["w-[20vw]","h-[20vw]","lg:w-75","lg:h-75","overflow-cover"])}
                         />
                     </div>
-                    <div className={cn(["flex","flex-col","mt-0","lg:mt-5","items-center","justify-center","pl-5","lg:pl-0"])}> {/* items-center不能删*/}
+                    <div className={cn(["flex","flex-col","items-center","justify-center","pl-5","lg:pl-0","lg:gap-2"])}> {/* items-center不能删*/}
                         <div className={cn(["lg:text-2xl", "text-[32px]", "font-medium"," w-75"])}>{username}</div>
-                        <div className={cn(["lg:text-[20px]","text-[25px]","font-sans","text-[#59636e]","w-75","italic"])}>Setting </div>
+                        <div className={cn(["lg:text-[20px]","text-[25px]","font-sans","text-[#59636e]","w-75","italic"])}>个人设置</div>
                     </div>
                 </div>
-                <div className={"flex  mt-3  px-3 justify-center"}> {/*justify-center*/}
+                <div className={cn([
+                    "flex","mt-3","px-20",
+                    "justify-center","flex-col","items-center",
+                    "gap-5"
+                ])}> {/*justify-center*/}
                     <input
                         type="file"
                         onChange={handleFileChange}
                         ref={fileInputRef}
                         style={{ display: "none" }} /* 隐藏原生文件选择框 */
                     />
-                    <Button onClick={handleClick} variant={"outline"} className={cn(["lg:w-75 w-full"])}>
-                        Edit You Avatar
+
+                    <Button onClick={handleClick} variant={"outline"} className={cn(["lg:w-75 w-full","text-base"])}>
+                        编辑用户头像
                     </Button>
+
+                    <div className={cn(["flex","justify-start","w-full"])}>
+                        <Button
+                            asChild
+                            className={cn([
+                                "bg-green-700",
+                                "text-white","text-center",
+                                "text-base","h-9",
+                                "hover:bg-green-600",
+                                "focus:ring-2"," focus:ring-green-500 ","focus:ring-offset-2"])}
+                            variant={"solid"}
+                        >
+                            <Link to={"/"}>返回主页</Link>
+                        </Button>
+                    </div>
                 </div>
             </aside>
 
@@ -149,15 +193,20 @@ function MyProfile() {
                         </form>
                     </Form>*/}
                     <Form {...form}>
-                        <form onSubmit={form.handleSubmit(onSubmit)} className={cn(["space-y-4"])}>
+                        <form onSubmit={form.handleSubmit(onSubmit)} className={cn(["space-y-4","flex","gap-3","flex-col"])}>
                             <FormField
                                 control={form.control}
                                 name="username"
                                 render={({ field }) => (
                                     <FormItem>
-                                        <FormLabel>Name</FormLabel>
+                                        <FormLabel>用户名</FormLabel>
                                         <FormControl>
-                                            <Input {...field} placeholder="请输入新用户名" />
+                                            <Input
+                                                {...field}
+                                                icon={UserRound}
+                                                placeholder="请输入新用户名"
+                                                className={cn(["flex","justify-start","w-3/4"])}
+                                            />
                                         </FormControl>
                                         <FormMessage />
                                     </FormItem>
@@ -172,20 +221,43 @@ function MyProfile() {
                                         <FormLabel>新密码</FormLabel>
                                         <FormControl>
                                             <Input
+                                                icon={Lock}
                                                 type="password"
                                                 {...field}
                                                 placeholder="请输入新密码"
+                                                className={cn([
+                                                    "flex","justify-start","w-3/4",
+                                                ])}
                                             />
                                         </FormControl>
                                         <FormMessage />
                                     </FormItem>
                                 )}
                             />
+                            <div className={cn(["flex","flex-col"])}>
+                                <Label htmlFor="descrip" className={"text-[20px]"}>简介</Label>
+                                <hr className={cn(["my-1 border-gray-300"])}/>
+                                <Textarea placeholder="介绍自己"
+                                          className={
+                                              cn(["mt-2 mb-2 h-100"," bg-gray-200","border"," border-gray-300" ,
+                                                  "focus-visible:ring-2"," focus-visible:ring-gray-200/25"])
+                                          }/>
+                            </div>
                             <Button
                                 type="submit"
                                 loading={loading}
-                                className="w-full">
-                                保存更改
+                                className={cn([
+                                    "w-24",
+                                    "bg-green-700",
+                                    "text-white","text-center",
+                                    "text-base","h-9",
+                                    "hover:bg-green-600",
+                                    "focus:ring-2"," focus:ring-green-500 ","focus:ring-offset-2"
+                                ])}
+                                variant={"solid"}
+                            >
+
+                                更新用户
                             </Button>
                         </form>
                     </Form>
