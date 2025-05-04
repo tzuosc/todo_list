@@ -41,9 +41,5 @@ export async function uploadAvatar(file: File) {
     const formData = new FormData();
     formData.append("file", file);
 
-    return alova.Post<WebResponse<string>>("/user/upload", formData, {
-        headers: {
-            "Content-Type": "multipart/form-data", // 确保是文件上传
-        },
-    });
+    return alova.Post<WebResponse<string>>("/user/upload", formData);
 }

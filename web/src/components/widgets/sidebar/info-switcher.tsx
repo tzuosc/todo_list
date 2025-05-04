@@ -31,6 +31,7 @@ export function InfoSwitch(
     items: InfoItem[]
     defaultSelected?: number
 }) {
+    const authStore =useAuthStore()
     /*const {user} =*/
     const { isMobile } = useSidebar()
     const navigate = useNavigate()
@@ -61,7 +62,7 @@ export function InfoSwitch(
 
                 {/* 如果没有登录则显示未登录 登录状态存储在AuthStore里(/storages/auth) */}
                 {user?(
-                    < Avatar src={"https://avatars.githubusercontent.com/u/149759599?v=4"}
+                    < Avatar src={authStore.user?.avatar_url || ""}
                              className={cn([
                                  "lg:w-[12vw]","lg:h-[12vw]",
                                  "w-[20vw]","h-[20vw]",

@@ -75,12 +75,12 @@ function MyProfile() {
 
         try {
             const res = await uploadAvatar(file);
-
+            console.log("头像地址", authStore.user?.avatar_url);
             if (res.code === 200) {
                 toast.success("上传成功", { id: "user-avatar-upload" });
                 authStore.setUser({
                     ...authStore.user!,
-                    avatar_url: res.data as string, // 这是图片 URL
+                    avatar_url: `http://localhost:8080${res.data}`, // 这是图片 URL
                 });
                 sharedStore.setRefresh();
             } else {
