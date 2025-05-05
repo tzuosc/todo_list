@@ -1,4 +1,4 @@
-import { Card } from "@/components/ui/card.tsx";
+/*import { Card } from "@/components/ui/card.tsx";*/
 import { cn } from "@/utils";
 import { TrashIcon } from "lucide-react";
 import { Button } from "@/components/ui/button.tsx";
@@ -36,11 +36,11 @@ function DeleteTaskDialog({taskId,taskName,onClose,onDelete}:DeleteTaskDialogPro
     };
     return(
         <>
-            <Card
+            <div
                 className={cn([
                     "flex",
                     "flex-col",
-                    "p-5","m-1",
+                    "p-2","m-1",
                     "min-h-32",
                     "w-full",
                     "gap-10",
@@ -71,7 +71,7 @@ function DeleteTaskDialog({taskId,taskName,onClose,onDelete}:DeleteTaskDialogPro
                         {loading ? "删除中..." : "确定"}
                     </Button>
                 </div>
-            </Card>
+            </div>
 
         </>
     )

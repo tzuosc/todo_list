@@ -13,6 +13,7 @@ import { zodResolver } from "@hookform/resolvers/zod";
 
 import { Form, FormControl, FormField, FormItem, FormLabel, FormMessage } from "@/components/ui/form.tsx";
 import { login } from "@/api/user";
+import { Lock, UserRound } from "lucide-react";
 
 function LoginForm(){
     const authStore =useAuthStore()
@@ -37,9 +38,14 @@ function LoginForm(){
         })
             .then((res)=>{
             if(res.code===200){
+                const fullUrl = `http://localhost:8080${res.data?.avatarUrl}`;
+                authStore.setUser({
+                    ...res.data,
+                    avatarUrl:fullUrl
+                })
                 console.log(res.data)
-                authStore.setUser(res.data)
-            toast.success("success to login",{
+                /*console.log(authStore.user?.avatarUrl as string)*/
+            toast.success("登录成功",{
                 id:"login-success",
                 description:`welcome back,${res.data?.username}`
                 })
@@ -47,7 +53,7 @@ function LoginForm(){
             }
             if (res.code===400){
                 toast.error(
-                    "fall to login",{
+                    "登录失败",{
                         id:"login-error",
                         description:res.msg
                     }
@@ -60,20 +66,25 @@ function LoginForm(){
     }
     return(
         <Form {...form}>
-        <form className="px-6 md:px-8" onSubmit={form.handleSubmit(onSubmit)}>
+            {/* 左边的登录框 */}
+        <form
+            className={cn(["flex","flex-col","p-2","md:p-4","h-full"])}
+            onSubmit={form.handleSubmit(onSubmit)}
+        >
             <div className="flex flex-col gap-6">
-                <div className={cn("flex flex-col items-center text-center")}>
-                    <h1 className="text-2xl font-bold">Welcome back</h1>
-                    <p className="text-balance text-muted-foreground">Login to your Acme Inc account</p>
+                <div className={cn("flex","flex-col","items-center","text-center","gap-2")}>
+                    <h1 className="text-2xl font-bold">欢迎回来</h1>
+                    <p className="text-balance text-muted-foreground">登录你的 Todo-List 账户</p>
                 </div>
                 <FormField
                 control={form.control}
                 name={'username'}
                 render={({field }) => (
-                    <FormItem>
-                        <FormLabel>用户名</FormLabel>
+                    <FormItem className={cn(["flex","flex-col","gap-3"])}>
+                        <FormLabel className={cn(["font-semibold"])}>用户名</FormLabel>
                         <FormControl>
                             <Input
+                                icon={UserRound}
                                 placeholder={"Login Name"}
                                 {...field}
                             />
@@ -86,11 +97,12 @@ function LoginForm(){
                     control={form.control}
                     name={"password"}
                     render={({field})=>(
-                        <FormItem>
-                            <FormLabel>密码</FormLabel>
+                        <FormItem className={cn(["flex","flex-col","gap-3"])} >
+                            <FormLabel className={cn(["font-semibold"])}>密码</FormLabel>
                             <FormControl>
                                 <Input
                                 placeholder={"password"}
+                                icon={Lock}
                                 type={"password"}
                                 {...field}
                                 ></Input>
@@ -107,6 +119,7 @@ function LoginForm(){
                         "hover:bg-green-700",
                         "focus:ring-2"," focus:ring-green-500 ","focus:ring-offset-2"
                     ])}
+                    size={"lg"}
                     loading={loading}
                     variant={"solid"}
                     level={"success"}>

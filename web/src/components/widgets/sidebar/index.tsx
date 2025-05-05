@@ -4,7 +4,7 @@ import {
     Sidebar,
     SidebarHeader,
     SidebarContent,
-    SidebarFooter,
+
 } from "@/components/ui/sidebar.tsx"
 import {
     ContextMenu,
@@ -108,7 +108,11 @@ export default function AppSidebar() {
         }
     }
 
-    useEffect(() => { fetchLists() }, [])
+    useEffect(() => {
+        if (authStore.user){
+            fetchLists()    /* */
+        }else setLists([]) /*清空列表*/
+         }, [authStore.user])
 
     const infoItems = [
         { title: "个人设置", logo: Settings, url: "/account/settings" },
@@ -136,21 +140,26 @@ export default function AppSidebar() {
 
             </SidebarHeader>
 
-            <SidebarContent className={cn(["overflow-auto","px-15"])}>
+            <SidebarContent className={cn(["overflow-auto","flex","justify-between"])}>
 
-                <nav className={cn(["space-y-1 "])}>
+                <nav className={cn(["px-15","space-y-1 "])}>
                     {lists.map((item) => (
                         <NavListItem key={item.id} item={item} onRefresh={fetchLists} />
                     ))}
                 </nav>
+
+                {authStore.user && (
+                    <AddList onAddSuccess={fetchLists} />
+                )}
+                {/* 登录状态下显示 AddList，未登录不显示 */}
             </SidebarContent>
 
-            <SidebarFooter className="h-1/3 flex items-center justify-center px-10">
-
-                <AddList onAddSuccess={fetchLists}  />
+            {/*<SidebarFooter className={cn(["flex items-center justify-center px-10"])}>
 
 
-            </SidebarFooter>
+
+
+            </SidebarFooter>*/}
         </Sidebar>
     )
 }

@@ -10,10 +10,10 @@ export interface UserLoginRequest {
     password: string;
 }
 export async function login(request: UserLoginRequest) {
-    return alova.Post<WebResponse<User>>("/auth/login", request);
+    return alova.Post<WebResponse<User>>("/user/login", request);
 }
 export async function logout() {
-    return alova.Get<WebResponse<never>>("/auth/logout");
+    return alova.Get<WebResponse<never>>("/user/logout");
 }
 
 /*注册需要用到的类型*/
@@ -24,7 +24,7 @@ export interface UserRegisterRequest {
 
 }
 export async function register(request: UserRegisterRequest) {
-    return alova.Post<WebResponse<User>>("/auth/register", request);
+    return alova.Post<WebResponse<User>>("/user/register", request);
 }
 
 
@@ -34,5 +34,12 @@ export interface UserUpdateRequest{
     password?: string;
 }
 export async function updateUser (request: UserUpdateRequest) {
-    return alova.Patch<WebResponse<string>>(`auth/${request.id}`, request);
+    return alova.Patch<WebResponse<string>>("/user", request);
+}
+
+export async function uploadAvatar(file: File) {
+    const formData = new FormData();
+    formData.append("file", file);
+
+    return alova.Post<WebResponse<string>>("/user/upload", formData);
 }
