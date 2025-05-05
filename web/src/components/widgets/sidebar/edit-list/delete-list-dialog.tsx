@@ -48,18 +48,17 @@ function DeleteListDialog(
                     "w-full",
                     "gap-10",
                 ])}>
-                <div
+                <h2
                     className={cn([
                         "flex",
                         "gap-2",
                         "items-center",
-                        "text-2xl",
                         "font-bold"
                     ])}
                 >
                     <TrashIcon className={cn(["size-8"])} />
                     删除列表
-                </div>
+                </h2>
                 {/*"opacity-50"*/}
                 <p className={cn(["text-lg","font-medium","text-center"])}>
                     你确定要删除列表 {category} 吗？
@@ -70,6 +69,7 @@ function DeleteListDialog(
                         variant={"tonal"}
                         size={"sm"}
                         onClick={()=>handleDelete()}
+                        className={cn(["w-full"])}
                     >
                         {loading ? "删除中..." : "确定"}
                     </Button>

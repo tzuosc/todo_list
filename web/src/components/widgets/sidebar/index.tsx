@@ -72,7 +72,7 @@ function NavListItem({ item, onRefresh }: { item: NavItem; onRefresh: () => void
             </ContextMenu>
 
             <Dialog open={showDelete} onOpenChange={setShowDelete}>
-                <DialogContent className={cn(["flex","items-center","justify-center"])}>
+                <DialogContent className={cn(["flex","items-center","justify-center","p-0"])}>
                     <DeleteListDialog
                         listId={item.id}
                         category={item.title}
@@ -82,7 +82,7 @@ function NavListItem({ item, onRefresh }: { item: NavItem; onRefresh: () => void
             </Dialog>
 
             <Dialog open={showUpdate} onOpenChange={setShowUpdate}>
-                <DialogContent>
+                <DialogContent className={cn(["flex","items-center","justify-center","p-0"])}>
                     <UpdateListDialog
                         listId={item.id}
                         category={item.title}
@@ -149,11 +149,11 @@ export default function AppSidebar() {
 
             <SidebarContent className={cn(["overflow-hidden","flex","justify-center"])}>
                 {authStore.user&&(<ScrollArea className={cn(["flex","mx-4","border","rounded-md","h-68","overflow-y-auto"])}>
-                    <div className={cn(["px-4"])}>
-                        <div className={cn(["text-sm","font-medium","leading-none","h-10","flex","items-center",
+                    <div className={cn([""])}>
+                        <div className={cn(["text-base","font-medium","leading-none","h-10","flex","items-center","pl-4",
                             "sticky","top-0","bg-white/80 backdrop-blur-md","z-10"
                         ])}>列表</div>
-                        <nav className={cn(["space-y-1"])}>
+                        <nav className={cn(["space-y-1","px-4"])}>
                             {lists.map((item) => (
                                 <>
                                     <NavListItem key={item.id} item={item} onRefresh={fetchLists} />

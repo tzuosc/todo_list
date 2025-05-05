@@ -79,17 +79,17 @@ export default function ListDetailPage() {
                 "flex", "flex-col",
                 "h-full","w-4/5"
             ])} >
-                <div className={cn(["w-full","items-start","basis-1/5"])}>
+                <div className={cn(["w-full","items-start","h-fit","px-8"])}>
                     <p className="lg:text-2xl font-bold mb-4">{category}</p>
                 </div>
 
-                <div className={cn(["flex","w-full","flex-col" ,"basis-4/5"])} >
+                <div className={cn(["flex","w-full","flex-col" ,"h-full"])} >
 
                     <div className={cn([ "flex","px-8","h-full","flex-col"])}>
                         <Columns tasks={tasks} loading={loading} onUpdated={fetchTasks} />
                     </div>
 
-                    <div className={cn(["flex","h-1/3","items-center","justify-center","w-full","space-x-2","p-8"])}>
+                    <div className={cn(["flex","h-fit","items-end","justify-center","w-full","space-x-2","px-8"])}>
                         <Form {...form}>
                             <form
                                 onSubmit={form.handleSubmit((values) => {

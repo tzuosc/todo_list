@@ -15,7 +15,7 @@ import {
 } from "@/components/ui/form.tsx"
 import { Input } from "@/components/ui/input.tsx"
 import { Button } from "@/components/ui/button.tsx"
-import { SaveIcon } from "lucide-react"
+import { SaveIcon, SquarePen, Type } from "lucide-react";
 import { toast } from "sonner";
 import { useNavigate } from "react-router-dom";
 export function UpdateListDialog
@@ -62,7 +62,9 @@ export function UpdateListDialog
 
     return (
         <div className={cn(["p-4 space-y-4 w-full"])}>
-            <h2 className={cn(["text-lg font-semibold"])}>编辑列表名称</h2>
+            <h2 className={cn(["text-lg","font-semibold","flex","flex-row","items-center"])}>
+                <SquarePen className={cn(["size-8"])}/>
+                编辑列表名称</h2>
             <Form {...form}>
                 <form onSubmit={onSubmit} className="space-y-4">
                     <FormField
@@ -72,20 +74,27 @@ export function UpdateListDialog
                             <FormItem>
                                 <FormLabel>列表名称</FormLabel>
                                 <FormControl>
-                                    <Input {...field} placeholder="请输入新的列表名称" />
+                                    <Input {...field} icon={Type} placeholder="请输入新的列表名称" />
                                 </FormControl>
                                 <FormMessage />
                             </FormItem>
                         )}
                     />
-                    <Button
-                        type="submit"
-                        icon={SaveIcon}
-                        loading={loading}
-                        className={cn("w-full")}
-                    >
-                        保存
-                    </Button>
+
+                        <Button
+                            type={"submit"}
+                            icon={SaveIcon}
+                            loading={loading}
+                            className={cn(
+                                "w-full",
+                                "bg-green-700",
+                                "text-white","text-center",
+                                "text-base","h-9",
+                                "hover:bg-green-600",
+                                "focus:ring-2"," focus:ring-green-500 ","focus:ring-offset-2")}
+                        >
+                            保存
+                        </Button>
                 </form>
             </Form>
         </div>
