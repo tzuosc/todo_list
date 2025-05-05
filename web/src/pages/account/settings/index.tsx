@@ -24,7 +24,6 @@ import { Lock, UserRound } from "lucide-react";
 
 function MyProfile() {
     const authStore =useAuthStore()
-    const avatarUrl = useAuthStore((state) => state.user?.avatarUrl);
     const [loading, setLoading] = useState<boolean>(false);
     const sharedStore = useSharedStore();
     const username = useAuthStore((state)=>state.user?.username)
@@ -71,14 +70,12 @@ function MyProfile() {
     const handleFileChange = async (e: React.ChangeEvent<HTMLInputElement>) => {
         const file = e.target.files?.[0];
         if (!file) return;
-
-        toast.loading("上传中...", { id: "user-avatar-upload" });
-
+        toast.loading("上传中...");
         try {
             const res = await uploadAvatar(file);
             console.log("头像地址", authStore.user?.avatarUrl);
             if (res.code === 200) {
-                toast.success("上传成功", { id: "user-avatar-upload" });
+                toast.success("上传成功");
                 authStore.setUser({
                     ...authStore.user!,
                     avatarUrl: `http://localhost:8080${res.data}`, // 这是图片 URL
@@ -86,13 +83,11 @@ function MyProfile() {
                 sharedStore.setRefresh();
             } else {
                 toast.error("上传失败", {
-                    id: "user-avatar-upload",
                     description: res.msg,
                 });
             }
         } catch (err) {
             toast.error("上传失败", {
-                id: "user-avatar-upload",
                 description: "网络或服务器错误",
             });
         }
@@ -100,8 +95,6 @@ function MyProfile() {
 
 
     return(
-
-
         <div className={cn("flex","flex-col","lg:flex-row ","gap-5","2xl:mx-60","lg:mx-40 ","mx-10","mt-16 ")}>
             {/*
         flex-col md:flex-row
@@ -121,7 +114,7 @@ function MyProfile() {
       */}
                 <div className={cn(["flex","flex-row"," lg:flex-col","mb-3","lg:mb-0","mx-3","lg:mx-0","lg:gap-5"])}>
                     <div className={cn(["flex","justify-center"])}>{/*justify-center*/}
-                        <Avatar src={avatarUrl!} fallback={"CN"}
+                        <Avatar src={authStore.user?.avatarUrl!} fallback={"CN"}
                                 className={cn(["w-[20vw]","h-[20vw]","lg:w-75","lg:h-75","overflow-cover"])}
                         />
                     </div>

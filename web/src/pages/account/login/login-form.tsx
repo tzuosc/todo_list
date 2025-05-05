@@ -28,7 +28,11 @@ function LoginForm(){
         })
     })
     const form = useForm<z.infer<typeof formSchema> >({
-        resolver:zodResolver(formSchema)
+        resolver:zodResolver(formSchema),
+        defaultValues:{
+            username:undefined,
+            password:undefined
+        }
     })
 
     function  onSubmit(values:z.infer<typeof formSchema>){
@@ -38,13 +42,12 @@ function LoginForm(){
         })
             .then((res)=>{
             if(res.code===200){
-                const fullUrl = `http://localhost:8080${res.data?.avatarUrl}`;
+                const avatar_url = `http://localhost:8080${res.data?.avatarUrl}`;
                 authStore.setUser({
                     ...res.data,
-                    avatarUrl:fullUrl
+                    avatarUrl:avatar_url  /*要和后端的avatarUrl取同一个名字*/
                 })
                 console.log(res.data)
-                /*console.log(authStore.user?.avatarUrl as string)*/
             toast.success("登录成功",{
                 id:"login-success",
                 description:`welcome back,${res.data?.username}`
