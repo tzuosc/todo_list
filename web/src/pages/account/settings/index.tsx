@@ -24,6 +24,7 @@ import { Lock, UserRound } from "lucide-react";
 
 function MyProfile() {
     const authStore =useAuthStore()
+    const avatarUrl = useAuthStore((state) => state.user?.avatarUrl);
     const [loading, setLoading] = useState<boolean>(false);
     const sharedStore = useSharedStore();
     const username = useAuthStore((state)=>state.user?.username)
@@ -75,12 +76,12 @@ function MyProfile() {
 
         try {
             const res = await uploadAvatar(file);
-            console.log("头像地址", authStore.user?.avatar_url);
+            console.log("头像地址", authStore.user?.avatarUrl);
             if (res.code === 200) {
                 toast.success("上传成功", { id: "user-avatar-upload" });
                 authStore.setUser({
                     ...authStore.user!,
-                    avatar_url: `http://localhost:8080${res.data}`, // 这是图片 URL
+                    avatarUrl: `http://localhost:8080${res.data}`, // 这是图片 URL
                 });
                 sharedStore.setRefresh();
             } else {
@@ -120,7 +121,7 @@ function MyProfile() {
       */}
                 <div className={cn(["flex","flex-row"," lg:flex-col","mb-3","lg:mb-0","mx-3","lg:mx-0","lg:gap-5"])}>
                     <div className={cn(["flex","justify-center"])}>{/*justify-center*/}
-                        <Avatar src={authStore.user?.avatar_url || ""} fallback={"CN"}
+                        <Avatar src={avatarUrl!} fallback={"CN"}
                                 className={cn(["w-[20vw]","h-[20vw]","lg:w-75","lg:h-75","overflow-cover"])}
                         />
                     </div>

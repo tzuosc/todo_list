@@ -62,7 +62,7 @@ export function InfoSwitch(
 
                 {/* 如果没有登录则显示未登录 登录状态存储在AuthStore里(/storages/auth) */}
                 {user?(
-                    < Avatar src={authStore.user?.avatar_url || ""}
+                    < Avatar src={authStore.user?.avatarUrl || ""}
                              className={cn([
                                  "lg:w-[12vw]","lg:h-[12vw]",
                                  "w-[20vw]","h-[20vw]",

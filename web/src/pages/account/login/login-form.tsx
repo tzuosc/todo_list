@@ -38,8 +38,13 @@ function LoginForm(){
         })
             .then((res)=>{
             if(res.code===200){
+                const fullUrl = `http://localhost:8080${res.data?.avatarUrl}`;
+                authStore.setUser({
+                    ...res.data,
+                    avatarUrl:fullUrl
+                })
                 console.log(res.data)
-                authStore.setUser(res.data)
+                /*console.log(authStore.user?.avatarUrl as string)*/
             toast.success("登录成功",{
                 id:"login-success",
                 description:`welcome back,${res.data?.username}`
