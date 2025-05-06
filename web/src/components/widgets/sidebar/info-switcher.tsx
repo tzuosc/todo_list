@@ -12,7 +12,7 @@ import { SidebarMenu, SidebarMenuButton, SidebarMenuItem, useSidebar } from "@/c
 import { Avatar } from "@/components/ui/avatar.tsx";
 import { cn } from "@/utils";
 import { useAuthStore } from "@/storages/auth.ts";
-import { ChevronRight, CircleUser, User } from "lucide-react";
+import { CircleUser, User } from "lucide-react";
 
 
 // Example data structure
