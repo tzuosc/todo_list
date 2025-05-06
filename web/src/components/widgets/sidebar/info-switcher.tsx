@@ -12,7 +12,7 @@ import { SidebarMenu, SidebarMenuButton, SidebarMenuItem, useSidebar } from "@/c
 import { Avatar } from "@/components/ui/avatar.tsx";
 import { cn } from "@/utils";
 import { useAuthStore } from "@/storages/auth.ts";
-import { CircleUser } from "lucide-react";
+import { ChevronRight, CircleUser, User } from "lucide-react";
 
 
 // Example data structure
@@ -55,7 +55,7 @@ export function InfoSwitch(
     return (
         <SidebarMenu className={cn([ "w-full","h-full","justify-center"])}>
             <SidebarMenuItem className={cn(["flex",
-                "flex","lg:flex-col","flex-row",
+                "flex","lg:flex-col","flex-row","gap-3",
                 "w-full",
                 "h-full",
                 "justify-center","items-center"])}>
@@ -79,20 +79,23 @@ export function InfoSwitch(
                     <DropdownMenuTrigger className={"h-auto"} asChild>
                         <SidebarMenuButton
                             size="lg"
-                            className={cn(["mt-6"
+                            className={cn(["flex","flex-row","justify-center","w-50","gap-3"
                                 /*"data-[state=open]:bg-sidebar-accent data-[state=open]:text-sidebar-accent-foreground",*/
                             ])}
                         >
+                            <div>
+                                <User size={30} color={"#409671"}/>
+                            </div>
                             {/*leading-tight 是 Tailwind CSS 中的一个实用类，用来控制 行高（line-height）*/}
                             <p className={cn([
-                                "flex",
-                                "text-center ",
-                                "lg:text-3xl","align-baseline","inline-block",
+                                "lg:text-2xl","inline-block",
                                 "leading-tight","font-sans","font-bold",
-                                "w-full"
+                                "w-fit"
                             ])}>
                                 {user ? `${user.username}` : "未登录"}
                             </p>
+
+
                         </SidebarMenuButton>
                     </DropdownMenuTrigger>
 

@@ -14,7 +14,7 @@ import {
 } from "@/components/ui/context-menu.tsx"
 import { Dialog, DialogContent } from "@/components/ui/dialog.tsx"
 import { Button } from "@/components/ui/button.tsx"
-import { EditIcon, TrashIcon, LogIn, LogOut, Settings } from "lucide-react"
+import { EditIcon, TrashIcon, LogIn, LogOut, Settings, ListTodo } from "lucide-react";
 import { cn } from "@/utils"
 import { AddList } from "@/components/widgets/sidebar/edit-list/add-list"
 import { InfoSwitch } from "@/components/widgets/sidebar/info-switcher.tsx"
@@ -151,8 +151,8 @@ export default function AppSidebar() {
                 {authStore.user&&(<ScrollArea className={cn(["flex","mx-4","border","rounded-md","h-68","overflow-y-auto"])}>
                     <div className={cn([""])}>
                         <div className={cn(["text-base","font-medium","leading-none","h-10","flex","items-center","pl-4",
-                            "sticky","top-0","bg-white/80 backdrop-blur-md","z-10"
-                        ])}>列表</div>
+                            "sticky","top-0","bg-white/80 backdrop-blur-md","z-10","gap-2"
+                        ])}><ListTodo color={"#964065"}/>列表</div>
                         <nav className={cn(["space-y-1","px-4"])}>
                             {lists.map((item) => (
                                 <>
