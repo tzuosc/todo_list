@@ -237,7 +237,6 @@ function MyProfile() {
                                           }/>
                             </div>
                             <Button
-                                type="submit"
                                 loading={loading}
                                 className={cn([
                                     "w-24",
