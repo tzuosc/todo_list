@@ -36,6 +36,7 @@ spring:
     multipart:
       max-file-size: 20MB
       max-request-size: 30MB
+      enabled: true
 
 logging:
   level:
@@ -47,5 +48,7 @@ jwt:
   secret: 8J6bZzqkRtA7X9LvMwYhN2PpQeFjHnKsDcV4BfGxTqWu3yJ5rCt0Oa1iEoUl+/M=
   expiration: 3600
 
+# 静态资源映射
 file:
-  upload-dir: ./uploads/avatars
+  upload-dir: C:/uploads/images
+  access-path: /images/**

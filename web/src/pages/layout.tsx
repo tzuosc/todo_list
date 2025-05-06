@@ -7,16 +7,6 @@ export default function layout(){
     /*globalRouter.navigate 被初始化赋值，实现没有登录自动跳转login界面*/
     const navigate = useNavigate();
     globalRouter.navigate = navigate;
-    /*const navigate = useNavigate()
-    const user = useAuthStore((state)=>state.user)
-    useEffect(() => {
-        if (!user) {
-            navigate("/account/login", { replace: true });
-        }
-    }, [user, navigate]);
-
-    globalRouter.navigate = navigate;
-    globalRouter.navigate = navigate*/
     return(
         <div className={cn(["flex h-screen flex-col"])}>
 

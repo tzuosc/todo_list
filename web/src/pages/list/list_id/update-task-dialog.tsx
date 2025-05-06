@@ -93,7 +93,7 @@ function UpdateTaskDialog({taskId, onSuccess, onClose}:{taskId:number; onSuccess
     }
 
     return (
-        <Card className={cn(["p-4","space-y-4"])}>
+        <div className={cn(["p-2","space-y-4"])}>
             <h2 className="text-lg font-semibold">编辑任务</h2>
             {task ? (
                 <Form {...form}>
@@ -167,7 +167,7 @@ function UpdateTaskDialog({taskId, onSuccess, onClose}:{taskId:number; onSuccess
             ) : (
                 <div>加载任务数据...</div>
             )}
-        </Card>
+        </div>
     );
 }
 

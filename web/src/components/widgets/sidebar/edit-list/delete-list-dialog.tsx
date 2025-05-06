@@ -2,10 +2,11 @@ import { useState } from "react";
 import { useSharedStore } from "@/storages/shared.ts";
 
 import { deleteByListId } from "@/api/todolist";
-import { Card } from "@/components/ui/card.tsx";
+/*import { Card } from "@/components/ui/card.tsx";*/
 import { cn } from "@/utils";
 import { TrashIcon } from "lucide-react";
 import { Button } from "@/components/ui/button.tsx";
+import { useNavigate } from "react-router-dom";
 
 function DeleteListDialog(
     {listId, category,onClose}:{
@@ -16,7 +17,7 @@ function DeleteListDialog(
 {
     const [loading, setLoading] = useState<boolean>(false);
     const sharedStore = useSharedStore();
-
+    const navigate = useNavigate();
 
     const handleDelete=()=>{
         if (!listId) return
@@ -29,6 +30,7 @@ function DeleteListDialog(
                         console.log(`删除成功`) /*myself*/
                         sharedStore.setRefresh()
                         onClose() //关闭弹窗
+                        navigate("/")
                     }else {
                         console.log(("删除失败"))
                     }
@@ -36,8 +38,9 @@ function DeleteListDialog(
     }
     return(
         <>
-            <Card
+            <form
                 className={cn([
+                    "p-0",
                     "flex",
                     "flex-col",
                     "p-5","m-1",
@@ -71,7 +74,7 @@ function DeleteListDialog(
                         {loading ? "删除中..." : "确定"}
                     </Button>
                 </div>
-            </Card>
+            </form>
 
         </>
     )

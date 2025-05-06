@@ -10,12 +10,13 @@ import { Button } from "@/components/ui/button.tsx";
 import { Form, FormControl, FormField, FormItem, FormLabel } from "@/components/ui/form.tsx";
 import { Input } from "@/components/ui/input.tsx";
 import { cn } from "@/utils";
+import { Plus } from "lucide-react";
 
 function AddList({onAddSuccess}:{onAddSuccess:()=>void}){
     const navigate = useNavigate();
     const [loading, setLoading] = useState(false);
     const formSchema = z.object({
-        category:z.string({message:"请填写List类型"})
+        category:z.string({message:"请填写列表类型"})
     })
     const form = useForm<z.infer<typeof formSchema>>({
         resolver:zodResolver(formSchema)
@@ -50,10 +51,16 @@ function AddList({onAddSuccess}:{onAddSuccess:()=>void}){
         <Dialog open={open} onOpenChange={setOpen}>
             <DialogTrigger asChild className={cn([])}>
                 {/*"bg-blue-500"*/}
-                <Button variant="outline" className={cn(["w-full","bg-white"])}>Add List</Button>
+                <Button
+                    variant="ghost"
+                    className={cn(["w-full","flex","justify-start","gap-3"])}
+                >
+                    <Plus/>
+                    新建列表
+                </Button>
             </DialogTrigger>
             <DialogContent>
-                <DialogTitle>Add List</DialogTitle>
+                <DialogTitle>添加列表</DialogTitle>
                 <Form {...form}>
                     <form onSubmit={form.handleSubmit(onSubmit)}>
                         <div>
@@ -64,14 +71,14 @@ function AddList({onAddSuccess}:{onAddSuccess:()=>void}){
                                     <FormItem>
                                         <FormLabel>列表名称</FormLabel>
                                         <FormControl>
-                                            <Input placeholder="" {...field} />
+                                            <Input placeholder=" " {...field} />
                                         </FormControl>
                                     </FormItem>
                                 )}
                             />
                             <div className={cn(["mt-4","flex","justify-end"])}>
                                 <Button type="submit" variant="outline" disabled={loading}className={cn(["w-1/4"])} >
-                                    {loading ? "添加中..." : "Add"}
+                                    {loading ? "添加中..." : "添加"}
                                 </Button>
                             </div>
                         </div>

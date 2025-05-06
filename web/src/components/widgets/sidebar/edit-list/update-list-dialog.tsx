@@ -3,7 +3,6 @@ import { useForm } from "react-hook-form"
 import { z } from "zod";
 import { zodResolver } from "@hookform/resolvers/zod"
 import { useSharedStore } from "@/storages/shared.ts"
-import { Card } from "@/components/ui/card.tsx"
 import { changeTodoListCategory } from "@/api/todolist"
 import { cn } from "@/utils"
 import {
@@ -18,6 +17,7 @@ import { Input } from "@/components/ui/input.tsx"
 import { Button } from "@/components/ui/button.tsx"
 import { SaveIcon } from "lucide-react"
 import { toast } from "sonner";
+import { useNavigate } from "react-router-dom";
 export function UpdateListDialog
 ({ listId, category, onClose, }
  : {
@@ -25,6 +25,7 @@ export function UpdateListDialog
     category: string
     onClose: () => void
 }) {
+    const navigate = useNavigate();
     const [loading, setLoading] = useState(false)
     const sharedStore = useSharedStore()
     const formSchema = z.object({
@@ -48,6 +49,7 @@ export function UpdateListDialog
             if (res.code === 200) {
                 sharedStore.setRefresh()
                 onClose()
+                navigate(`/list/${values.category}`)
             } else {
                 toast.error("更新失败：" + res.msg)
             }
@@ -59,7 +61,7 @@ export function UpdateListDialog
     })
 
     return (
-        <Card className={cn(["p-4 space-y-4 w-full"])}>
+        <div className={cn(["p-4 space-y-4 w-full"])}>
             <h2 className={cn(["text-lg font-semibold"])}>编辑列表名称</h2>
             <Form {...form}>
                 <form onSubmit={onSubmit} className="space-y-4">
@@ -86,6 +88,6 @@ export function UpdateListDialog
                     </Button>
                 </form>
             </Form>
-        </Card>
+        </div>
     )
 }

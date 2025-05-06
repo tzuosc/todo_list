@@ -110,7 +110,7 @@ export default function ListDetailPage() {
                                                     id: "add-success",
                                                     description: "finish",
                                                 });
-                                                form.reset({name: " "}); // 清空输入框
+                                                form.reset({name: ""}); // 清空输入框，不能是" "，而是""
                                                 fetchTasks(); // 重新获取任务列表
                                             } else {
                                                 toast.error("任务添加失败", {
@@ -125,23 +125,24 @@ export default function ListDetailPage() {
                             >
                                 <FormField control={form.control} name={"name"}
                                            render={({ field }) => (
-                                               <FormItem className={cn("w-full",)}>
+                                               <FormItem className={cn("w-full")}>
                                                    <FormControl>
                                                        <Input
-                                                           className={cn(["w-full"])}
+                                                           className={cn(["w-full","text-base"])}
                                                            icon={Plus}
                                                            {...field}
                                                            placeholder={"请添加任务名称"}
                                                        />
+
                                                    </FormControl>
                                                </FormItem>
                                            )}
                                 />
                                 <div className={cn(["flex","items-center"])}>
-                                    <Button variant={"outline"} className={""}
+                                    <Button variant={"outline"} className={cn(["h-12","text-base","px-6"])}
                                             type={"submit"}
                                             disabled={loading}
-                                    >{loading ? "添加中..." : "添加任务"}
+                                    >{loading ? "添加中..." : "添加"}
                                     </Button>
                                 </div>
                             </form>

@@ -55,11 +55,14 @@ export function Columns({ tasks, loading,onUpdated }: ColumnProps) {
                     })
                 }
                 return(
-                    <Switch
-                        checked={checked}
-                        onCheckedChange={handleTaskChange}
-                        aria-label={"开关"}
-                    />
+
+                    <div className={cn(["flex","items-center","justify-center"])}>
+                        <Switch
+                            checked={checked}
+                            onCheckedChange={handleTaskChange}
+                            aria-label={"开关"}
+                        />
+                    </div>
                 )
             }
         },
@@ -68,7 +71,13 @@ export function Columns({ tasks, loading,onUpdated }: ColumnProps) {
             header: ()=><div className={"justify-self-center"}>任务名称</div>,
             cell: ({ row }) => {
                 const name = row.getValue("name") as string
-                return name || "-"
+                return(
+                    <div className={cn(["flex","justify-center"])}>
+                        {name? `${name}`:"-"}
+                    </div>
+                )
+
+                /*name || "-"*/
             }
         },
         {
@@ -99,9 +108,14 @@ export function Columns({ tasks, loading,onUpdated }: ColumnProps) {
                 )
             },
             cell:({row})=>{
-                return new Date(
+                const deadline=new Date(
                     row.getValue<number>("deadline")*1000
                 ).toLocaleDateString()
+                return(
+                        <div className="flex justify-center">
+                            {deadline}
+                        </div>
+                    )
 
             }
         },
@@ -131,7 +145,7 @@ export function Columns({ tasks, loading,onUpdated }: ColumnProps) {
                             open={updateDialogOpen}
                             onOpenChange={setUpdateDialogOpen}
                         >
-                            <DialogContent>
+                            <DialogContent className={cn("")}>
                                 <UpdateTaskDialog
                                     taskId={row.original.id}
                                     onSuccess={onUpdated}

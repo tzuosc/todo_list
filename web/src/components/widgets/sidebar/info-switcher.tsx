@@ -6,13 +6,13 @@ import {
     DropdownMenu,
     DropdownMenuContent,
     DropdownMenuItem,
-    DropdownMenuLabel,
     DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu.tsx"
 import { SidebarMenu, SidebarMenuButton, SidebarMenuItem, useSidebar } from "@/components/ui/sidebar.tsx"
 import { Avatar } from "@/components/ui/avatar.tsx";
 import { cn } from "@/utils";
 import { useAuthStore } from "@/storages/auth.ts";
+import { CircleUser } from "lucide-react";
 
 
 // Example data structure
@@ -31,6 +31,7 @@ export function InfoSwitch(
     items: InfoItem[]
     defaultSelected?: number
 }) {
+    const authStore =useAuthStore()
     /*const {user} =*/
     const { isMobile } = useSidebar()
     const navigate = useNavigate()
@@ -61,18 +62,19 @@ export function InfoSwitch(
 
                 {/* 如果没有登录则显示未登录 登录状态存储在AuthStore里(/storages/auth) */}
                 {user?(
-                    < Avatar src={"https://avatars.githubusercontent.com/u/149759599?v=4"}
+                    < Avatar src={authStore.user?.avatarUrl || ""}
                              className={cn([
                                  "lg:w-[12vw]","lg:h-[12vw]",
                                  "w-[20vw]","h-[20vw]",
                              ])}
                              fallback={"CN"} />
-                ):(< Avatar src={""}
+                ):(< CircleUser
+                     strokeWidth={1.25}
                             className={cn([
                                 "lg:w-[12vw]","lg:h-[12vw]",
                                 "w-[20vw]","h-[20vw]",
                             ])}
-                            fallback={"CN"} />)}
+                             />)}
                 <DropdownMenu>
                     <DropdownMenuTrigger className={"h-auto"} asChild>
                         <SidebarMenuButton
@@ -82,28 +84,6 @@ export function InfoSwitch(
                             ])}
                         >
                             {/*leading-tight 是 Tailwind CSS 中的一个实用类，用来控制 行高（line-height）*/}
-                            {/*<p
-                                className={cn([
-                                    "flex-1",
-                                    "text-center",
-                                    "leading-tight",
-                                    "font-sans",
-                                    "w-full",
-                                ])}
-                            >
-                                {user ? (
-                                    <>
-                                        <p className="text-2xl lg:text-3xl font-bold align-baseline inline-block">
-                                            {user.username}
-                                        </p>
-                                        <p className="text-base lg:text-xl font-medium ml-1 align-baseline inline-block">
-                                            's chat
-                                        </p>
-                                    </>
-                                ) : (
-                                    "未登录"
-                                )}
-                            </p>*/}
                             <p className={cn([
                                 "flex",
                                 "text-center ",
@@ -115,13 +95,13 @@ export function InfoSwitch(
                             </p>
                         </SidebarMenuButton>
                     </DropdownMenuTrigger>
+
                     <DropdownMenuContent
                         className="w-[--radix-dropdown-menu-trigger-width] min-w-56 rounded-lg"
                         align="start"
                         side={isMobile ? "bottom" : "right"}
                         sideOffset={4}
                     >
-                        <DropdownMenuLabel className="text-xs text-muted-foreground">Menu</DropdownMenuLabel>
                         {items.map((item) => (
                             <DropdownMenuItem key={item.title} onClick={() => handleItemClick(item)} className="gap-2 p-2 font-medium">
                                 <div className="flex size-6 items-center justify-center rounded-sm border">

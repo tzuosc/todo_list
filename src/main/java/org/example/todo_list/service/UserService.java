@@ -9,15 +9,15 @@ import org.example.todo_list.exception.errors.UserError;
 import org.example.todo_list.model.User;
 import org.example.todo_list.repository.UserRepository;
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.http.ResponseEntity;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
 
+import java.io.File;
 import java.io.IOException;
-import java.nio.file.Files;
-import java.nio.file.Path;
-import java.nio.file.Paths;
-import java.nio.file.StandardCopyOption;
+import java.nio.file.*;
+import java.security.NoSuchAlgorithmException;
 import java.util.UUID;
 
 @Slf4j
@@ -27,6 +27,9 @@ public class UserService {
 
     private final UserRepository userRepository;
     private final BCryptPasswordEncoder passwordEncoder;
+
+    @Value("${file.access-path}")
+    private String accessPath;
 
     @Value("${file.upload-dir}")
     private String uploadDir;
@@ -98,12 +101,54 @@ public class UserService {
         userRepository.save(user);
     }
 
-    public String storeFile(MultipartFile file) throws IOException {
-        String filename = UUID.randomUUID() + "_" + file.getOriginalFilename();
-        Path path = Paths.get(uploadDir).resolve(filename);
-        Files.createDirectories(path.getParent());
-        Files.copy(file.getInputStream(), path, StandardCopyOption.REPLACE_EXISTING);
-        return filename;
+    public String storeFile(Long userId, MultipartFile file) throws IOException {
+       // TODO 存储头像图片. 随意你存储在哪里, 只要最终可以通过 http://localhost:8080/images/文件名 这个地址访问到对应的图片就算成功
+
+        try {
+            log.info("进入了服务类的方法");
+            // 校验文件是否为空
+            if (file.isEmpty()) {
+                throw new UserException(
+                        UserError.INVALID_FILE.getCode(),
+                        UserError.INVALID_FILE.getMessage()
+                );
+            }
+
+            // 生成随机文件名（UUID + 后缀）
+            String originalFilename = file.getOriginalFilename();
+            String fileExtension = null;
+            if (originalFilename != null) {
+                fileExtension = originalFilename.substring(originalFilename.lastIndexOf("."));
+            }
+            String randomFileName = UUID.randomUUID() + fileExtension;
+
+            // 创建存储目录（如果不存在）
+            Path uploadPath = Paths.get(uploadDir);
+            if (!Files.exists(uploadPath)) {
+                Files.createDirectories(uploadPath);
+            }
+
+            // 保存文件到本地
+            Path filePath = uploadPath.resolve(randomFileName);
+            file.transferTo(filePath.toFile());
+
+            // 返回可访问的URL路径（示例：http://localhost:8080/images/xxx.jpg）
+            String path = accessPath.replace("**", "") + randomFileName;
+            userRepository.findById(userId).ifPresentOrElse(user -> {
+                log.info("成功设置了用户头像");
+                user.setAvatarUrl(path);
+                userRepository.save(user);
+            }, () -> {
+                throw new UserException(
+                        UserError.NO_USER.getCode(),
+                        UserError.NO_USER.getMessage());
+            });
+            return path;
+
+        } catch (IOException e) {
+            log.error(e.getMessage());
+            return "上传失败：";
+        }
     }
 
     public void updateUser(Long id, UpdateUserRequest newUser) {
@@ -127,14 +172,6 @@ public class UserService {
                         String encodedPassword = passwordEncoder.encode(newUser.password());
                         user.setPassword(encodedPassword);
                     }
-//                    if (newUser.avatar() != null) {
-//
-//                        try {
-//                            storeFile(newUser.avatar());
-//                        } catch (IOException e) {
-//                            throw new RuntimeException(e);
-//                        }
-//                    }
                     userRepository.save(user);
                 },
                 () -> {
@@ -146,21 +183,5 @@ public class UserService {
         );
     }
 
-    public String upload(Long id, MultipartFile file) throws IOException {
-        if (file.isEmpty()) throw new UserException(UserError.EMPTY_FILE.getCode(), UserError.EMPTY_FILE.getMessage());
-        try {
-            // 保存文件到本地
-            String filename = file.getOriginalFilename();
-            Path path = Paths.get(uploadDir + filename);
-            Files.createDirectories(path.getParent());
-            Files.write(path, file.getBytes());
-            userRepository.findById(id).ifPresent(user -> {
-                user.setAvatarUrl(uploadDir + filename);
-            });
-            return uploadDir + filename;
-        } catch (IOException exception) {
-            log.error(exception.getMessage());
-            return "上传失败";
-        }
-    }
+
 }
