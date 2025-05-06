@@ -70,7 +70,6 @@ function MyProfile() {
     const handleFileChange = async (e: React.ChangeEvent<HTMLInputElement>) => {
         const file = e.target.files?.[0];
         if (!file) return;
-        toast.loading("上传中...");
         try {
             const res = await uploadAvatar(file);
             console.log("头像地址", authStore.user?.avatarUrl);

@@ -54,9 +54,9 @@ function LoginForm(){
                 })
                 navigate("/")
             }
-            if (res.code===400){
+            if (res.code===1002){
                 toast.error(
-                    "登录失败",{
+                    `登录失败,用户名或密码错误`,{
                         id:"login-error",
                         description:res.msg
                     }
