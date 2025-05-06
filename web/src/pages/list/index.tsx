@@ -18,6 +18,13 @@ export default function ListDetailPage() {
     const { category } = useParams<{ category: string }>();
     const [loading, setLoading] = useState(true);
     const [tasks, setTasks] = useState<TaskRow[]>([]);
+    /*
+    * 将任务拆分为两个数组(完成:未完成)，并渲染两个 Columns
+    * */
+    const unfinishedTasks = tasks.filter(task => !task.status);
+    const finishedTasks = tasks.filter(task => task.status);
+
+
     // 更新任务列表
     const fetchTasks = async () => {
         if (!category) return; // 如果没有 category，不执行后续操作
@@ -86,7 +93,10 @@ export default function ListDetailPage() {
                 <div className={cn(["flex","w-full","flex-col" ,"h-full"])} >
 
                     <div className={cn([ "flex","px-8","h-full","flex-col"])}>
-                        <Columns tasks={tasks} loading={loading} onUpdated={fetchTasks} />
+                        <Columns tasks={unfinishedTasks} loading={loading} onUpdated={fetchTasks} />
+
+                        <p className="text-lg font-semibold mt-6 mb-2">已完成</p>
+                        <Columns tasks={finishedTasks} loading={loading} onUpdated={fetchTasks} />
                     </div>
 
                     <div className={cn(["flex","h-fit","items-end","justify-center","w-full","space-x-2","px-8"])}>
@@ -147,7 +157,7 @@ export default function ListDetailPage() {
                                 </div>
                             </form>
                         </Form>
-                        {/*<CreateTask/> 钓鱼*/}
+                        {/*<CreateTask/> */}
                     </div>
                 </div>
 
