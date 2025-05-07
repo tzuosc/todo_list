@@ -5,7 +5,7 @@ import { Button } from "@/components/ui/button.tsx";
 import { Link } from "react-router-dom";
 import { UserRoundPlus } from "lucide-react";
 import { Separator } from "@/components/ui/separator.tsx";
-
+import logo from "@/assets/logo.jpg"
 export default function(){
     return(
         <div
@@ -31,7 +31,7 @@ export default function(){
                             <img
                                 alt="logo"
                                 decoding={"async"}
-                                src={"https://avatars.githubusercontent.com/u/149759599?v=4"}
+                                src={logo}
                                 draggable={false}
                                 className={cn(["w-50 h-50 rounded-full mx-auto"
                                 ])}
