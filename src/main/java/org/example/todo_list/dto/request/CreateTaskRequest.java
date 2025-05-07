@@ -24,7 +24,7 @@ public record CreateTaskRequest(
         @Schema(name = "category", example = "work")
         @NotBlank(message = "任务类别不能为空") String category,
 
-        @Schema(name = "name", example = "task1")
+        @Schema(name = "name", example = "task")
         @NotBlank(message = "任务名不能为空") String name,
 
         @Schema(name = "status", example = "false")

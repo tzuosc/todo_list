@@ -1,5 +1,7 @@
 package org.example.todo_list.dto.response;
 
+import jakarta.annotation.Nullable;
+import jakarta.validation.constraints.Null;
 import lombok.Builder;
 
 /*
@@ -12,6 +14,6 @@ import lombok.Builder;
 public record UserResponse(
         Long id,
         String username,
-        String avatarUrl
+        @Nullable String avatarUrl
 ) {
 }
