@@ -262,6 +262,12 @@ http://localhost:8080/swagger-ui/index.html
 
 > apifox 是一个用于测试接口和自动化测试的软件, 在这里下载 https://apifox.com/ 
 
+
+
+## 导入配置和测试
+
+
+
 点击进入 github 首页右侧的 release. 我把我已经配置好的 apifox 上传了. 你们需要下载下来. ![image-20250507195854443](./assets/image-20250507195854443.png)
 
 然后导入到 apifox 中
@@ -278,7 +284,7 @@ http://localhost:8080/swagger-ui/index.html
 
 任务相关的测试在 Task 目录下面, 列表相关的测试在 List 目录下面
 
-如果你完成了所有代码, 可以批量运行测试代码
+如果你完成了所有代码, 可以批量运行测试代码, 最终项目展示的时候需要你展示通过率 
 
 ![image-20250507201021168](.\assets\image-20250507201021168.png)
 
@@ -300,6 +306,12 @@ http://localhost:8080/swagger-ui/index.html
 
 > 如果你上面都没有问题, 那么这条可以略过. 
 
+![image-20250507202805657](./assets/image-20250507202805657.png)
 
+ 把这里的数据库用户名和密码改成你的
 
- 
+![image-20250507202851737](./assets/image-20250507202851737.png)
+
+回到代码, 把配置文件也改一下
+
+![image-20250507202946145](./assets/image-20250507202946145.png)
