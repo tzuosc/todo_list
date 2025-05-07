@@ -1,4 +1,11 @@
-import { Dialog, DialogContent, DialogTitle, DialogTrigger } from "@/components/ui/dialog.tsx";
+import {
+    Dialog,
+    DialogContent,
+    DialogDescription,
+    DialogHeader,
+    DialogTitle,
+    DialogTrigger,
+} from "@/components/ui/dialog.tsx";
 import { z } from "zod";
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
@@ -10,7 +17,7 @@ import { Button } from "@/components/ui/button.tsx";
 import { Form, FormControl, FormField, FormItem, FormLabel } from "@/components/ui/form.tsx";
 import { Input } from "@/components/ui/input.tsx";
 import { cn } from "@/utils";
-import { Plus } from "lucide-react";
+import { CheckIcon, Plus, ScrollText, Type } from "lucide-react";
 
 function AddList({onAddSuccess}:{onAddSuccess:()=>void}){
     const navigate = useNavigate();
@@ -49,8 +56,7 @@ function AddList({onAddSuccess}:{onAddSuccess:()=>void}){
 
     return(
         <Dialog open={open} onOpenChange={setOpen}>
-            <DialogTrigger asChild className={cn([])}>
-                {/*"bg-blue-500"*/}
+            <DialogTrigger asChild>
                 <Button
                     variant="ghost"
                     className={cn(["w-full","flex","justify-start","gap-3"])}
@@ -59,8 +65,12 @@ function AddList({onAddSuccess}:{onAddSuccess:()=>void}){
                     新建列表
                 </Button>
             </DialogTrigger>
-            <DialogContent>
-                <DialogTitle>添加列表</DialogTitle>
+
+            <DialogContent className={cn(["p-4"])}>
+                <DialogHeader>
+                    <DialogTitle className={cn(["flex","flex-row","items-center"])}> <ScrollText/>添加列表</DialogTitle>
+                    <DialogDescription></DialogDescription>
+                </DialogHeader>
                 <Form {...form}>
                     <form onSubmit={form.handleSubmit(onSubmit)}>
                         <div>
@@ -68,16 +78,27 @@ function AddList({onAddSuccess}:{onAddSuccess:()=>void}){
                                 control={form.control}
                                 name="category"
                                 render={({ field }) => (
-                                    <FormItem>
+                                    <FormItem className={cn(["flex","gap-4","flex-col"])}>
                                         <FormLabel>列表名称</FormLabel>
                                         <FormControl>
-                                            <Input placeholder=" " {...field} />
+                                            <Input placeholder=" " {...field} icon={Type} />
                                         </FormControl>
                                     </FormItem>
                                 )}
                             />
                             <div className={cn(["mt-4","flex","justify-end"])}>
-                                <Button type="submit" variant="outline" disabled={loading}className={cn(["w-1/4"])} >
+                                <Button type={"submit"}
+                                        variant={"solid"}
+                                        icon={CheckIcon}
+                                        disabled={loading}
+                                        className={cn([
+                                            "w-full",
+                                            "bg-green-700",
+                                            "text-white","text-center",
+                                            "text-base","h-9",
+                                            "hover:bg-green-600",
+                                            "focus:ring-2"," focus:ring-green-500 ","focus:ring-offset-2"
+                                        ])} >
                                     {loading ? "添加中..." : "添加"}
                                 </Button>
                             </div>
