@@ -325,4 +325,339 @@ web/
 └── vite.config.ts           // Vite 配置文件
 
 ```
+## 🧩 前端通用工具与类型定义说明
 
+本文件主要说明了项目中 `types/`、`utils/` 目录下的工具函数、类型定义与全局配置用途及使用方式
+
+### 📁 `types/index.tsx`
+
+#### `WebResponse<T>`
+
+统一定义接口响应结构，适用于所有后端 API 通信的泛型封装。
+
+```ts
+export interface WebResponse<T> {
+  code: number;        // 状态码，如 200 表示成功，1004 表示未登录等
+  data?: T;            // 返回的泛型数据
+  msg?: string;        // 错误或成功提示信息
+  ts: number;          // 时间戳
+  total?: number;      // 数据总量（用于分页）
+}
+```
+
+
+
+### 📁 `utils/index.ts`
+
+🧩 `cn(...)` 工具函数
+
+```ts
+import { clsx, type ClassValue } from "clsx";
+import { twMerge } from "tailwind-merge";
+
+export function cn(...inputs: ClassValue[]) {
+  return twMerge(clsx(inputs));
+}
+```
+
+##### ✅ 功能说明
+
+- 用于合并多个类名字符串，自动解决 Tailwind CSS 的类冲突。
+- 类似 `classnames`，但增强了 Tailwind 专用的合并逻辑。
+
+### 📁 `utils/alova.ts`
+
+#### 🌐 网络请求封装
+
+使用 alova 配合 fetch 构建统一请求器。
+
+```ts
+import { createAlova } from "alova";
+import adapterFetch from "alova/fetch";
+
+export const alova = createAlova({
+  baseURL: "/api",
+  requestAdapter: adapterFetch(),
+  timeout: 5000,
+  shareRequest: true,
+  statesHook: ReactHook,
+  responded: {
+    onSuccess: async (response, _method) => {
+      const res = await response.json();
+      // 通用拦截逻辑
+    }
+  }
+});
+```
+
+##### 🔐 通用拦截逻辑
+
+- `1004`: 未登录 → 跳转登录页并清除用户状态。
+- `502`: 后端挂了 → 弹出错误提示。
+
+### 📁 `utils/global-router.ts`
+
+#### 🌍 全局路由跳转支持
+
+```ts
+const globalRouter = { navigate: undefined } as {
+  navigate?: NavigateFunction;
+};
+
+export default globalRouter;
+```
+
+##### 🧭 使用方式 (具体的使用在项目代码里写了注释)
+
+在 `layout.tsx` 中初始化：
+
+```tsx
+globalRouter.navigate = useNavigate();
+```
+
+
+
+## 📦 状态管理模块：`storages/`
+
+### 1. `auth.ts` - 用户认证状态管理
+
+**路径**：`storages/auth.ts`
+ **依赖**：[Zustand](https://github.com/pmndrs/zustand)、`User` 模型
+
+```ts
+// storages/auth.ts
+
+import { User } from "@/models/user";
+import { create } from "zustand";
+import { createJSONStorage, persist } from "zustand/middleware";
+
+/**
+ * ✅ 说明：
+ * 全局用户认证状态管理
+ * - 使用 zustand 管理用户登录信息
+ * - 支持持久化存储（localStorage），实现刷新页面后仍保持登录
+ *
+ * ✅ 为什么使用 zustand？
+ * - 简洁轻量
+ * - 使用简单但功能强大(persist)
+ */
+
+// 用户状态接口
+interface AuthState {
+    user?: User;                      // 当前登录用户（包括用户名、头像等）
+    setUser: (user?: User) => void;  // 设置用户信息（登录后使用）
+    clear: () => void;               // 清空用户信息（登出时使用）
+}
+
+// 创建状态管理：useAuthStore 包含 user, setUser, clear
+export const useAuthStore = create<AuthState>()(
+    persist(
+        (set, _get) => ({
+            setUser: (user?: User) => set({ user }),     // 设置用户
+            clear: () => set({ user: undefined }),       // 清空用户
+        }),
+        {
+            name: "auth",                                 // localStorage 的 key 名称
+            storage: createJSONStorage(() => localStorage), // 使用 localStorage 存储
+        }
+    )
+);
+
+```
+
+
+
+#### ✅ 功能说明
+
+`auth.ts` 使用 `zustand` 管理全局的用户认证状态。它负责：
+
+- 存储当前登录用户的信息（如用户名、头像等）
+- 在用户登录、退出时更新状态
+- 利用 `zustand/middleware/persist` 插件将状态持久化到 `localStorage`，支持页面刷新后的状态保持
+
+#### 📘 使用场景
+
+- 判断用户是否已登录
+- 获取当前用户信息用于展示（如头像、昵称）
+- 实现退出登录时的状态清除
+- 页面刷新后自动保持登录状态
+
+通过 `useAuthStore()` 可访问：
+
+- `user`: 当前用户对象（可为空）
+- `setUser(user?: User)`: 设置用户信息
+- `clear()`: 清除用户信息（登出时调用）
+
+### 2. `shared.ts` - 通用刷新状态管理
+
+**路径**：`storages/shared.ts`
+ **依赖**：仅依赖 `zustand`
+
+```ts
+// storages/shared.ts
+
+import { create } from "zustand";
+
+/**
+ * ✅ 说明：
+ * 用于组件之间共享状态的全局 store
+ * 当前仅用于提供页面/组件刷新信号
+ *
+ * 使用场景示例：
+ * - 用户更新信息后，需要其他组件重新拉取数据
+ * - 点击某个操作，想通知多个组件重新加载
+ */
+
+// 共享状态接口
+interface SharedState {
+    refresh: number;        // 每次更新都会自增，触发依赖该值的组件重新渲染
+    setRefresh: () => void; // 执行一次刷新：refresh + 1
+}
+
+// 创建共享状态管理：useSharedStore 包含 refresh 和 setRefresh
+export const useSharedStore = create<SharedState>()((set, get) => ({
+    refresh: 0,
+    setRefresh: () => set({ refresh: get().refresh + 1 }),
+}));
+
+```
+
+
+
+#### ✅ 功能说明
+
+`shared.ts` 提供一个简单的全局状态 `refresh`，用于跨组件传递“刷新信号”。
+
+- 通过递增的 `refresh` 数值，实现依赖组件的响应式刷新
+- 适合用在“某个地方数据变了，其他地方需要感知并刷新”这种场景中
+
+#### 📘 使用场景 (在update-list-dialog中的例子)
+
+```tsx
+const sharedStore = useSharedStore()
+const onSubmit = form.handleSubmit(async (values) => {
+        setLoading(true)
+        try {
+            ...
+            if (res.code === 200) {
+                sharedStore.setRefresh()// 在操作成功后手动触发一次全局刷新信号，侧边栏会出现新的list名字
+                onClose()
+                navigate(`/list/${values.category}`)//然后跳转到更新的list页面
+            } ...
+        } catch (err) {
+           ...
+        } finally {
+            ...
+        }
+    })
+return (
+    ...
+    <Form{...form}>
+    	...
+        <form onSubmit={onSubmit}...>
+        	<Button
+            ...
+            type={"submit"}>
+        	...
+        	</Button>
+        </form>
+    </Form>
+```
+
+
+
+通过 `useSharedStore()` 可访问：
+
+- `refresh`: 数值，每次调用 `setRefresh()` 都会 +1
+- `setRefresh()`: 用于手动触发刷新
+
+
+
+## 📁 `models/user.ts` 模块说明文档
+
+### ✅ 作用
+
+定义项目中与「用户（User）」相关的数据结构，即 `User` 类型接口。它用于标识、约束用户对象包含的字段类型，是整个项目在登录、注册、更新用户信息等操作中统一使用的用户模型。
+
+### 📦 User 接口字段说明
+
+```ts
+export interface User {
+    id?: number; // 用户 ID
+    username?: string; // 用户名
+    password?: string; // 密码（登录或注册时用）
+    confirm_password?: string; // 确认密码（注册时使用）
+    avatarUrl?: string; // 用户头像 URL
+}
+```
+
+> 所有字段均为 ?（`表示可选`），以方便在表单处理、局部更新时使用。
+
+### 🧠 使用场景
+
+- 注册表单中，使用 `User` 模型进行类型推导；
+- 登录响应中，服务端返回的用户数据统一使用该结构；
+- 在全局状态 `auth.ts` 中存储的 `user` 类型也是该接口。
+
+## 📁 `api/user/index.ts` 模块说明文档
+
+### ✅ 作用
+
+封装与「用户」相关的所有 API 请求方法，所有请求都通过 `alova` 请求实例发出，并统一使用 `WebResponse` 类型封装响应结果。
+
+### 📡 API 一览表
+
+| 方法名         | 请求路径         | 请求方式 | 用途         |
+| -------------- | ---------------- | -------- | ------------ |
+| `login`        | `/user/login`    | POST     | 登录         |
+| `logout`       | `/user/logout`   | GET      | 注销登录     |
+| `register`     | `/user/register` | POST     | 注册账号     |
+| `updateUser`   | `/user`          | PATCH    | 修改用户信息 |
+| `uploadAvatar` | `/user/upload`   | POST     | 上传用户头像 |
+
+
+
+### 🧩 请求类型定义
+
+```ts
+// 登录请求体
+export interface UserLoginRequest {
+    username: string;
+    password: string;
+}
+
+// 注册请求体
+export interface UserRegisterRequest {
+    username: string;
+    password: string;
+    confirm_password: string;
+}
+
+// 更新用户信息请求体
+export interface UserUpdateRequest {
+    id: number;
+    username?: string;
+    password?: string;
+}
+```
+
+
+
+### 🔄 响应格式统一封装
+
+所有 API 响应都使用如下通用格式封装：
+
+```ts
+interface WebResponse<T> {
+    code: number;
+    data?: T;
+    msg?: string;
+    ts: number;
+    total?: number;
+}
+```
+
+例如：
+
+- 登录返回：`WebResponse<User>`
+- 上传头像返回：`WebResponse<string>`（返回头像地址）
