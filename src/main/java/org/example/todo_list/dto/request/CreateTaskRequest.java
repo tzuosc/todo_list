@@ -6,6 +6,15 @@ import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotNull;
 import lombok.Builder;
 
+/*
+ * TODO 用于新建任务的 DTO 请求
+ *  字段说明:
+ *  - category 必须, :String 类型
+ *  - name 必须, :String 类型
+ *  - status 必须, 传入必须为 false, :boolean 类型
+ *  - taskDescription 不是必须的 :String 类型
+ *  - deadline 不是必须的 :Long 类型, 用时间戳表示
+ * */
 
 @Builder
 @Schema(name = "新建任务请求")
