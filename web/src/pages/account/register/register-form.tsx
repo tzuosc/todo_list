@@ -92,10 +92,10 @@ function RegisterForm() {
             <form
                 onSubmit={form.handleSubmit(onSubmit)}
                 autoComplete={"off"}
-                className={cn(["flex", "flex-col", "h-full", "gap-8"])}
+                className={cn(["flex","flex-col","h-full","gap-8"])}
             >
-                <div className={cn("space-y-3", "flex-1")}>
-                    <div className={cn(["flex", "gap-3", "items-center"])}>
+                <div className={cn("space-y-3","flex-1")}>
+                    <div className={cn(["flex","gap-3","items-center"])}>
                         <FormField
                             control={form.control}
                             name={"username"}
