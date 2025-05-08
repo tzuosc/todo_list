@@ -7,7 +7,7 @@
 - 用户注册与登录
 - 登出功能
 - 用户信息更新
-- 头像上传
+- 头像上传 
 
 ✅ **任务管理模块**
 
@@ -15,7 +15,7 @@
 - 任务分类管理
 - 状态与截止时间管理
 
-✅ **安全控制模块**
+✅ **安全控制模块** (作者已经完成)
 
 - JWT 鉴权机制
 - 全局异常处理
@@ -133,18 +133,22 @@ spring:
 
 # 开发提示
 
-1. 使用 IDEA 的 TODO 功能定位待实现代码：
-   ![](./assets/image-20250507205434219.png)
-2. 启用被注释的方法（Ctrl+/）：
-   ![](./assets/image-20250507205833967.png)
-3. 数据库连通性检查：
-   ![](./assets/image-20250507201238700.png)
-4. 配置文件修改示例(修改成你的mysql的用户名和密码) ：
-   ![]( ./assets/image-20250507202851737.png)
+### 1. 使用 IDEA 的 TODO 功能定位待实现代码：
+
+![](./assets/image-20250507205434219.png)
+
+### 2. 启用被注释的方法（Ctrl+/）：
+![](./assets/image-20250507205833967.png)
+
+### 3. 数据库连通性检查：
+![](./assets/image-20250507201238700.png)
+
+### 4. 配置文件修改示例(修改成你的mysql的用户名和密码) ：
+![]( ./assets/image-20250507202851737.png)
 
 
 
-通过 Swagger 测试注册接口：
+### 5. 通过 Swagger 测试注册接口：
 
 ```url
 http://localhost:8080/swagger-ui/index.html
@@ -152,7 +156,39 @@ http://localhost:8080/swagger-ui/index.html
 
 ![](./assets/image-20250422153319116.png)
 
+### 6. 前置知识
+
+> 想要始本项目, 你至少需要了解下面的相关知识.
+
+-  什么是 `JWT` , 如何使用. (登录, 注册有用)
+-  什么是网络拦截器, 它是如何阻止没有登陆的用户访问后端接口的. 以及什么是 Cookie
+-  什么是 Java 异常处理. (本项目采用全局异常处理的方式, 这符合最佳实践)
+-  什么是 JPA (spring boot 的持久层)
+-  什么是 DTO, 如何设计一个合理的 DTO.
+-  什么是接口文档(Swagger)
+-  什么是 RESTful API 规范, 如何设计一个合理的接口
+- 什么是 枚举类, 纪录类
+- java 文件读写 
+
+### 7. 如何使用 Mybatis 替换 JPA(可选)
+
+> 本项目默认采用 JPA 对数据库操作. 如果你一定要使用 Mybatis. 那么需要修改一些配置文件.   
+
+在 `application.yml` 添加 
+
+```yml
+mybatis:
+  mapper-locations: classpath:mapper/*.xml  # XML映射文件路径
+  type-aliases-package: com.todo_list.model  # 实体类包路径
+  configuration:
+    map-underscore-to-camel-case: true      # 自动转换字段名（下划线→驼峰）
+```
+
+然后把 JPA 配置删除 (重要) ![image-20250508134534014](./assets/image-20250508134534014.png)
+
 -----------
+
+
 
 # 项目设计
 

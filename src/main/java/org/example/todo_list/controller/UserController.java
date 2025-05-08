@@ -5,7 +5,7 @@ import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.example.todo_list.dto.request.LoginRegisterRequest;
-import org.example.todo_list.repository.JPA.UserRepository;
+import org.example.todo_list.repository.jpa.UserRepository;
 import org.example.todo_list.security.JwtUtils;
 import org.example.todo_list.service.UserService;
 import org.example.todo_list.utils.ApiResponse;

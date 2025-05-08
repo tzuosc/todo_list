@@ -6,7 +6,7 @@ import org.example.todo_list.dto.request.LoginRegisterRequest;
 import org.example.todo_list.exception.UserException;
 import org.example.todo_list.exception.errors.UserError;
 import org.example.todo_list.model.User;
-import org.example.todo_list.repository.JPA.UserRepository;
+import org.example.todo_list.repository.jpa.UserRepository;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
