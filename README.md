@@ -109,7 +109,7 @@ web/                                     // 前端代码
 - /list/{id} -> 删除列表
     - DELETE
     - 返回: 删除成功
-- /list/change -> 修改列表类型
+- /list/change_category/{id} -> 修改列表类型
     - PATCH
     - 传入参数: id, category
     - 返回: 是否删除成功
