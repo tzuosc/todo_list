@@ -22,7 +22,6 @@ import { useSharedStore } from "@/storages/shared.ts";
 import { Input } from "@/components/ui/input.tsx";
 import { updateUser, uploadAvatar } from "@/api/user";
 import { toast } from "sonner";
-import { User } from "@/models/user.ts";
 import { Link } from "react-router-dom";
 import { Textarea } from "@/components/ui/textarea.tsx";
 import { Lock, UserRound } from "lucide-react";
