@@ -11,7 +11,7 @@ public enum UserError {
     // 注册的时候不能有重复的用户名
     DUPLICATE_USERNAME(1003, "用户名已经存在"),
     NO_COOKIE(1004, "没有登录");
-    // 登陆的时候用户名或者密码错误 ...
+    // TODO 用户异常枚举. 登陆的时候用户名或者密码错误等等 ...
 
     private final Integer code;
     private final String message;

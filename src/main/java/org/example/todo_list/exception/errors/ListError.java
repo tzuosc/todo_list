@@ -6,6 +6,7 @@ import lombok.RequiredArgsConstructor;
 @RequiredArgsConstructor
 @Getter
 public enum ListError {
+    // TODO 任务列表异常枚举
     ;
 
     private final Integer code;

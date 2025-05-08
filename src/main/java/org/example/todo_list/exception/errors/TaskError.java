@@ -6,6 +6,7 @@ import lombok.Getter;
 @AllArgsConstructor
 @Getter
 public enum TaskError {
+    // TODO 任务异常枚举
     ;
 
     private final Integer code;
