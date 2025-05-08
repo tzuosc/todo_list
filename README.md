@@ -257,32 +257,32 @@ src/
 
 ### 👤 用户相关接口
 
-| 端点                | 方法  | 参数                        | 说明                   |
-| ------------------- | ----- | --------------------------- | ---------------------- |
-| `/user/register`    | POST  | username, password          | 用户注册               |
-| `/user/login`       | POST  | username, password          | 用户登录（返回Cookie） |
-| `/user/logout`      | GET   | -                           | 用户登出               |
-| `/user/{id}`        | PATCH | username/password/avatarUrl | 更新用户信息           |
-| `/user/upload/{id}` | POST  | 图片文件                    | 上传用户头像           |
+| 端点                | 方法  | 参数                 | 返回值       | 说明                   |
+| ------------------- | ----- | -------------------- | ------------ | ---------------------- |
+| `/user/register`    | POST  | LoginRegisterRequest | void/String  | 用户注册               |
+| `/user/login`       | POST  | LoginRegisterRequest | UserResponse | 用户登录（返回Cookie） |
+| `/user/logout`      | GET   | -                    | void/String  | 用户登出               |
+| `/user/{id}`        | PATCH | UpdateUserRequest    | UserResponse | 更新用户信息           |
+| `/user/upload/{id}` | POST  | 图片文件, id         | String       | 上传用户头像           |
 
 ### 📂 任务清单接口
 
-| 端点                         | 方法   | 参数     | 说明             |
-| ---------------------------- | ------ | -------- | ---------------- |
-| `/list/{category}`           | PUT    | category | 创建新任务清单   |
-| `/list/{id}`                 | DELETE | -        | 删除指定清单     |
-| `/list/change_category/{id}` | PATCH  | category | 修改清单分类     |
-| `/list/`                     | GET    | -        | 获取所有清单     |
-| `/list/{id}`                 | GET    | -        | 获取指定清单详情 |
+| 端点                         | 方法   | 参数     | 返回值                | 说明             |
+| ---------------------------- | ------ | -------- | --------------------- | ---------------- |
+| `/list/{category}`           | PUT    | category | -                     | 创建新任务清单   |
+| `/list/{id}`                 | DELETE | id       | -                     | 删除指定清单     |
+| `/list/change_category/{id}` | PATCH  | category | -                     | 修改清单分类     |
+| `/list/`                     | GET    | -        | List<GetListResponse> | 获取所有清单     |
+| `/list/{id}`                 | GET    | id       | GetListResponse       | 获取指定清单详情 |
 
 ### 📝 任务管理接口
 
-| 端点         | 方法   | 参数                         | 说明         |
-| ------------ | ------ | ---------------------------- | ------------ |
-| `/task/`     | POST   | category, name, status=false | 创建新任务   |
-| `/task/{id}` | GET    | -                            | 获取任务详情 |
-| `/task/{id}` | DELETE | -                            | 删除任务     |
-| `/task/{id}` | PATCH  | 任意任务字段                 | 更新任务信息 |
+| 端点         | 方法   | 参数                  | 返回值          | 说明         |
+| ------------ | ------ | --------------------- | --------------- | ------------ |
+| `/task/`     | POST   | CreateTaskRequest     | -               | 创建新任务   |
+| `/task/{id}` | GET    | id                    | GetTaskResponse | 获取任务详情 |
+| `/task/{id}` | DELETE | id                    | -               | 删除任务     |
+| `/task/{id}` | PATCH  | id, UpdateTaskRequest | -               | 更新任务信息 |
 
 ------
 
@@ -699,5 +699,4 @@ interface WebResponse<T> {
 
 - 登录返回：`WebResponse<User>`
 - 上传头像返回：`WebResponse<string>`（返回头像地址）
-
 
