@@ -1,20 +1,5 @@
 package org.example.todo_list.service;
 
-import lombok.RequiredArgsConstructor;
-import lombok.extern.slf4j.Slf4j;
-import org.example.todo_list.dto.request.CreateTaskRequest;
-import org.example.todo_list.dto.request.UpdateTaskRequest;
-import org.example.todo_list.dto.response.GetTaskResponse;
-import org.example.todo_list.exception.TaskException;
-import org.example.todo_list.exception.errors.TaskError;
-import org.example.todo_list.model.Task;
-import org.example.todo_list.repository.TaskRepository;
-import org.example.todo_list.repository.TodoListRepository;
-import org.example.todo_list.repository.UserRepository;
-import org.springframework.stereotype.Service;
-
-import java.util.Optional;
-
 
 public class TaskService {
 

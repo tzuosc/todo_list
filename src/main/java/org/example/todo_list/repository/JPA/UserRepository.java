@@ -1,4 +1,4 @@
-package org.example.todo_list.repository;
+package org.example.todo_list.repository.JPA;
 
 import org.example.todo_list.model.User;
 import org.springframework.data.jpa.repository.JpaRepository;

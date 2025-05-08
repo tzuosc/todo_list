@@ -3,22 +3,13 @@ package org.example.todo_list.service;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.example.todo_list.dto.request.LoginRegisterRequest;
-import org.example.todo_list.dto.request.UpdateUserRequest;
 import org.example.todo_list.exception.UserException;
 import org.example.todo_list.exception.errors.UserError;
 import org.example.todo_list.model.User;
-import org.example.todo_list.repository.UserRepository;
+import org.example.todo_list.repository.JPA.UserRepository;
 import org.springframework.beans.factory.annotation.Value;
-import org.springframework.http.ResponseEntity;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
-import org.springframework.web.multipart.MultipartFile;
-
-import java.io.File;
-import java.io.IOException;
-import java.nio.file.*;
-import java.security.NoSuchAlgorithmException;
-import java.util.UUID;
 
 @Slf4j
 @Service

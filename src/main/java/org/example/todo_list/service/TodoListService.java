@@ -1,24 +1,5 @@
 package org.example.todo_list.service;
 
-import jakarta.transaction.Transactional;
-import lombok.RequiredArgsConstructor;
-import org.example.todo_list.dto.response.GetListResponse;
-import org.example.todo_list.exception.ListException;
-import org.example.todo_list.exception.UserException;
-import org.example.todo_list.exception.errors.ListError;
-import org.example.todo_list.exception.errors.UserError;
-import org.example.todo_list.model.Task;
-import org.example.todo_list.model.TodoList;
-import org.example.todo_list.repository.TaskRepository;
-import org.example.todo_list.repository.TodoListRepository;
-import org.example.todo_list.repository.UserRepository;
-import org.example.todo_list.security.JwtUtils;
-import org.springframework.stereotype.Service;
-
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Optional;
-
 
 public class TodoListService {
 
