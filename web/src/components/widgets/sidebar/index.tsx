@@ -3,9 +3,9 @@ import { Link, useNavigate } from "react-router-dom"
 import {
     Sidebar,
     SidebarHeader,
-    SidebarContent,
+    SidebarContent, SidebarFooter,
 
-} from "@/components/ui/sidebar.tsx"
+} from "@/components/ui/sidebar.tsx";
 import {
     ContextMenu,
     ContextMenuTrigger,
@@ -14,7 +14,7 @@ import {
 } from "@/components/ui/context-menu.tsx"
 import { Dialog, DialogContent } from "@/components/ui/dialog.tsx"
 import { Button } from "@/components/ui/button.tsx"
-import { EditIcon, TrashIcon, LogIn, LogOut, Settings } from "lucide-react"
+import { EditIcon, TrashIcon, LogIn, LogOut, Settings, ListTodo } from "lucide-react";
 import { cn } from "@/utils"
 import { AddList } from "@/components/widgets/sidebar/edit-list/add-list"
 import { InfoSwitch } from "@/components/widgets/sidebar/info-switcher.tsx"
@@ -24,6 +24,8 @@ import { toast } from "sonner"
 import { useAuthStore } from "@/storages/auth.ts"
 import { DeleteListDialog } from "@/components/widgets/sidebar/edit-list/delete-list-dialog.tsx"
 import { UpdateListDialog } from "@/components/widgets/sidebar/edit-list/update-list-dialog.tsx"
+import { ScrollArea } from "@/components/ui/scroll-area.tsx";
+import { Separator } from "@/components/ui/separator.tsx";
 
 type NavItem = { title: string; path: string; id: number }
 
@@ -70,7 +72,7 @@ function NavListItem({ item, onRefresh }: { item: NavItem; onRefresh: () => void
             </ContextMenu>
 
             <Dialog open={showDelete} onOpenChange={setShowDelete}>
-                <DialogContent className={cn(["flex","items-center","justify-center"])}>
+                <DialogContent className={cn(["flex","items-center","justify-center","p-0"])}>
                     <DeleteListDialog
                         listId={item.id}
                         category={item.title}
@@ -80,7 +82,7 @@ function NavListItem({ item, onRefresh }: { item: NavItem; onRefresh: () => void
             </Dialog>
 
             <Dialog open={showUpdate} onOpenChange={setShowUpdate}>
-                <DialogContent>
+                <DialogContent className={cn(["flex","items-center","justify-center","p-0"])}>
                     <UpdateListDialog
                         listId={item.id}
                         category={item.title}
@@ -114,9 +116,12 @@ export default function AppSidebar() {
         }else setLists([]) /*清空列表*/
          }, [authStore.user])
 
-    const infoItems = [
+    /*
+    未登录：显示 “登录 / 注册”。
+    已登录：显示 “个人设置” 和 “登出”
+     */
+    const infoItems = authStore.user?[
         { title: "个人设置", logo: Settings, url: "/account/settings" },
-        { title: "登录/注册", logo: LogIn, url: "/account/login" },
         {
             title: "登出",
             logo: LogOut,
@@ -131,29 +136,41 @@ export default function AppSidebar() {
                 }
             },
         },
+    ]:[
+        { title: "登录/注册", logo: LogIn, url: "/account/login" },
     ]
 
     return (
         <Sidebar className={cn("w-1/5 flex flex-col justify-between")} collapsible="icon">
-            <SidebarHeader className="h-1/3">
-                <InfoSwitch items={infoItems} />
 
+            <SidebarHeader className={cn(["h-fit"])}>
+                <InfoSwitch items={infoItems} />
             </SidebarHeader>
 
-            <SidebarContent className={cn(["overflow-auto","flex","justify-between"])}>
+            <SidebarContent className={cn(["overflow-hidden","flex","justify-center"])}>
+                {authStore.user&&(<ScrollArea className={cn(["flex","mx-4","border","rounded-md","h-68","overflow-y-auto"])}>
+                    <div className={cn([""])}>
+                        <div className={cn(["text-base","font-medium","leading-none","h-10","flex","items-center","pl-4",
+                            "sticky","top-0","bg-white/80 backdrop-blur-md","z-10","gap-2"
+                        ])}><ListTodo color={"#964065"}/>列表</div>
+                        <nav className={cn(["space-y-1","px-4"])}>
+                            {lists.map((item) => (
+                                <>
+                                    <NavListItem key={item.id} item={item} onRefresh={fetchLists} />
+                                    <Separator className="my-2" />
+                                </>
+                            ))}
+                        </nav>
+                    </div>
+                </ScrollArea>)}
+            </SidebarContent>
 
-                <nav className={cn(["px-15","space-y-1 "])}>
-                    {lists.map((item) => (
-                        <NavListItem key={item.id} item={item} onRefresh={fetchLists} />
-                    ))}
-                </nav>
-
+            <SidebarFooter className={cn("w-full","flex","h-1/3","justify-end")}>
+                {/* 登录状态下显示 AddList，未登录不显示 */}
                 {authStore.user && (
                     <AddList onAddSuccess={fetchLists} />
                 )}
-                {/* 登录状态下显示 AddList，未登录不显示 */}
-            </SidebarContent>
-
+            </SidebarFooter>
             {/*<SidebarFooter className={cn(["flex items-center justify-center px-10"])}>
 
 

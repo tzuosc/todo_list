@@ -50,13 +50,13 @@ function LoginForm(){
                 console.log(res.data)
             toast.success("登录成功",{
                 id:"login-success",
-                description:`welcome back,${res.data?.username}`
+                description:`欢迎回来,${res.data?.username}`
                 })
                 navigate("/")
             }
-            if (res.code===400){
+            if (res.code===1002){
                 toast.error(
-                    "登录失败",{
+                    `登录失败,用户名或密码错误`,{
                         id:"login-error",
                         description:res.msg
                     }

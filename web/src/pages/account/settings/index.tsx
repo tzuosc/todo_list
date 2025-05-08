@@ -53,8 +53,13 @@ function MyProfile() {
             if (res.code === 200){
                 console.log(res.data)//
                 toast.success(`用户更新成功`)
-                authStore.setUser(res.data as User)
-                sharedStore.setRefresh()
+                const updatedUser = {
+                    ...authStore.user!,
+                    username: values.username ?? authStore.user!.username,
+                };
+
+                authStore.setUser(updatedUser);
+                sharedStore.setRefresh();
             }else {
                 toast.error("用户更新失败")
             }
@@ -70,7 +75,6 @@ function MyProfile() {
     const handleFileChange = async (e: React.ChangeEvent<HTMLInputElement>) => {
         const file = e.target.files?.[0];
         if (!file) return;
-        toast.loading("上传中...");
         try {
             const res = await uploadAvatar(file);
             console.log("头像地址", authStore.user?.avatarUrl);

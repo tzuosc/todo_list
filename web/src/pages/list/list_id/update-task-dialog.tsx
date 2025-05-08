@@ -130,16 +130,17 @@ function UpdateTaskDialog({taskId, onSuccess, onClose}:{taskId:number; onSuccess
                             render={({ field }) => (
                                 <FormItem>
                                     <FormLabel>截止时间</FormLabel>
-                                    <Popover modal>
-                                        <PopoverTrigger asChild>
+                                    <Popover>
+                                        <PopoverTrigger className={cn("flex")}>
                                             <Button
                                                 variant="outline"
-                                                className={cn("justify-start text-left font-normal", !field.value && "text-muted-foreground")}
+                                                className={cn("justify-center w-1/2 text-left font-normal ", !field.value && "text-muted-foreground")}
                                             >
                                                 <CalendarIcon className="mr-2 h-4 w-4" />
                                                 {field.value ? format(field.value, "yyyy-MM-dd") : "选择日期"}
                                             </Button>
                                         </PopoverTrigger>
+
                                         <PopoverContent align="start" className="w-auto p-0">
                                             <Calendar
                                                 mode="single"

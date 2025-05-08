@@ -3,13 +3,13 @@ import { ColumnDef } from "@tanstack/react-table";
 import { DataTable } from "@/components/ui/data-table";
 import { updateTask } from "@/api/task";
 import { toast } from "sonner";
-import { Switch } from "@/components/ui/switch.tsx";
 import { ArrowDown, ArrowUp, ArrowUpDown, EditIcon, TrashIcon } from "lucide-react";
 import { cn } from "@/utils";
 import { Button } from "@/components/ui/button.tsx";
 import { Dialog, DialogContent } from "@/components/ui/dialog.tsx";
 import { UpdateTaskDialog } from "@/pages/list/list_id/update-task-dialog.tsx";
 import { DeleteTaskDialog } from "@/pages/list/list_id/delete-task-dialog.tsx";
+import { Checkbox } from "@/components/ui/checkbox.tsx";
 
 // 删除不需要的状态声明，直接使用 props 传递过来的值
 export interface TaskRow{
@@ -51,13 +51,14 @@ export function Columns({ tasks, loading,onUpdated }: ColumnProps) {
                                     id: "is_finished",
                                 }
                             );
+                            onUpdated?.();
                         }
                     })
                 }
                 return(
 
                     <div className={cn(["flex","items-center","justify-center"])}>
-                        <Switch
+                        <Checkbox
                             checked={checked}
                             onCheckedChange={handleTaskChange}
                             aria-label={"开关"}
@@ -71,8 +72,12 @@ export function Columns({ tasks, loading,onUpdated }: ColumnProps) {
             header: ()=><div className={"justify-self-center"}>任务名称</div>,
             cell: ({ row }) => {
                 const name = row.getValue("name") as string
+                const status = row.getValue("status") as boolean; /*如果true显示删除字体*/
                 return(
-                    <div className={cn(["flex","justify-center"])}>
+                    <div className={cn([
+                        "flex","justify-center",
+                        status&&"line-through"
+                    ])}>
                         {name? `${name}`:"-"}
                     </div>
                 )
