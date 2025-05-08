@@ -34,6 +34,40 @@ public class UserService {
     @Value("${file.upload-dir}")
     private String uploadDir;
 
+    public boolean login(LoginRegisterRequest request) {
+
+        /*
+         * TODO 登录
+         *    你需要处理
+         *    - 如果用户名不存在
+         *    - 如果密码错误
+         * */
+
+
+        User user = userRepository.findByUsername(request.username());
+
+        // 如果用户名不存在
+        if (user == null) {
+            throw new UserException(
+                    UserError.INVALID_PASSWD_USER.getCode(),
+                    UserError.INVALID_PASSWD_USER.getMessage());
+        }
+
+        // 验证密码是错误
+        boolean judge = passwordEncoder.matches(request.password(), user.getPassword());
+
+        // 如果密码错误
+        if (!judge) {
+            throw new UserException(
+                    UserError.INVALID_PASSWD_USER.getCode(),
+                    UserError.INVALID_PASSWD_USER.getMessage()
+            );
+        }
+
+
+        return true;
+    }
+
     public void register(LoginRegisterRequest request) {
 
         // 如果注册用户名使用非法字符
@@ -67,30 +101,87 @@ public class UserService {
         userRepository.save(user);
     }
 
+    public String storeFile(Long userId, MultipartFile file) throws IOException {
+       // TODO 存储头像图片. 随意你存储在哪里, 只要最终可以通过 http://localhost:8080/images/文件名 这个地址访问到对应的图片就算成功
 
-//    public boolean login(LoginRegisterRequest request) {
-//
-//        /*
-//         * TODO 登录
-//         *    你需要处理
-//         *    - 如果用户名不存在
-//         *    - 如果密码错误
-//         * */
-//
-//    }
-//
-//    public String storeFile(Long userId, MultipartFile file) throws IOException {
-//       // TODO 存储头像图片. 随意你存储在哪里, 只要最终可以通过 http://localhost:8080/images/文件名 这个地址访问到对应的图片就算成功
-//
-//    }
-//
-//    public void updateUser(Long id, UpdateUserRequest newUser) {
-//        /*TODO
-//         *  更新用户
-//         *  你需要处理的业务异常与注册差不多. 这是增量更新, 只需要判断需要更新的字段的业务异常就可以了
-//         * */
-//
-//    }
+        try {
+            log.info("进入了服务类的方法");
+            // 校验文件是否为空
+            if (file.isEmpty()) {
+                throw new UserException(
+                        UserError.INVALID_FILE.getCode(),
+                        UserError.INVALID_FILE.getMessage()
+                );
+            }
+
+            // 生成随机文件名（UUID + 后缀）
+            String originalFilename = file.getOriginalFilename();
+            String fileExtension = null;
+            if (originalFilename != null) {
+                fileExtension = originalFilename.substring(originalFilename.lastIndexOf("."));
+            }
+            String randomFileName = UUID.randomUUID() + fileExtension;
+
+            // 创建存储目录（如果不存在）
+            Path uploadPath = Paths.get(uploadDir);
+            if (!Files.exists(uploadPath)) {
+                Files.createDirectories(uploadPath);
+            }
+
+            // 保存文件到本地
+            Path filePath = uploadPath.resolve(randomFileName);
+            file.transferTo(filePath.toFile());
+
+            // 返回可访问的URL路径（示例：http://localhost:8080/images/xxx.jpg）
+            String path = accessPath.replace("**", "") + randomFileName;
+            userRepository.findById(userId).ifPresentOrElse(user -> {
+                log.info("成功设置了用户头像");
+                user.setAvatarUrl(path);
+                userRepository.save(user);
+            }, () -> {
+                throw new UserException(
+                        UserError.NO_USER.getCode(),
+                        UserError.NO_USER.getMessage());
+            });
+            return path;
+
+        } catch (IOException e) {
+            log.error(e.getMessage());
+            return "上传失败：";
+        }
+    }
+
+    public void updateUser(Long id, UpdateUserRequest newUser) {
+        /*TODO
+         *  更新用户
+         *  你需要处理的业务异常与注册差不多. 这是增量更新, 只需要判断需要更新的字段的业务异常就可以了
+         * */
+
+        userRepository.findById(id).ifPresentOrElse(
+                user -> {
+                    if (newUser.username() != null) {
+                        if (!newUser.username().matches("[a-zA-Z0-9_]{3,15}")) {
+                            throw new UserException(
+                                    UserError.INVALID_USERNAME.getCode(),
+                                    UserError.INVALID_USERNAME.getMessage()
+                            );
+                        }
+                        user.setUsername(newUser.username());
+                    }
+                    if (newUser.password() != null) {
+                        String encodedPassword = passwordEncoder.encode(newUser.password());
+                        user.setPassword(encodedPassword);
+                    }
+                    userRepository.save(user);
+                },
+                () -> {
+                    throw new UserException(
+                            UserError.NO_USER.getCode(),
+                            UserError.NO_USER.getMessage()
+                    );
+                }
+        );
+    }
 
 
 }
