@@ -36,7 +36,7 @@
 > - 常用工具类封装
 >
 > **需要实现部分**
-> - 数据持久层（Repository）
+> - 数据持久层（Repository）可以使用 JPA 或者 MyBatis. 接口文件都在 `/src/repository` 中, MayBatis 的 `xml` 文件都在 `/resources/mapper`
 > - 业务逻辑层（Service）
 > - 接口控制层（Controller）
 
