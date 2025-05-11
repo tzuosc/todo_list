@@ -15,20 +15,21 @@ import org.springframework.web.bind.annotation.*;
 @Tag(name = "任务相关Api", description = "用于管理任务")
 @RestController
 @RequestMapping("/task")
+@RequiredArgsConstructor// 通过 Lombok 自动生成包含所有 final 字段的构造函数，简化代码书写。
 public class TaskController {
 
 //    @Operation(summary = "新建一个任务",
 //            description = "传入任务名, 类别.这两个是必须的. 还有非必须的 任务备注, 任务状态(是否完成, true 或者 false), 截至日期(时间戳)")
 //    @PostMapping({"/", ""})
 //    public ApiResponse<String> createTask(@Valid @RequestBody CreateTaskRequest createTaskRequest, @RequestAttribute("userId") Long userId) {
-//        //  TODO 新建任务, 传入 createTaskRequest 如果成功调用 service 对应的 creatTask 函数, 就返回 ApiResponse.success("创建任务成功")11
+//        //  TODO 新建任务, 传入 createTaskRequest 如果成功调用 service 对应的 creatTask 函数, 就返回 ApiResponse.success("创建任务成功")
 //    }
 //
 //    @Operation(summary = "获取一个任务",
 //            description = "传入任务id, 返回 task的详细信息")
 //    @GetMapping("/{id}")
 //    public ApiResponse<GetTaskResponse> getTask(@PathVariable Long id) {
-//
+//      // TODO 根据id更新任务, 传入的参数都是非必须的, 传入 id , updateTaskRequest
 //    }
 //
 //    @Operation(summary = "更新任务对应的参数")
