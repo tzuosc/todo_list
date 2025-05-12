@@ -153,9 +153,40 @@ http://localhost:8080/swagger-ui/index.html
 
 ![](./assets/image-20250422153319116.png)
 
------------
 
-# 项目设计
+
+# 前端项目设计
+
+## 项目前置准备
+
+本项目基于 **[Vite](https://vitejs.dev/)** + **React** + **TypeScript**，使用了 **[Tailwind CSS](https://tailwindcss.com/)** 作为原子化 CSS 工具，并集成了 **shadcn/ui** 组件库。使用之前请完成以下前置工作：
+
++ **安装Vite脚手架**
+
+  ```powershell
+  npm create vite@latest
+  pnpm create vite (推荐)
+  ```
+
+  (pnpm下载得基于npm,没有安装pnpm去 [pnpm中文文档](https://www.pnpm.cn/installation) 自己找，换源什么的不多赘述)
+
++ **配置Tailwind CSS**
+  📄 Tailwind CSS 官网文档：
+   👉 https://tailwindcss.com/docs/installation
+
++ **配置shadcn/ui组件**
+  📄 shadcn/ui 官网配置文档：
+   👉 https://ui.shadcn.dev/docs/installation
+  要注意的是运行：
+  
+  ```powershell
+  pnpm dlx shadcn@latest init
+  ```
+  
+  的时候会在你原始的main.css文件下配置主题，这边建议
+
+
+  **(建议先去配置shadcn/ui,再去看Tailwind CSS。shadcn配置文档会教你如何配置Tailwind CSS。使用 shadcn 组件前，Tailwind 必须已正确配置)**
 
 ## 项目结构
 
@@ -165,7 +196,7 @@ web/
 ├── public/                  // 公共资源目录
 ├── src/                     // 源代码主目录
 │   ├── api/                 // 接口请求封装（如 axios 实例、API 方法等）
-│   ├── assets/              // 静态资源目录
+│   ├── assets/              // 静态资源目录(可以修改你的Todo-List的Logo)
 │   ├── components/          // 通用组件库（按钮、模态框等）
 │   ├── lib/                 // 第三方库封装或工具库
 │   ├── models/              // 类型模型定义（如接口响应结构等）
@@ -528,9 +559,200 @@ interface WebResponse<T> {
 - 登录返回：`WebResponse<User>`
 - 上传头像返回：`WebResponse<string>`（返回头像地址）
 
+## routers文件使用说明
 
+`routers`（即路由配置）的**根本目的是管理前端页面的访问路径与组件渲染关系**，让你的 React 应用能像一个网站一样，根据 URL 显示不同的页面内容。
 
+### 📘 一、基础知识：React Router 的基本概念
 
+- `createBrowserRouter`：基于 `window.history` 的路由方案（适用于 Web 项目）。
+- `lazy:`：懒加载组件，只有当访问到对应路由时才会动态加载对应的页面代码（优化首屏体积）。
+- `children:`：嵌套路由，用于嵌套页面布局、复用 UI。
+- `index: true`：指定为默认子路由，即访问父路径时自动加载这个子页面。
+
+### ✅ 三、具体路由项说明
+
+### 1. `/account/settings`（独立页面）
+
+```tsx
+{
+  path: "/account/settings",
+  lazy: async () => ({
+    Component: (await import("@/pages/account/settings")).default,
+  }),
+}
+```
+
+- **作用**：用户设置页面。
+- **特点**：不在 layout（主布局）下，是一个单独页面，比如不显示侧边栏。
+
+------
+
+### 2. `/`（主路由，挂载 layout）
+
+```tsx
+{
+  path: "/",
+  lazy: async () => ({
+    Component: (await import("@/pages/layout")).default,
+  }),
+  children: [...]
+}
+```
+
+- **作用**：定义了一个 `layout.tsx` 布局，所有 children 路由会嵌套在这个布局中。
+- **比如：** `/list`、`/account/login` 都显示在 layout 下。
+
+------
+
+### 3. `/` 首页路由（子项 index:true）
+
+```tsx
+{
+  index: true,
+  lazy: async () => ({
+    Component: (await import("@/pages/home")).default,
+  }),
+}
+```
+
+- **index: true**：表示这是 `/` 路径的默认子页面。
+- **渲染路径**：访问 `/` 时，加载 `home` 页面。
+
+------
+
+### 4. `/list` 和 `/list/:category`
+
+```tsx
+{
+  path: "list",
+  children: [
+    {
+      index: true, // -> "/list"
+      lazy: async () => ({
+        Component: (await import("@/pages/list")).default,
+      }),
+    },
+    {
+      path: ":category", // -> "/list/work"、"/list/fun"
+      lazy: async () => ({
+        Component: (await import("@/pages/list/index.tsx")).default,
+      }),
+    },
+  ],
+}
+```
+
+- `:category` 是一个动态参数（例如 `/list/work`）。
+- 可以通过 `useParams()` 在页面组件中拿到 `category` 值。
+
+------
+
+### 5. `/account/login` 和 `/account/register`
+
+```tsx
+{
+  path: "account",
+  children: [
+    {
+      path: "login",
+      lazy: async () => ({
+        Component: (await import("@/pages/account/login")).default,
+      }),
+    },
+    {
+      path: "register",
+      lazy: async () => ({
+        Component: (await import("@/pages/account/register")).default,
+      }),
+    },
+  ],
+}
+```
+
+- 显示登录与注册界面。
+- 挂在 layout 下（你可以决定是否在 `layout.tsx` 里根据 route 隐藏 header/sidebar）。
+
+## 前端如何定位错误
+
+### 以 `login-form ` 为例
+
+###  一、常见问题排查顺序
+
+```tsx
+function LoginForm() {
+	...
+    function onSubmit(values: z.infer<typeof formSchema>) {
+        console.log("正在提交登录信息：", values); // 打印用户输入
+        setLoading(true);
+        login({ ...values })
+            .then((res) => {
+                console.log("登录接口返回：", res); // 打印接口返回值
+                if (res.code === 200) {
+                    const avatar_url = `http://localhost:8080${res.data?.avatarUrl}`;
+                    authStore.setUser({
+                        ...res.data,
+                        avatarUrl: avatar_url
+                    });
+                    toast.success("登录成功", {
+                        id: "login-success",
+                        description: `欢迎回来, ${res.data?.username}`
+                    });
+                    navigate("/"); // 跳转首页
+                }
+                if (res.code === 1002) {
+                    toast.error("登录失败，用户名或密码错误", {
+                        id: "login-error",
+                        description: res.msg
+                    });
+                }
+            })
+            .catch((err) => {
+                console.error("登录请求出错：", err); // 捕获异常
+                toast.error("系统错误，请稍后再试");
+            })
+            .finally(() => {
+                setLoading(false);
+            });
+    }
+    return (
+	...
+)
+export { LoginForm };
+```
+
+1. **表单没反应？**
+   - 是否绑定了 `onSubmit`？
+   - 看控制台有没有打印。
+   - 🔍 加上 `console.log("提交内容：", values);`
+2. **接口没返回？**
+   - 打开浏览器 → F12 → Network → 找 `login` 请求
+   - 查看：
+     - 状态码是否是 200？
+     - 响应数据结构对吗？
+3. **页面不跳转？**
+   - `navigate("/")` 是否执行？
+   - 看控制台是否有跳转相关报错。
+4. **toast 没弹出？**
+   - 确认是否满足 `res.code === 200`。
+   - 检查 `toast.success` 调用有没有执行。
+
+## 定位样式(使用React Developer Tool插件)
+
+下载地址：[React Developer Tools – React](https://react.dev/learn/react-developer-tools)
+![屏幕截图 2025-05-11 101132](./assets/屏幕截图 2025-05-11 101132.png)
+
+#### **查看组件树结构**(左侧)
+
+- 能看到你的整个 React 应用是怎么组织的。
+- 组件嵌套关系一目了然，能快速定位你写的组件（如 `LoginForm`）。
+
+#### 2. **查看和修改 props / state / hooks**（右侧）
+
+- 选中一个组件，比如 `LoginForm`，可以直接看到：
+  - 它的 `props` 是什么？
+  - 它的 `useState` 状态值现在是多少？
+  - 它用了哪些 hooks？
 
 | 端点                         | 方法   | 参数     | 说明             |
 | ---------------------------- | ------ | -------- | ---------------- |
@@ -548,8 +770,6 @@ interface WebResponse<T> {
 | `/task/{id}` | GET    | -                            | 获取任务详情 |
 | `/task/{id}` | DELETE | -                            | 删除任务     |
 | `/task/{id}` | PATCH  | 任意任务字段                 | 更新任务信息 |
-
-------
 
 ## 异常处理规范
 

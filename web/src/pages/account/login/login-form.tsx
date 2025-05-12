@@ -36,26 +36,29 @@ function LoginForm() {
     const form = useForm<z.infer<typeof formSchema>>({
         resolver: zodResolver(formSchema),
         defaultValues: {
-            username: undefined,
-            password: undefined
+            username: "",
+            password: ""
         }
     });
 
     function onSubmit(values: z.infer<typeof formSchema>) {
+        console.log("正在提交登录信息：", values); // 打印用户输入
         setLoading(true);
         login({ ...values })
             .then((res) => {
+                console.log("登录接口返回：", res); // 打印接口返回值
+
                 if (res.code === 200) {
                     const avatar_url = `http://localhost:8080${res.data?.avatarUrl}`;
                     authStore.setUser({
                         ...res.data,
-                        avatarUrl: avatar_url // 保持与后端字段一致
+                        avatarUrl: avatar_url
                     });
                     toast.success("登录成功", {
                         id: "login-success",
                         description: `欢迎回来, ${res.data?.username}`
                     });
-                    navigate("/");
+                    navigate("/"); // 跳转首页
                 }
 
                 if (res.code === 1002) {
@@ -65,10 +68,15 @@ function LoginForm() {
                     });
                 }
             })
+            .catch((err) => {
+                console.error("登录请求出错：", err); // 捕获异常
+                toast.error("系统错误，请稍后再试");
+            })
             .finally(() => {
                 setLoading(false);
             });
     }
+
 
     return (
         <Form {...form}>
