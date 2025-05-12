@@ -88,6 +88,7 @@ export function Columns({ tasks, loading,onUpdated }: ColumnProps) {
         {
             accessorKey:"deadline",
             id:"deadline",
+            sortingFn: "basic",
             header:({column})=>{
                 const Icon = useMemo(() => {
                     switch (column.getIsSorted()) {
