@@ -89,8 +89,9 @@ export function Columns({ tasks, loading,onUpdated }: ColumnProps) {
             accessorKey:"deadline",
             id:"deadline",
             sortingFn: "basic",
-            header:({column})=>{
-                const Icon = useMemo(() => {
+            /*column*/
+            header:()=>{
+                /*const Icon = useMemo(() => {
                     switch (column.getIsSorted()) {
                         case "asc":
                             return ArrowUp;
@@ -100,16 +101,16 @@ export function Columns({ tasks, loading,onUpdated }: ColumnProps) {
                         default:
                             return ArrowUpDown;
                     }
-                },[column.getIsSorted()])
+                },[column.getIsSorted()])*/
                 return(
-                    <div className={cn(["flex", "gap-1", "justify-self-center","items-center"])}>
+                    <div className={cn(["flex", "gap-1", "justify-center","items-center"])}>
                         截止于
-                        <Button
+                       {/* <Button
                             icon={Icon}
                             square
                             size={"sm"}
                             onClick={()=>column.toggleSorting()}
-                        />
+                        />*/}
                     </div>
                 )
             },
