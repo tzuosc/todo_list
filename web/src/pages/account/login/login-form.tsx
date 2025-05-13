@@ -36,6 +36,7 @@ function LoginForm() {
     const form = useForm<z.infer<typeof formSchema>>({
         resolver: zodResolver(formSchema),
         defaultValues: {
+
             username: "",
             password: ""
         }
@@ -47,17 +48,18 @@ function LoginForm() {
         login({ ...values })
             .then((res) => {
                 console.log("登录接口返回：", res); // 打印接口返回值
-
                 if (res.code === 200) {
                     const avatar_url = `http://localhost:8080${res.data?.avatarUrl}`;
                     authStore.setUser({
                         ...res.data,
-                        avatarUrl: avatar_url
+
+                        avatarUrl: avatar_url // 保持与后端字段一致
                     });
                     toast.success("登录成功", {
                         id: "login-success",
                         description: `欢迎回来, ${res.data?.username}`
                     });
+
                     navigate("/"); // 跳转首页
                 }
 
@@ -85,13 +87,12 @@ function LoginForm() {
             .catch((err) => {
                 console.error("登录请求出错：", err); // 捕获异常
                 toast.error("系统错误，请稍后再试");
+
             })
             .finally(() => {
                 setLoading(false);
             });
     }
-
-
     return (
         <Form {...form}>
             <form

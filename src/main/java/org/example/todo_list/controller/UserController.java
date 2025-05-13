@@ -2,29 +2,14 @@ package org.example.todo_list.controller;
 
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;
-import jakarta.servlet.http.HttpServletResponse;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.example.todo_list.dto.request.LoginRegisterRequest;
-import org.example.todo_list.dto.request.UpdateUserRequest;
-import org.example.todo_list.dto.response.UserResponse;
-import org.example.todo_list.exception.UserException;
-import org.example.todo_list.exception.errors.UserError;
-import org.example.todo_list.model.User;
-import org.example.todo_list.repository.UserRepository;
+import org.example.todo_list.repository.jpa.UserRepository;
 import org.example.todo_list.security.JwtUtils;
 import org.example.todo_list.service.UserService;
 import org.example.todo_list.utils.ApiResponse;
-import org.example.todo_list.utils.CookieUtil;
-import org.springframework.http.MediaType;
 import org.springframework.web.bind.annotation.*;
-import org.springframework.web.multipart.MultipartFile;
-
-import java.awt.*;
-import java.io.File;
-import java.io.IOException;
-import java.security.NoSuchAlgorithmException;
-import java.util.Objects;
 
 @Tag(name = "用户相关Api", description = "用于登录和注册")
 @RestController
