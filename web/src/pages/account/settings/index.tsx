@@ -42,8 +42,8 @@ function MyProfile() {
     const form = useForm<z.infer<typeof formSchema>>({
         resolver: zodResolver(formSchema),
         defaultValues: {
-            username: authStore.user?.username ?? undefined,
-            password: undefined,
+            username: "",
+            password: "",
         },
     });
 
@@ -63,7 +63,8 @@ function MyProfile() {
                     };
                     authStore.setUser(updatedUser);
                     sharedStore.setRefresh();
-                } else {
+                }
+                else {
                     toast.error("用户更新失败");
                 }
             })
@@ -85,11 +86,30 @@ function MyProfile() {
                     avatarUrl: `http://localhost:8080${res.data}`,
                 });
                 sharedStore.setRefresh();
-            } else {
-                toast.error("上传失败", { description: res.msg });
+            }
+            if (res.code === 1006) {
+                toast.error("文件为空",{
+                    id:"update-error",
+                    description:res.msg
+                });
+            }
+            if (res.code === 1007) {
+                toast.error("非法文件类型",{
+                    id:"update-error",
+                    description:res.msg
+                });
+            }
+            else {
+                toast.error("上传失败", {
+                    id:"update-error",
+                    description: res.msg
+                });
             }
         } catch (err) {
-            toast.error("上传失败", { description: "网络或服务器错误" });
+            toast.error("上传失败", {
+                id:"update-error",
+                description: "网络或服务器错误"
+            });
         }
     };
 
@@ -189,7 +209,7 @@ function MyProfile() {
             {/* Main Content */}
             <Card className={cn("m-3", "flex-1", "p-6", "md:basis-2/3")}>
                 <CardHeader>
-                    <CardTitle className={cn("text-[32px]")}>Public profile</CardTitle>
+                    <CardTitle className={cn("text-[32px]")}>个人设置</CardTitle>
                     <hr className={cn("my-1", "border-gray-300")} />
                 </CardHeader>
                 <CardContent>

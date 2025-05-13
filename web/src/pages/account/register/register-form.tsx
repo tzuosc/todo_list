@@ -68,17 +68,17 @@ function RegisterForm() {
                     navigate("/account/login");
                 }
 
-                if (res.code === 400) {
-                    toast.success("注册失败", {
+                else if (res.code === 400) {
+                    toast.error("注册失败", {
                         id: "register-error",
                         description: res.msg,
                     });
                 }
 
-                if (res.code === 409) {
-                    toast.success("注册失败", {
+                else if (res.code === 1003) {
+                    toast.error("用户名已存在", {
                         id: "register-error",
-                        description: "用户名重复",
+                        description: res.msg,
                     });
                 }
             })
