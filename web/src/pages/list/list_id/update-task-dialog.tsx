@@ -100,6 +100,7 @@ function UpdateTaskDialog({ taskId, onSuccess, onClose }: { taskId: number; onSu
     }
 
     return (
+
         <div className={cn(["p-2", "space-y-4"])}>
             <h2 className={cn(["text-lg font-semibold"])}>编辑任务</h2>
 
@@ -107,6 +108,7 @@ function UpdateTaskDialog({ taskId, onSuccess, onClose }: { taskId: number; onSu
                 <Form {...form}>
                     <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-4">
                         {/* 名称 */}
+
                         <FormField
                             control={form.control}
                             name="name"
@@ -145,13 +147,13 @@ function UpdateTaskDialog({ taskId, onSuccess, onClose }: { taskId: number; onSu
                                         <PopoverTrigger className="flex">
                                             <Button
                                                 variant="outline"
-                                                className={cn("justify-center", "w-1/2", "text-left font-normal", !field.value && "text-muted-foreground")}
+                                                className={cn("justify-center","w-1/2","text-left font-normal", !field.value && "text-muted-foreground")}
                                             >
-                                                <CalendarIcon className="mr-2 h-4 w-4" />
+                                                <CalendarIcon className={cn(["mr-2 h-4 w-4"])} />
                                                 {field.value ? format(field.value, "yyyy-MM-dd") : "选择日期"}
                                             </Button>
                                         </PopoverTrigger>
-                                        <PopoverContent align="start" className="w-auto p-0">
+                                        <PopoverContent align="start" className={cn(["w-auto p-0"])}>
                                             <Calendar
                                                 mode="single"
                                                 selected={field.value}
@@ -165,8 +167,13 @@ function UpdateTaskDialog({ taskId, onSuccess, onClose }: { taskId: number; onSu
                                 </FormItem>
                             )}
                         />
-                        {/* 保存按钮 */}
-                        <Button type="submit" icon={SaveIcon} loading={loading} className="w-full">
+
+                        <Button
+                            type="submit"
+                            icon={SaveIcon}
+                            loading={loading}
+                            className={cn(["w-full"])}
+                        >
                             保存修改
                         </Button>
                     </form>
