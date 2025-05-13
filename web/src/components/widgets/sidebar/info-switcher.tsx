@@ -69,14 +69,15 @@ export function InfoSwitch(
                              ])}
                              fallback={"CN"} />
                 ):(< CircleUser
-                     strokeWidth={1.25}
+                     strokeWidth={1}
                             className={cn([
                                 "lg:w-[12vw]","lg:h-[12vw]",
                                 "w-[20vw]","h-[20vw]",
+                                "text-gray-300",
                             ])}
                              />)}
                 <DropdownMenu>
-                    <DropdownMenuTrigger className={"h-auto"} asChild>
+                    <DropdownMenuTrigger className={cn(["h-auto"])} asChild>
                         <SidebarMenuButton
                             size="lg"
                             className={cn(["flex","flex-row","justify-center","w-50","gap-3"

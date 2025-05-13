@@ -61,8 +61,22 @@ function LoginForm() {
                     navigate("/"); // 跳转首页
                 }
 
-                if (res.code === 1002) {
+                if (res.code === 1001){
+                    toast.error("非法用户名", {
+                        id: "login-error",
+                        description: res.msg
+                    });
+                }
+
+                else if (res.code === 1002) {
                     toast.error("登录失败，用户名或密码错误", {
+                        id: "login-error",
+                        description: res.msg
+                    });
+                }
+
+                else if (res.code === 1005) {
+                    toast.error("没找到用户,请先注册", {
                         id: "login-error",
                         description: res.msg
                     });

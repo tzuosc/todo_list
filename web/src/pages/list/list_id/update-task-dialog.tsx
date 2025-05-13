@@ -1,4 +1,3 @@
-import { Card } from "@/components/ui/card.tsx";
 import { useSharedStore } from "@/storages/shared.ts";
 import { useEffect, useState } from "react";
 import { z } from "zod";
@@ -88,8 +87,18 @@ function UpdateTaskDialog({ taskId, onSuccess, onClose }: { taskId: number; onSu
                     sharedStore.setRefresh(); // 🚨 注意：是否触发了刷新？
                     onSuccess?.();
                     onClose(); // 成功后关闭弹窗
-                } else {
-                    toast.error("任务更新失败，时间可能不合法");
+                }
+                else if (res.code==2001) {
+                    toast.error("非法时间",{
+                        id:"update-list-time-error",
+                        description:res.msg
+                    });
+                }
+                else if (res.code==2003) {
+                    toast.error("不是将来时",{
+                        id:"update-list-time-error",
+                        description:res.msg
+                    });
                 }
             })
             .catch((err) => {
