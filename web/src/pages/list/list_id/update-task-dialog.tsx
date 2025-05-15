@@ -64,9 +64,7 @@ function UpdateTaskDialog({ taskId, onSuccess, onClose }: { taskId: number; onSu
 
     function onSubmit(values: z.infer<typeof formSchema>) {
         if (!task) return;
-
         console.log("提交的任务内容:", values); // ✅ 调试：打印提交值
-
         setLoading(true);
 
         updateTask({
@@ -81,7 +79,6 @@ function UpdateTaskDialog({ taskId, onSuccess, onClose }: { taskId: number; onSu
         })
             .then((res) => {
                 console.log("更新接口返回:", values); // ✅ 调试：接口返回内容
-
                 if (res.code === 200) {
                     toast.success(`任务${values.name}更新成功`);
                     sharedStore.setRefresh(); // 🚨 注意：是否触发了刷新？
@@ -100,6 +97,10 @@ function UpdateTaskDialog({ taskId, onSuccess, onClose }: { taskId: number; onSu
                         description:res.msg
                     });
                 }
+            })
+            .catch((err) => {
+                console.error("更新任务失败", err);
+                toast.error("更新异常，请检查接口或输入");
             })
             .catch((err) => {
                 console.error("更新任务失败", err);
