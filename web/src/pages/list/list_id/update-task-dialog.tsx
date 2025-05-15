@@ -29,8 +29,8 @@ function UpdateTaskDialog({ taskId, onSuccess, onClose }: { taskId: number; onSu
     const form = useForm<z.infer<typeof formSchema>>({
         resolver: zodResolver(formSchema),
         defaultValues: {
-            name: "",
-            description: "",
+            name:"",
+            description:"",
             deadline: undefined,
         },
     });
@@ -64,9 +64,7 @@ function UpdateTaskDialog({ taskId, onSuccess, onClose }: { taskId: number; onSu
 
     function onSubmit(values: z.infer<typeof formSchema>) {
         if (!task) return;
-
-        console.log("提交的任务内容：", values); // ✅ 调试：打印提交值
-
+        console.log("提交的任务内容:", values); // ✅ 调试：打印提交值
         setLoading(true);
 
         updateTask({
@@ -80,10 +78,9 @@ function UpdateTaskDialog({ taskId, onSuccess, onClose }: { taskId: number; onSu
             category: task.category,
         })
             .then((res) => {
-                console.log("更新接口返回：", res); // ✅ 调试：接口返回内容
-
+                console.log("更新接口返回:", values); // ✅ 调试：接口返回内容
                 if (res.code === 200) {
-                    toast.success(`任务 ${res?.data?.name} 更新成功`);
+                    toast.success(`任务${values.name}更新成功`);
                     sharedStore.setRefresh(); // 🚨 注意：是否触发了刷新？
                     onSuccess?.();
                     onClose(); // 成功后关闭弹窗
@@ -105,11 +102,14 @@ function UpdateTaskDialog({ taskId, onSuccess, onClose }: { taskId: number; onSu
                 console.error("更新任务失败", err);
                 toast.error("更新异常，请检查接口或输入");
             })
+            .catch((err) => {
+                console.error("更新任务失败", err);
+                toast.error("更新异常，请检查接口或输入");
+            })
             .finally(() => setLoading(false));
     }
 
     return (
-
         <div className={cn(["p-2", "space-y-4"])}>
             <h2 className={cn(["text-lg font-semibold"])}>编辑任务</h2>
 
@@ -117,7 +117,6 @@ function UpdateTaskDialog({ taskId, onSuccess, onClose }: { taskId: number; onSu
                 <Form {...form}>
                     <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-4">
                         {/* 名称 */}
-
                         <FormField
                             control={form.control}
                             name="name"
